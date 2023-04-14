@@ -10,6 +10,7 @@ project = 'Leishmania_Project'
 copyright = '2023, Ronny Pacheco'
 author = 'Ronny Pacheco'
 release = '0.1'
+autodoc_mock_imports = [‘bs4’, ‘requests’]
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
