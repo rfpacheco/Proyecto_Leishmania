@@ -14,7 +14,6 @@ Welcome to Leishmania_Project's documentation!
    support
 
 
-
 Indices and tables
 ==================
 
