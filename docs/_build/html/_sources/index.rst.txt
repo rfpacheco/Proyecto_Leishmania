@@ -6,12 +6,18 @@
 Welcome to Leishmania_Project's documentation!
 ==============================================
 
+.. automodule:: modules.Module_Test
+   :members:
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
    
    install
    support
+   
+Program
+=======
 
 
 Indices and tables
@@ -20,3 +26,4 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+

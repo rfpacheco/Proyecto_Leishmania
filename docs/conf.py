@@ -10,12 +10,17 @@ project = 'Leishmania_Project'
 copyright = '2023, Ronny Pacheco'
 author = 'Ronny Pacheco'
 release = '0.1'
-autodoc_mock_imports = [‘bs4’, ‘requests’]
+
+
+import os
+import sys
+sys.path.insert(0, os.path.abspath("../SIDER_RepetitiveSearcher"))
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = []
+extensions = ['sphinx.ext.autodoc', 'sphinx.ext.coverage', 
+              'sphinx.ext.napoleon']
 
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', ".env/*", ".ipynb_checkpoints/*"]
@@ -25,5 +30,5 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', ".env/*", ".ipynb_checkp
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = 'alabaster'
+html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
