@@ -1,5 +1,6 @@
-.. This need to be adjusted to my code
+.. This need to be adjusted to my code 
     Got it from: https://sphinx-tutorial.readthedocs.io/step-1/
+
 Support
 =======
 

@@ -1,8 +1,9 @@
 .. This is the installation info file
-
     Needs to be constructed
+    Got it from https://sphinx-tutorial.readthedocs.io/step-1/
 
 Installation
+============
 
 At the command line:
 
