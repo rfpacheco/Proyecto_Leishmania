@@ -8,7 +8,7 @@ def folder_creator(options):
     :paran options: Name of the folder
     :type options: string
 
-    returns: folder in the current directory
+    :returns: Folder in the current directory
     """
     options = str(options.file_name)
     if not os.path.exists(options):
