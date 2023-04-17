@@ -20,8 +20,12 @@ sys.path.insert(0, os.path.abspath("../SIDER_RepetitiveSearcher"))
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 # These extensions are used for the ..audomodule:: and such
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.coverage',
-              'sphinx.ext.napoleon']
+extensions = [
+    'sphinx_rtd_theme',
+    'sphinx.ext.autodoc',
+    'sphinx.ext.coverage',
+    'sphinx.ext.napoleon'
+]
 
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', ".env/*",
