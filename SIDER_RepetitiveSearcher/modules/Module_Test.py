@@ -3,12 +3,12 @@ import os
 
 def folder_creator(options):
     """
-    Creates a Folder in the selected directory
+    Creates a Folder in the current path
 
     :paran options: Name of the folder
     :type options: string
 
-    returns: folder in the current directory
+    :returns: Folder in the current directory
     """
     options = str(options.file_name)
     if not os.path.exists(options):

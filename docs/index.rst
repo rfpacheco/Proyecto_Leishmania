@@ -6,9 +6,6 @@
 Welcome to Leishmania_Project's documentation!
 ==============================================
 
-.. automodule:: modules.Module_Test
-   :members:
-
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
@@ -18,7 +15,12 @@ Welcome to Leishmania_Project's documentation!
    
 Program
 =======
+.. here I will post the program modules and reStructured Text Anotation
+.. the location of my code is written in config.py in ../SIDER_RepetitiveSearcher
 
+
+.. automodule:: modules.Module_Test
+   :members:
 
 Indices and tables
 ==================

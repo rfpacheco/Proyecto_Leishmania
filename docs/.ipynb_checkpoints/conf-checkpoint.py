@@ -19,11 +19,12 @@ sys.path.insert(0, os.path.abspath("../SIDER_RepetitiveSearcher"))
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.coverage', 
+extensions = ['sphinx.ext.autodoc', 'sphinx.ext.coverage',
               'sphinx.ext.napoleon']
 
 templates_path = ['_templates']
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', ".env/*", ".ipynb_checkpoints/*"]
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', ".env/*",
+                    ".ipynb_checkpoints/*"]
 
 
 
