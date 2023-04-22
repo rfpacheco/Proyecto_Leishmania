@@ -1,5 +1,6 @@
 __all__ = [
-    "Module_Test"
+    "Module_Test",
+    "blaster"
 ]
 
 from modules import *
