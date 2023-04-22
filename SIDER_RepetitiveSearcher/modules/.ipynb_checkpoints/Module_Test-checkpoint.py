@@ -28,7 +28,7 @@ def csv_creator(writing_path_input, writing_input):
 
     :param writing_path_input: Path where the .csv file will be created
     :type writing_path_input: string
-    
+
     :param writing_input: What info we want to add to the .csv file, normally a Matrix/Array 3D
     :type writing_input: TO BE DONE
     """
@@ -40,17 +40,16 @@ def csv_creator(writing_path_input, writing_input):
 
 def csv_mixer(path_input1, path_input2, writing_path_input):
     """
-    Mixes .csv files.
-    
-    Uses `csv_creator` to generate a .csv with the mixed files.
+    Mixes two .csv files. Then, uses :func:`~csv_creator` to generate a .csv with the mixed files.
 
-    :func: `~Module_Test.csv_creator`
-    :func: `~csv_creator`
-    :func: `my text <Module_Test.csv_creator>`
-    :func: `my text <csv_creator>`
-    :meth: `csv_creator`
-    :meth: `.csv_creator`
-    :meth: `~Module_Test.csv_creator`
+    :param path_input1: Path to the first .csv to mix. It will take the first rows in the final mixed file.
+    :type path_input1: string
+
+    :param path_input2: Path to the second .csv to mix. It will take rows adther the first .csv.
+    :type path_input2: string
+
+    :param writing_path_input: path to both .csv files
+    :type writing_path_input: string
     """
 
     csv_mixer_matrix = []
