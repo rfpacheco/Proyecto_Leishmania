@@ -22,6 +22,9 @@ Program
 .. automodule:: modules.Module_Test
    :members:
 
+.. automodule:: modules.blaster
+   :members:
+
 Indices and tables
 ==================
 
