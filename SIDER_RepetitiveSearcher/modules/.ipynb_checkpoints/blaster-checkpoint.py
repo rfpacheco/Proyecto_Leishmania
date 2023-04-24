@@ -1,13 +1,14 @@
 import os
+import pdb
+
+# -----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 
-# 1) Creacion del diccionario Blast
-
-# Creation of the Blast Dic of our whole genome
-def BlastN_Dic (path_input):
+def blastn_dic(path_input):
     """
-    Creation af a BLAST database of our whole genome. It uses the BLAST\ :sup:`R` \ command line, see BLAST
-    `Command Line Application User Manual for more information`_.
+    Creation af a BLAST database of our whole genome. It uses the BLAST\ :sup:`R` \command line, see BLAST
+    `Command Line Application User Manual`_ for more information.
 
 
     The generation of the properly database will be placed in the **.fasta directory**.
@@ -17,15 +18,53 @@ def BlastN_Dic (path_input):
     :type path_input: string
 
 
-    .. _Command Line Application User Manual for more information: https://www.ncbi.nlm.nih.gov/books/NBK279690
     """
+    pdb.set_trace()
+    print(path_input)
+    directory = os.getcwd()
+    print(directory)
+
+    os.system("makeblastdb -in " + path_input.dic_path + " -dbtype nucl -parse_seqids")
+    # Remember ".dic_path" is the argument in my argparse_main
 
     try:
-        os.system("makeblastdb -in " + path_input + " -dbtype nucl -parse_seqids")
+        print(path_input)
+        os.system("makeblastdb -in " + path_input.dic_path + " -dbtype nucl -parse_seqids")
         print("\nBlast Dictionary created in", path_input)
-    except:
+    except Exception:
         print("\nError: Blast Dictionary couldn't be created")
 
-# BlastN_Dic(Path_Input)
+# -----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
-    #Arg 0: STRING. Directorio del archivo FASTA del cual queremos realizar el diccionario BLAST. Los archivos generados se colocaran en ese misma directorio, por ello se recomienda que este dentro de una carpeta unicamente dedicada a estos archivos.
+
+def blast_blaster(query_path, dict_path, outfile_path, perc_identity):
+    """
+    This module calls for `blastn` in the BLAST\ :sup:`R` \command line.
+    See `Command Line Application User Manual`_ for more information.
+
+    .. list-table:: Arguments used in ``blastn``
+       :header-rows: 1
+    
+       * - Argument
+         - Description
+       * - ``word_size``
+         - | 11 by default.
+           | BLAST search starts with finding a perfect sequence match of length given by this parameter.
+           | See `world_size info`_ for more information.
+           
+           
+           
+    
+
+    """
+    try:
+        os.system("blastn -word_size 11 -query "
+                  + query_path + " -db "
+                  + dict_path + " -out "
+                  + outfile_path + " -perc_identity "
+                  + perc_identity + " -outfmt '10 qseqid sseqid pident length qlen slen mismatch gapopen qstart qend sstart send evalue bitscore sstrand sseq'")
+        print("\nBlaster succesful", outfile_path, "created.")
+    except Exception:
+        print("\nError: Blaster couldn't be loaded, somthing happened")
+

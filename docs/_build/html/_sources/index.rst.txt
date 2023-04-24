@@ -7,7 +7,7 @@ Welcome to Leishmania_Project's documentation!
 ==============================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
    :caption: Contents:
    
    install
@@ -32,3 +32,9 @@ Indices and tables
 * :ref:`modindex`
 * :ref:`search`
 
+
+.. References:
+
+.. _Command Line Application User Manual: https://www.ncbi.nlm.nih.gov/books/NBK279690
+
+.. _world_size info: https://www.metagenomics.wiki/tools/blast/default-word-size
