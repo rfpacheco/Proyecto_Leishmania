@@ -38,3 +38,5 @@ Indices and tables
 .. _Command Line Application User Manual: https://www.ncbi.nlm.nih.gov/books/NBK279690
 
 .. _world_size info: https://www.metagenomics.wiki/tools/blast/default-word-size
+
+.. _Metagenomics BLASTn manual: https://www.metagenomics.wiki/tools/blast/blastn-output-format-6s
