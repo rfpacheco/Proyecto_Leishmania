@@ -218,8 +218,74 @@
 <span class="sig-prename descclassname"><span class="pre">modules.blaster.</span></span><span class="sig-name descname"><span class="pre">blast_blaster</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dict_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outfile_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">perc_identity</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.blaster.blast_blaster" title="Permalink to this definition">¶</a></dt>
 <dd><p>This module calls for <cite>blastn</cite> in the BLAST<sup>R</sup> command line.
 See <a class="reference external" href="https://www.ncbi.nlm.nih.gov/books/NBK279690">Command Line Application User Manual</a> for more information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>query_path</strong> (<em>string</em>) – Path to our .fasta query used in BLASTn against our database.</p></li>
+<li><p><strong>dict_path</strong> (<em>string</em>) – Path to our database we made with <a class="reference internal" href="#modules.blaster.blastn_dic" title="modules.blaster.blastn_dic"><code class="xref py py-func docutils literal notranslate"><span class="pre">blastn_dic()</span></code></a>.</p></li>
+<li><p><strong>outfile_path</strong> (<em>string</em>) – path where the results will be saved. <strong>Remember to write it with the .csv ending</strong>.</p></li>
+<li><p><strong>perc_identity</strong> (<em>string</em>) – Percent oh identity which we want to make the BLASTn</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a .csv file with the results of the BLASTN</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>csv file</p>
+</dd>
+</dl>
 <table class="docutils align-default" id="id1">
 <caption><span class="caption-text">Arguments used in <code class="docutils literal notranslate"><span class="pre">blastn</span></code></span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Argument</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">-word_size</span></code></p></td>
+<td><p>integer</p></td>
+<td><div class="line-block">
+<div class="line">28 by default.</div>
+<div class="line">BLAST search starts with finding a perfect sequence match of length given by this parameter.</div>
+<div class="line">See <a class="reference external" href="https://www.metagenomics.wiki/tools/blast/default-word-size">world_size info</a> for more information.</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">-query</span></code></p></td>
+<td><p>string</p></td>
+<td><p>Query file name.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">-db</span></code></p></td>
+<td><p>string</p></td>
+<td><p>BLAST database name.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">-out</span></code></p></td>
+<td><p>string</p></td>
+<td><p>Output file name.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">-perc_identity</span></code></p></td>
+<td><p>integer</p></td>
+<td><p>Percent identity cutoff.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">-outfmt</span></code></p></td>
+<td><p>string</p></td>
+<td><div class="line-block">
+<div class="line">Alignment view options. Written inside in a nested string.</div>
+<div class="line">Explained in <a class="reference internal" href="#outfmt-table"><span class="std std-ref">Table</span></a></div>
+<div class="line">See <a class="reference external" href="https://www.ncbi.nlm.nih.gov/books/NBK279690">Command Line Application User Manual</a> and <a class="reference external" href="https://www.metagenomics.wiki/tools/blast/blastn-output-format-6s">Metagenomics BLASTn manual</a> for help.</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<span id="outfmt-table"></span><table class="docutils align-default" id="id2">
+<caption><span class="caption-text">Arguments used in <code class="docutils literal notranslate"><span class="pre">--outfmt</span></code> inside <code class="docutils literal notranslate"><span class="pre">blastn</span></code></span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
 <colgroup>
 <col style="width: 50%" />
 <col style="width: 50%" />
@@ -230,13 +296,64 @@ See <a class="reference external" href="https://www.ncbi.nlm.nih.gov/books/NBK27
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">word_size</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">10</span></code></p></td>
+<td><p>Comma-separated values.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">qseqid</span></code></p></td>
 <td><div class="line-block">
-<div class="line">11 by default.</div>
-<div class="line">BLAST search starts with finding a perfect sequence match of length given by this parameter.</div>
-<div class="line">See <a class="reference external" href="https://www.metagenomics.wiki/tools/blast/default-word-size">world_size info</a> for more information.</div>
+<div class="line">Query Seq-id.</div>
+<div class="line">ID of our query sequence.</div>
 </div>
 </td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sseqid</span></code></p></td>
+<td><div class="line-block">
+<div class="line">Subject Seq-id.</div>
+<div class="line">ID of our subject sequence.</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pident</span></code></p></td>
+<td><p>Percentage of identical matches.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">length</span></code></p></td>
+<td><p>Alignment length.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">qlen</span></code></p></td>
+<td><p>Query sequence length.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">slen</span></code></p></td>
+<td><p>Subject sequence length.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">mismatch</span></code></p></td>
+<td><p>Number of mismatches.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gapopen</span></code></p></td>
+<td><p>Number of gap openings.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">qstart</span></code></p></td>
+<td><p>Start of alignment in query.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">qend</span></code></p></td>
+<td><p>End of alignment in query.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">sstart</span></code></p></td>
+<td><p>Start of alignment in subject.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">send</span></code></p></td>
+<td><p>End of alignment in subject.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">evalue</span></code></p></td>
+<td><p>Expect value.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">bitscore</span></code></p></td>
+<td><p>Bit score.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">sstrand</span></code></p></td>
+<td><p>Subject strand.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sseq</span></code></p></td>
+<td><p>Aligned part of subject sequence.</p></td>
 </tr>
 </tbody>
 </table>
