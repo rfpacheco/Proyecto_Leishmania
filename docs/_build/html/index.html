@@ -214,8 +214,8 @@
 </dd></dl>
 
 <span class="target" id="module-modules.blaster"></span><dl class="py function">
-<dt class="sig sig-object py" id="modules.blaster.blast_blaster">
-<span class="sig-prename descclassname"><span class="pre">modules.blaster.</span></span><span class="sig-name descname"><span class="pre">blast_blaster</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dict_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outfile_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">perc_identity</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.blaster.blast_blaster" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="modules.blaster.blastn_blaster">
+<span class="sig-prename descclassname"><span class="pre">modules.blaster.</span></span><span class="sig-name descname"><span class="pre">blastn_blaster</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dict_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outfile_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">perc_identity</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.blaster.blastn_blaster" title="Permalink to this definition">¶</a></dt>
 <dd><p>This module calls for <cite>blastn</cite> in the BLAST<sup>R</sup> command line.
 See <a class="reference external" href="https://www.ncbi.nlm.nih.gov/books/NBK279690">Command Line Application User Manual</a> for more information.</p>
 <dl class="field-list simple">
@@ -371,6 +371,29 @@ It is recommended to use a dedicated folder to this genome.</p>
 <dd class="field-odd"><p><strong>path_input</strong> (<em>string</em>) – path to where our file genome sequence .fasta is</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="modules.blaster.repetitive_blaster">
+<span class="sig-prename descclassname"><span class="pre">modules.blaster.</span></span><span class="sig-name descname"><span class="pre">repetitive_blaster</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">genome_fasta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">naming_short</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_diff</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numbering</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maximun_runs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.blaster.repetitive_blaster" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function will iterate till a number of <code class="docutils literal notranslate"><span class="pre">maximun_runs</span></code> defined.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>genome_fasta</strong> (<em>string</em>) – Path to our genome sequence in .fasta.</p></li>
+<li><p><strong>path_input</strong> (<em>string</em>) – Path to the .csv file where data will be filtered.</p></li>
+<li><p><strong>folder_path</strong> (<em>string</em>) – Path to a folder where the results will be placed. Subfolder will be created with the cromosome names.</p></li>
+<li><p><strong>naming_short</strong> (<em>string</em>) – Label needed to read the ID of each cromosome in the .csv file. In the case of <strong>L. infantum</strong> for example, would be <em>LinJ</em> since the .csv file IDs are <em>LinJ.XX</em></p></li>
+<li><p><strong>max_diff</strong> (<em>integer</em>) – Maximun proxomity value for the different sequences when they have to be grouped. <strong>Important</strong></p></li>
+<li><p><strong>numbering</strong> (<em>integer</em>) – Indicates the number showed for the first program run. If it’s 0, then, the first run will be name 0.</p></li>
+<li><p><strong>maximun_runs</strong> (<em>integer</em>) – Indicates the last iterative execution of function.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Pay special attention to the <code class="docutils literal notranslate"><span class="pre">max_diff</span></code> argument.</p>
+</div>
 </dd></dl>
 
 </section>
