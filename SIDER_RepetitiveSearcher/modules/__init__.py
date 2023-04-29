@@ -1,6 +1,7 @@
 __all__ = [
     "Module_Test",
-    "blaster"
+    "blaster",
+    "aesthetics"
 ]
 
 from modules import *
