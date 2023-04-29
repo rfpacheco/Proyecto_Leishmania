@@ -173,6 +173,33 @@ def blastn_blaster(query_path, dict_path, outfile_path, perc_identity):
 
 
 def repetitive_blaster(genome_fasta, path_input, folder_path, naming_short, max_diff, numbering, maximun_runs):
+    """
+    This function will iterate till a number of ``maximun_runs`` defined.
+
+    :param genome_fasta: Path to our genome sequence in .fasta.
+    :type genome_fasta: string
+
+    :param path_input: Path to the .csv file where data will be filtered.
+    :type path_input: string
+
+    :param folder_path: Path to a folder where the results will be placed. Subfolder will be created with the cromosome names.
+    :type folder_path: string
+
+    :param naming_short: Label needed to read the ID of each cromosome in the .csv file. In the case of **L. infantum** for example, would be *LinJ* since the .csv file IDs are *LinJ.XX*
+    :type naming_short: string
+
+    :param max_diff: Maximun proxomity value for the different sequences when they have to be grouped. **Important**
+    :type max_diff: integer
+
+    :param numbering: Indicates the number showed for the first program run. If it's 0, then, the first run will be name 0.
+    :type numbering: integer
+
+    :param maximun_runs: Indicates the last iterative execution of function.
+    :type maximun_runs: integer
+
+    .. warning::
+        Pay special attention to the ``max_diff`` argument.
+    """
 
     boxymcboxface("RUN ", + str(numbering))
 
@@ -215,7 +242,7 @@ def repetitive_blaster(genome_fasta, path_input, folder_path, naming_short, max_
 
     # -----------------------------------------------------------------------------
     # Y cuando termine creando el archivo MIXER, lo que hago es purificarlo completamente
-    Global_Filters_Main_Output = folder_path + "/MIXER.csv"
+    Global_Filters_Main_Output = folder_path + "/MIXER.csv"  # This one's got the call to "blastn_blaster"
     Global_Filters_Main(Global_Filters_Main_Output,
                         Global_Filters_Main_Output,
                         genome_fasta,
