@@ -22,6 +22,10 @@ def folder_creator(options):
         print("\nDirectory", options, "already exists")
 
 
+# -----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+
+
 def csv_creator(writing_path_input, writing_input):
     """
     This function will create .csv files
@@ -36,6 +40,10 @@ def csv_creator(writing_path_input, writing_input):
         writer = csv.writer(OutCSV)
         writer.writerows(writing_input)
         print("\nCSV:", writing_path_input, "has been created.")
+
+
+# -----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 
 def csv_mixer(path_input1, path_input2, writing_path_input):
@@ -63,3 +71,4 @@ def csv_mixer(path_input1, path_input2, writing_path_input):
             csv_mixer_matrix.append(row)
 
     csv_creator(writing_path_input, csv_mixer_matrix)
+

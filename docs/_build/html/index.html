@@ -170,9 +170,9 @@
 </section>
 <section id="program">
 <h1>Program<a class="headerlink" href="#program" title="Permalink to this headline">¶</a></h1>
-<span class="target" id="module-modules.Module_Test"></span><dl class="py function">
-<dt class="sig sig-object py" id="modules.Module_Test.csv_creator">
-<span class="sig-prename descclassname"><span class="pre">modules.Module_Test.</span></span><span class="sig-name descname"><span class="pre">csv_creator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">writing_path_input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writing_input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.Module_Test.csv_creator" title="Permalink to this definition">¶</a></dt>
+<span class="target" id="module-modules.files_manager"></span><dl class="py function">
+<dt class="sig sig-object py" id="modules.files_manager.csv_creator">
+<span class="sig-prename descclassname"><span class="pre">modules.files_manager.</span></span><span class="sig-name descname"><span class="pre">csv_creator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">writing_path_input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writing_input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.files_manager.csv_creator" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function will create .csv files</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -185,9 +185,9 @@
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.Module_Test.csv_mixer">
-<span class="sig-prename descclassname"><span class="pre">modules.Module_Test.</span></span><span class="sig-name descname"><span class="pre">csv_mixer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_input1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_input2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writing_path_input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.Module_Test.csv_mixer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Mixes two .csv files. Then, uses <a class="reference internal" href="#modules.Module_Test.csv_creator" title="modules.Module_Test.csv_creator"><code class="xref py py-func docutils literal notranslate"><span class="pre">csv_creator()</span></code></a> to generate a .csv with the mixed files.</p>
+<dt class="sig sig-object py" id="modules.files_manager.csv_mixer">
+<span class="sig-prename descclassname"><span class="pre">modules.files_manager.</span></span><span class="sig-name descname"><span class="pre">csv_mixer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_input1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_input2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writing_path_input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.files_manager.csv_mixer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mixes two .csv files. Then, uses <a class="reference internal" href="#modules.files_manager.csv_creator" title="modules.files_manager.csv_creator"><code class="xref py py-func docutils literal notranslate"><span class="pre">csv_creator()</span></code></a> to generate a .csv with the mixed files.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -200,8 +200,8 @@
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="modules.Module_Test.folder_creator">
-<span class="sig-prename descclassname"><span class="pre">modules.Module_Test.</span></span><span class="sig-name descname"><span class="pre">folder_creator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">options</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.Module_Test.folder_creator" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="modules.files_manager.folder_creator">
+<span class="sig-prename descclassname"><span class="pre">modules.files_manager.</span></span><span class="sig-name descname"><span class="pre">folder_creator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">options</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.files_manager.folder_creator" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a Folder in the current path</p>
 <dl class="field-list simple">
 <dt class="field-odd">Paran options</dt>
@@ -394,6 +394,12 @@ It is recommended to use a dedicated folder to this genome.</p>
 <p class="admonition-title">Warning</p>
 <p>Pay special attention to the <code class="docutils literal notranslate"><span class="pre">max_diff</span></code> argument.</p>
 </div>
+</dd></dl>
+
+<span class="target" id="module-modules.identifiers"></span><dl class="py function">
+<dt class="sig sig-object py" id="modules.identifiers.specific_sequence_extractor">
+<span class="sig-prename descclassname"><span class="pre">modules.identifiers.</span></span><span class="sig-name descname"><span class="pre">specific_sequence_extractor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chromosome_ID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">main_folder_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.identifiers.specific_sequence_extractor" title="Permalink to this definition">¶</a></dt>
+<dd><p>It reads</p>
 </dd></dl>
 
 </section>

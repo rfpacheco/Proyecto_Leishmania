@@ -1,4 +1,3 @@
-
 def boxymcboxface(message):
     ## this function is from ARIBA (https://github.com/sanger-pathogens/ariba)
     ## give credit to them appropiately

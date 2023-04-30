@@ -1,7 +1,8 @@
 __all__ = [
-    "Module_Test",
     "blaster",
-    "aesthetics"
+    "aesthetics",
+    "identifiers",
+    "files_manager"
 ]
 
 from modules import *

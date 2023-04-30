@@ -5,6 +5,8 @@
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
+import os
+import sys
 
 project = 'Leishmania_Project'
 copyright = '2023, Ronny Pacheco'
@@ -12,8 +14,6 @@ author = 'Ronny Pacheco'
 release = '0.1'
 
 # Here it's the location path of my program
-import os
-import sys
 sys.path.insert(0, os.path.abspath("../SIDER_RepetitiveSearcher"))
 
 # -- General configuration ---------------------------------------------------
