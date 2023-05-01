@@ -1,6 +1,12 @@
 import os
 import csv
 import pdb  # For debugging
+from Bio import SeqIO
+from Bio.Seq import Seq
+from Bio.SeqRecord import SeqRecord
+
+# -----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 
 def folder_creator(options):
@@ -72,3 +78,29 @@ def csv_mixer(path_input1, path_input2, writing_path_input):
 
     csv_creator(writing_path_input, csv_mixer_matrix)
 
+    
+# -----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------abs
+
+
+def fasta_creator(path_input, fasta_output_path):
+    matrix_fasta_creator = []
+    numbering = 0
+    with open(path_input, "r") as main_file:
+        reader = csv.reader(main_file, delimiter=",")
+        for row in reader:
+            numbering += +1
+            rec = SeqRecord(
+                    Seq(row[15]),
+                    id="Seq_" + str(numbering) + "_" + row[1] + "_" + row[14],  # Que tenga aqui el sentido es esencial para luego filtrarlos
+                    description="Leishmania infantum " + row[14]
+            )
+            matrix_fasta_creator.append(rec)
+
+    SeqIO.write(matrix_fasta_creator, fasta_output_path, "fasta")
+    print("\nFasta created at:", fasta_output_path)
+
+# fasta_creator(path_input, fasta_output_path)
+
+    # Arg 0: STRING. Directorio del archivo CSV a leer de donde queremos extraer las secuencias FASTA
+    # Arg 1: STRING. Directorio del archivo FASTA que contiene las secuencias del archivo CSV. Recordar terminar en la extension .fasta
