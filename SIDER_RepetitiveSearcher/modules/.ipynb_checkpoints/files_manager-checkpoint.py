@@ -1,6 +1,7 @@
 import os
 import csv
 import pdb  # For debugging
+
 from Bio import SeqIO
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
@@ -78,9 +79,9 @@ def csv_mixer(path_input1, path_input2, writing_path_input):
 
     csv_creator(writing_path_input, csv_mixer_matrix)
 
-    
+
 # -----------------------------------------------------------------------------
-# -----------------------------------------------------------------------------abs
+# -----------------------------------------------------------------------------
 
 
 def fasta_creator(path_input, fasta_output_path):
