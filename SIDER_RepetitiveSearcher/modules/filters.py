@@ -1,11 +1,26 @@
 import csv
 
-from modules.file_manager import csv_creator
+from modules.files_manager import csv_creator
 
 
 # 2)Version mejorada para utilizarlo segun la columna que se desee editar, sea por longitud de las secuencias como por porcentaje de homologia
 
 def filter_by_column(path_input, column, size_filter, writing_path_input):  # Todo STRING menos size_filter
+    """
+    :param path_input: Path to the .csv file we want to filter data.
+    :type path_input: string
+
+    :param column: Can be ``length`` or ``percent``
+
+    :param size_filter:
+    :type size_filter:
+
+    :param writing_path_input:
+    :type writing_path_input:
+
+    :return:
+    :rtype:
+    """
     if column == "length":
         column = 3
     elif column == "percent":
