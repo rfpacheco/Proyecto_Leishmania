@@ -448,6 +448,28 @@ Then, it creates a .csv file  with all the selectes rows in a subfolder in a spe
 </dl>
 </dd></dl>
 
+<span class="target" id="module-modules.filters"></span><dl class="py function">
+<dt class="sig sig-object py" id="modules.filters.filter_by_column">
+<span class="sig-prename descclassname"><span class="pre">modules.filters.</span></span><span class="sig-name descname"><span class="pre">filter_by_column</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size_filter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writing_path_input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.filters.filter_by_column" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function will filter a CSV data depending on <code class="docutils literal notranslate"><span class="pre">length</span></code> (if we want to firlter by sequence length) or <code class="docutils literal notranslate"><span class="pre">percent</span></code> (if we want to filter by identity percent).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path_input</strong> (<em>string</em>) – Path to the .csv file we want to filter data.</p></li>
+<li><p><strong>column</strong> (<em>string</em>) – Can be <code class="docutils literal notranslate"><span class="pre">length</span></code> (if we want to firlter by sequence length) or <code class="docutils literal notranslate"><span class="pre">percent</span></code> (if we want to filter by identity percent)</p></li>
+<li><p><strong>size_filter</strong> (<em>integer</em>) – Number to filter dependint of the <strong>column</strong> argument.</p></li>
+<li><p><strong>writing_path_input</strong> (<em>string</em>) – Path to the CSV file this function will create and save</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A CSV file with the dalta filtered depending on the <strong>column</strong> and <strong>size_filter</strong> argumetns.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>CSV file</p>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
 <div class="section" id="indices-and-tables">
 <h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>

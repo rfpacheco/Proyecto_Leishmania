@@ -1,11 +1,26 @@
 import csv
 
-from modules.file_manager import csv_creator
-
-
-# 2)Version mejorada para utilizarlo segun la columna que se desee editar, sea por longitud de las secuencias como por porcentaje de homologia
+from modules.files_manager import csv_creator
 
 def filter_by_column(path_input, column, size_filter, writing_path_input):  # Todo STRING menos size_filter
+    """
+    This function will filter a CSV data depending on ``length`` (if we want to firlter by sequence length) or ``percent`` (if we want to filter by identity percent).
+
+    :param path_input: Path to the .csv file we want to filter data.
+    :type path_input: string
+
+    :param column: Can be ``length`` (if we want to firlter by sequence length) or ``percent`` (if we want to filter by identity percent)
+    :type column: string
+
+    :param size_filter: Number to filter dependint of the **column** argument.
+    :type size_filter: integer
+
+    :param writing_path_input: Path to the CSV file this function will create and save
+    :type writing_path_input: string
+
+    :return: A CSV file with the dalta filtered depending on the **column** and **size_filter** argumetns.
+    :rtype: CSV file
+    """
     if column == "length":
         column = 3
     elif column == "percent":
@@ -22,10 +37,3 @@ def filter_by_column(path_input, column, size_filter, writing_path_input):  # To
                 if float(row[column]) >= size_filter:  # Necesario para pasar de STRING a FLOAT
                     matrix_filter_by_column.append(row)
     csv_creator(writing_path_input, matrix_filter_by_column)
-
-#filter_by_column(path_input, column, size_filter, writing_path_input)
-
-    #Arg 0: STRING. Directorio del archivo en formato CSV al que queremos filtrar los datos.
-    #Arg 1: STRING. Puede ser "length" o "percent", dependiendo de lo que quereamos filtrar.
-    #Arg 2: INT. Numero que nos indica el minimo para filtrar dependiendo del Arg 1.
-    #Arg 3: STRING. Directorio del archivo en formato CSV en donde guardaremos los resultados del filtrado, recordar poner la extension .csv

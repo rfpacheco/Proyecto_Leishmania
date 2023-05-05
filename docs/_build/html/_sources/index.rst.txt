@@ -26,8 +26,11 @@ Program
 
 .. automodule:: modules.identifiers
    :members:
-   
+
 .. automodule:: modules.seq_modifier
+   :members:
+   
+.. automodule:: modules.filters
    :members:
 
 Indices and tables
