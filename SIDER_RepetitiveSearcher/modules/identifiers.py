@@ -3,7 +3,8 @@ import csv
 
 from modules.files_manager import folder_creator, csv_creator, fasta_creator
 from modules.blaster import blastn_dic, blastn_blaster
-from modules.seq_modifier import specific_sequence_1000nt
+from modules.seq_modifier import specific_sequence_1000nt, specific_sequence_corrected
+from modules.filters import filter_by_column
 
 
 # -----------------------------------------------------------------------------
@@ -74,12 +75,12 @@ def genome_specific_chromosome_main(path_input, chromosome_ID, main_folder_path,
                    Blaster_Output,
                    "85")
 
-    Filter_by_Column(Blaster_Output,
+    filter_by_column(Blaster_Output,
                      "length",
                      100,
                      Blaster_Output)
 
-    Corrected_Sequences = Specific_Sequence_Corrected(Blaster_Output, nucleotides1000_directory, main_folder_path, chromosome_ID)
+    Corrected_Sequences = specific_sequence_corrected(Blaster_Output, nucleotides1000_directory, main_folder_path, chromosome_ID)
 
     Subfamilies_File_Path_Writing = main_folder_path + "/" + chromosome_ID + "/" + chromosome_ID + "_Subfamily.csv"
     Subfamily_Sorter(Blaster_Output, Corrected_Sequences, Subfamilies_File_Path_Writing)

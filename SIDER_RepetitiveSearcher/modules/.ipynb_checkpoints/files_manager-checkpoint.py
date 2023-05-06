@@ -85,6 +85,9 @@ def csv_mixer(path_input1, path_input2, writing_path_input):
 
 
 def fasta_creator(path_input, fasta_output_path):
+    """
+    HAY QUE MODIFICARLO, NECESITO QUE EL NUMERING SEA 01, 02, 03, 04...09, 10, 11. Y no como lo tengo ahora, que es 1, 2, 3, 4, 5...10, 11, 12.
+    """
     matrix_fasta_creator = []
     numbering = 0
     with open(path_input, "r") as main_file:

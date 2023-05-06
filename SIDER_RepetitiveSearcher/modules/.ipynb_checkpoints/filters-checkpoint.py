@@ -2,7 +2,12 @@ import csv
 
 from modules.files_manager import csv_creator
 
-def filter_by_column(path_input, column, size_filter, writing_path_input):  # Todo STRING menos size_filter
+
+# -----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+
+
+def filter_by_column(path_input, column, size_filter, writing_path_input):
     """
     This function will filter a CSV data depending on ``length`` (if we want to firlter by sequence length) or ``percent`` (if we want to filter by identity percent).
 
@@ -21,6 +26,7 @@ def filter_by_column(path_input, column, size_filter, writing_path_input):  # To
     :return: A CSV file with the dalta filtered depending on the **column** and **size_filter** argumetns.
     :rtype: CSV file
     """
+
     if column == "length":
         column = 3
     elif column == "percent":
@@ -36,4 +42,6 @@ def filter_by_column(path_input, column, size_filter, writing_path_input):  # To
             elif column == 2:
                 if float(row[column]) >= size_filter:  # Necesario para pasar de STRING a FLOAT
                     matrix_filter_by_column.append(row)
+
     csv_creator(writing_path_input, matrix_filter_by_column)
+
