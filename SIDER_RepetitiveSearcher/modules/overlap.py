@@ -211,7 +211,7 @@ def Genome_Solap_Main(Genome_Fasta, Naming_Short, Path_Input, Max_Diff, Writing_
                             Minus_End_Matrix.append(int(row[11]))
 
         # Ahora, por si hay solapantes teniendo uno el minimo y otra secuencia el maximo, necesitaremos las dos. Por eso, revisamos sobre las coordenadas de lo anterior (para no repetir) y, buscamos esos solapantes.
-        Solap_Segments = [] # Aqui meteria todos los segmentos solapados pequeñitos
+        Solap_Segments = []  # Aqui meteria todos los segmentos solapados pequeñitos
         Solap_Segments_Plus_Start = []
         Solap_Segments_Plus_End = []
         Solap_Segments_Minus_Start = []
