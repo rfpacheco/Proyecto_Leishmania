@@ -199,6 +199,12 @@
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="modules.files_manager.fasta_creator">
+<span class="sig-prename descclassname"><span class="pre">modules.files_manager.</span></span><span class="sig-name descname"><span class="pre">fasta_creator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fasta_output_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.files_manager.fasta_creator" title="Permalink to this definition">¶</a></dt>
+<dd><p>HAY QUE MODIFICARLO, NECESITO QUE EL NUMERING SEA 01, 02, 03, 04…09, 10, 11. Y no como lo tengo ahora, que es 1, 2, 3, 4, 5…10, 11, 12.</p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="modules.files_manager.folder_creator">
 <span class="sig-prename descclassname"><span class="pre">modules.files_manager.</span></span><span class="sig-name descname"><span class="pre">folder_creator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">options</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.files_manager.folder_creator" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a Folder in the current path</p>
@@ -444,6 +450,35 @@ Then, it creates a .csv file  with all the selectes rows in a subfolder in a spe
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>CSV file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="modules.seq_modifier.specific_sequence_corrected">
+<span class="sig-prename descclassname"><span class="pre">modules.seq_modifier.</span></span><span class="sig-name descname"><span class="pre">specific_sequence_corrected</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nucleotides1000_directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">main_folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chromosome_ID</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.seq_modifier.specific_sequence_corrected" title="Permalink to this definition">¶</a></dt>
+<dd><div class="admonition danger">
+<p class="admonition-title">Danger</p>
+<p>NEED TO MODIFY IT BECAUSE OF SOME ERRORS</p>
+</div>
+<p>The main use of this function is to get the real “coordinates” of the sequence.</p>
+<p>Remember we’ve got first, after the initial BLASNn, sequence expanded to 1000nt. The next part of the program was launching them one against each other to get a BLASTn which can provide us useful information about the real coordinates:</p>
+<p>Now we’ve got the 1000 nt sequences with an aproximade location of where the SIDER2 are. And then, we’ve got the BLASTn (of them against each other) which can provide us with the real coordinates.</p>
+<p>With this, this function will get the real coordinates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path_input</strong> (<em>string</em>) – Path to the CSV file we’ll use to filter data. It’s the result from a BLASTn made between the expanded 1000nt sequences.</p></li>
+<li><p><strong>nucleotides1000_directory</strong> (<em>string</em>) – <em>return</em> result from the function <a class="reference internal" href="#modules.seq_modifier.specific_sequence_1000nt" title="modules.seq_modifier.specific_sequence_1000nt"><code class="xref py py-func docutils literal notranslate"><span class="pre">specific_sequence_1000nt()</span></code></a></p></li>
+<li><p><strong>main_folder_path</strong> (<em>string</em>) – Path where we’ll save the CSV data file to.</p></li>
+<li><p><strong>chromosome_ID</strong> (<em>string</em>) – Identification of the cromosome, e.g., “LinJ.07”</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p></p>
 </dd>
 </dl>
 </dd></dl>

@@ -4,7 +4,8 @@ __all__ = [
     "identifiers",
     "files_manager",
     "seq_modifier",
-    "filters"
+    "filters",
+    "subfamilies_finder"
 ]
 
 from modules import *

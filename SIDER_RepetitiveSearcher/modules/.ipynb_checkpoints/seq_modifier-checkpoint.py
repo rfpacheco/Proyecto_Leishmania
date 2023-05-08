@@ -59,7 +59,7 @@ def specific_sequence_1000nt(path_input, chromosome_ID, main_folder_path):
             elif "minus" in row[14]:
                 seq_length = int(row[10]) - int(row[11])  # This time the rest is inverted compared to "plus". We can as well make abs() instead.
 
-                number_add_length = int((1000 - seq_length)/ 2)
+                number_add_length = int((1000 - seq_length) / 2)
                 new_start = int(row[10]) + number_add_length  # Upside down because its "minus"
                 new_end = int(row[11]) - number_add_length  # Upside down because its "minus"
 
@@ -91,9 +91,34 @@ def specific_sequence_1000nt(path_input, chromosome_ID, main_folder_path):
 
 def specific_sequence_corrected(path_input, nucleotides1000_directory, main_folder_path, chromosome_ID):
     """
-    TENGO QUE MODIFICARLO
+    .. danger::
+       NEED TO MODIFY IT BECAUSE OF SOME ERRORS
+
+    The main use of this function is to get the real "coordinates" of the sequence.
+
+    Remember we've got first, after the initial BLASNn, sequence expanded to 1000nt. The next part of the program was launching them one against each other to get a BLASTn which can provide us useful information about the real coordinates:
+    
+    Now we've got the 1000 nt sequences with an aproximade location of where the SIDER2 are. And then, we've got the BLASTn (of them against each other) which can provide us with the real coordinates.
+    
+    With this, this function will get the real coordinates.
+
+    :param path_input:
+    :type path_input:
+
+    :param nucleotides1000_directory:
+    :type nucleotides1000_directory:
+
+    :param main_folder_path:
+    :type main_folder_path:
+
+    :param chromosome_ID:
+    :type chromosome_ID:
+
+    :return:
+    :rtype:
     """
 
+    # First from the BLASTn (one againts each other), we get the IDs of the sequences.
     names = []
     with open(path_input, "r") as main_file:
         reader = csv.reader(main_file, delimiter=",")
@@ -102,6 +127,7 @@ def specific_sequence_corrected(path_input, nucleotides1000_directory, main_fold
                 names.append(row[0])  # And example would be "Seq_2_LinJ.01_plus"
 
     # -----------------------------------------------------------------------------
+    # Now, we'll get from the BLASTn (one againts each other), the best alignment.
     chr_x_corrected = []
     for query in names:  # For each chromosome ID row[0] in "names"
         start = []

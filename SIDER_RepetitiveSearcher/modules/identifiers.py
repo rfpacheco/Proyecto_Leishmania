@@ -5,6 +5,7 @@ from modules.files_manager import folder_creator, csv_creator, fasta_creator
 from modules.blaster import blastn_dic, blastn_blaster
 from modules.seq_modifier import specific_sequence_1000nt, specific_sequence_corrected
 from modules.filters import filter_by_column
+from modules.subfamilies_finder import subfamily_sorter
 
 
 # -----------------------------------------------------------------------------
@@ -69,33 +70,33 @@ def genome_specific_chromosome_main(path_input, chromosome_ID, main_folder_path,
 
     blastn_dic(fasta_creator_output)
 
-    Blaster_Output = main_folder_path + "/" + chromosome_ID + "/" + chromosome_ID + "_1000nt_Blaster.csv"
+    blaster_output = main_folder_path + "/" + chromosome_ID + "/" + chromosome_ID + "_1000nt_Blaster.csv"
     blastn_blaster(fasta_creator_output,
                    fasta_creator_output,
-                   Blaster_Output,
+                   blaster_output,
                    "85")
 
-    filter_by_column(Blaster_Output,
+    filter_by_column(blaster_output,
                      "length",
                      100,
-                     Blaster_Output)
+                     blaster_output)
 
-    Corrected_Sequences = specific_sequence_corrected(Blaster_Output, nucleotides1000_directory, main_folder_path, chromosome_ID)
+    corrected_sequences = specific_sequence_corrected(blaster_output, nucleotides1000_directory, main_folder_path, chromosome_ID)
 
-    Subfamilies_File_Path_Writing = main_folder_path + "/" + chromosome_ID + "/" + chromosome_ID + "_Subfamily.csv"
-    Subfamily_Sorter(Blaster_Output, Corrected_Sequences, Subfamilies_File_Path_Writing)
+    subfamilies_file_path_writing = main_folder_path + "/" + chromosome_ID + "/" + chromosome_ID + "_Subfamily.csv"
+    subfamily_sorter(blaster_output, corrected_sequences, subfamilies_file_path_writing)
 
-    Second_fasta_creator_output = main_folder_path + "/" + chromosome_ID + "/" + chromosome_ID + "_Corrected.fasta"
-    fasta_creator(Corrected_Sequences, Second_fasta_creator_output)
+    second_fasta_creator_output = main_folder_path + "/" + chromosome_ID + "/" + chromosome_ID + "_Corrected.fasta"
+    fasta_creator(corrected_sequences, second_fasta_creator_output)
 
-    Second_Blaster_Output = main_folder_path + "/" + chromosome_ID + "/" + chromosome_ID + "_BLAST_MAIN.csv"
-    blastn_blaster(Second_fasta_creator_output,
+    second_blaster_output = main_folder_path + "/" + chromosome_ID + "/" + chromosome_ID + "_BLAST_MAIN.csv"
+    blastn_blaster(second_fasta_creator_output,
                    genome_fasta,
-                   Second_Blaster_Output,
+                   second_blaster_output,
                    "60")
 
-    Global_Filters_Main(Second_Blaster_Output,
-                        Second_Blaster_Output,
+    global_filters_main(second_blaster_output,
+                        second_blaster_output,
                         genome_fasta,
                         naming_short,
                         max_diff)
@@ -103,9 +104,9 @@ def genome_specific_chromosome_main(path_input, chromosome_ID, main_folder_path,
 
     CSV_Mixer_Output = main_folder_path + "/" + "MIXER.csv"
     if os.path.isfile(CSV_Mixer_Output) is False:  # #Cuando no existe, se crea
-        CSV_Mixer(path_input, Second_Blaster_Output, CSV_Mixer_Output)  # Para mezclar
+        CSV_Mixer(path_input, second_blaster_output, CSV_Mixer_Output)  # Para mezclar
     else:  # Si existe ya el archivo porque ha sido creado, se cambia el path_input por CSV_Mixer_Output
-        CSV_Mixer(CSV_Mixer_Output, Second_Blaster_Output, CSV_Mixer_Output)
+        CSV_Mixer(CSV_Mixer_Output, second_blaster_output, CSV_Mixer_Output)
 
 #genome_specific_chromosome_main(path_input, chromosome_ID, main_folder_path, genome_fasta, naming_short, max_diff)
 

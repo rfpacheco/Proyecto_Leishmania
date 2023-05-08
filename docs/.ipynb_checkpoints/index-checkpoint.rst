@@ -18,20 +18,26 @@ Program
 .. here I will post the program modules and reStructured Text Anotation
 .. the location of my code is written in config.py in ../SIDER_RepetitiveSearcher
 
-.. automodule:: modules.files_manager
-   :members:
-   
+
 .. automodule:: modules.blaster
    :members:
 
+.. automodule:: modules.files_manager
+   :members:
+   
+.. automodule:: modules.filters
+   :members:
+   
 .. automodule:: modules.identifiers
    :members:
 
 .. automodule:: modules.seq_modifier
    :members:
-   
-.. automodule:: modules.filters
+  
+.. automodule:: modules.subfamilies_finder
    :members:
+   
+
 
 Indices and tables
 ==================
