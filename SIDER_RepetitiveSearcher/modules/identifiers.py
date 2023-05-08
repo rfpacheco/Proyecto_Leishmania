@@ -1,10 +1,10 @@
 import os
 import csv
 
-from modules.files_manager import folder_creator, csv_creator, fasta_creator
+from modules.files_manager import folder_creator, csv_creator, fasta_creator, csv_mixer
 from modules.blaster import blastn_dic, blastn_blaster
 from modules.seq_modifier import specific_sequence_1000nt, specific_sequence_corrected
-from modules.filters import filter_by_column
+from modules.filters import filter_by_column, global_filters_main
 from modules.subfamilies_finder import subfamily_sorter
 
 
@@ -63,6 +63,7 @@ def genome_specific_chromosome_main(path_input, chromosome_ID, main_folder_path,
     # folder_path = new_directories[0]  # Chromosome's directory, i.e., folder_path from return (folder_path, writing_path_input)
     last_output = new_directories[1]  # Chromosome's .csv file inside Chromosome's directory, i.e., writing_path_input from return (folder_path_writing_path_input).
 
+    # -----------------------------------------------------------------------------
     nucleotides1000_directory = specific_sequence_1000nt(last_output, chromosome_ID, main_folder_path)  # Extend sequence to 1000 nt.
 
     fasta_creator_output = main_folder_path + "/" + chromosome_ID + "/" + chromosome_ID + "_1000nt.fasta"
@@ -81,11 +82,14 @@ def genome_specific_chromosome_main(path_input, chromosome_ID, main_folder_path,
                      100,
                      blaster_output)
 
+    # -----------------------------------------------------------------------------
     corrected_sequences = specific_sequence_corrected(blaster_output, nucleotides1000_directory, main_folder_path, chromosome_ID)
 
+    # -----------------------------------------------------------------------------
     subfamilies_file_path_writing = main_folder_path + "/" + chromosome_ID + "/" + chromosome_ID + "_Subfamily.csv"
     subfamily_sorter(blaster_output, corrected_sequences, subfamilies_file_path_writing)
 
+    # -----------------------------------------------------------------------------
     second_fasta_creator_output = main_folder_path + "/" + chromosome_ID + "/" + chromosome_ID + "_Corrected.fasta"
     fasta_creator(corrected_sequences, second_fasta_creator_output)
 
@@ -95,24 +99,26 @@ def genome_specific_chromosome_main(path_input, chromosome_ID, main_folder_path,
                    second_blaster_output,
                    "60")
 
+    # -----------------------------------------------------------------------------
     global_filters_main(second_blaster_output,
                         second_blaster_output,
                         genome_fasta,
                         naming_short,
                         max_diff)
 
+    # -----------------------------------------------------------------------------
+    csv_mixer_output = main_folder_path + "/" + "MIXER.csv"
 
-    CSV_Mixer_Output = main_folder_path + "/" + "MIXER.csv"
-    if os.path.isfile(CSV_Mixer_Output) is False:  # #Cuando no existe, se crea
-        CSV_Mixer(path_input, second_blaster_output, CSV_Mixer_Output)  # Para mezclar
-    else:  # Si existe ya el archivo porque ha sido creado, se cambia el path_input por CSV_Mixer_Output
-        CSV_Mixer(CSV_Mixer_Output, second_blaster_output, CSV_Mixer_Output)
+    if os.path.isfile(csv_mixer_output) is False:  # #Cuando no existe, se crea
+        csv_mixer(path_input, second_blaster_output, csv_mixer_output)  # Para mezclar
+    else:  # Si existe ya el archivo porque ha sido creado, se cambia el path_input por csv_mixer_output
+        csv_mixer(csv_mixer_output, second_blaster_output, csv_mixer_output)
 
-#genome_specific_chromosome_main(path_input, chromosome_ID, main_folder_path, genome_fasta, naming_short, max_diff)
+# genome_specific_chromosome_main(path_input, chromosome_ID, main_folder_path, genome_fasta, naming_short, max_diff)
 
-    #Arg 0: STRING. Directorio del archivo en formato CSV de donde leeremos y filtraremos los datos
-    #Arg 1: STRING. Identificacion del cromosoma, e.g., "LinJ.07"
-    #Arg 2: STRING. Directorio de la carpeta en donde se disponen los resultados del programa
-    #Arg 4: STRING. Directorio del archivo en formato fasta al que queremos leer la cantidad de cromosomas, es el fasta FASTA del genoma entero
-    #Arg 5: STRING. Etiqueta para leer de identificacion y numeracion de cada cromosoma en el archivo CSV. Depende del propio archivo CSV. En el caso de L. infantum es "LinJ"
-    #Arg 6: INT. Numeracion con la que le indicamos el maximo valor de proximidad para las diferentes secuancias cuando tienen que ser agrupadas. MUY IMPORTANTE
+    # Arg 0: STRING. Directorio del archivo en formato CSV de donde leeremos y filtraremos los datos
+    # Arg 1: STRING. Identificacion del cromosoma, e.g., "LinJ.07"
+    # Arg 2: STRING. Directorio de la carpeta en donde se disponen los resultados del programa
+    # Arg 4: STRING. Directorio del archivo en formato fasta al que queremos leer la cantidad de cromosomas, es el fasta FASTA del genoma entero
+    # Arg 5: STRING. Etiqueta para leer de identificacion y numeracion de cada cromosoma en el archivo CSV. Depende del propio archivo CSV. En el caso de L. infantum es "LinJ"
+    # Arg 6: INT. Numeracion con la que le indicamos el maximo valor de proximidad para las diferentes secuancias cuando tienen que ser agrupadas. MUY IMPORTANTE
