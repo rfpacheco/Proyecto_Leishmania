@@ -102,19 +102,19 @@ def specific_sequence_corrected(path_input, nucleotides1000_directory, main_fold
     
     With this, this function will get the real coordinates.
 
-    :param path_input:
-    :type path_input:
+    :param path_input: Path to the CSV file we'll use to filter data. It's the result from a BLASTn made between the expanded 1000nt sequences.
+    :type path_input: string
 
-    :param nucleotides1000_directory:
-    :type nucleotides1000_directory:
+    :param nucleotides1000_directory: *return* result from the function :func:`~specific_sequence_1000nt`
+    :type nucleotides1000_directory: string
 
-    :param main_folder_path:
-    :type main_folder_path:
+    :param main_folder_path: Path where we'll save the CSV data file to.
+    :type main_folder_path: string
 
-    :param chromosome_ID:
-    :type chromosome_ID:
+    :param chromosome_ID: Identification of the cromosome, e.g., "LinJ.07"
+    :type chromosome_ID: string
 
-    :return:
+    :return: 
     :rtype:
     """
 

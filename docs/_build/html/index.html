@@ -169,55 +169,6 @@
 </div>
 <div class="section" id="program">
 <h1>Program<a class="headerlink" href="#program" title="Permalink to this headline">¶</a></h1>
-<span class="target" id="module-modules.files_manager"></span><dl class="py function">
-<dt class="sig sig-object py" id="modules.files_manager.csv_creator">
-<span class="sig-prename descclassname"><span class="pre">modules.files_manager.</span></span><span class="sig-name descname"><span class="pre">csv_creator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">writing_path_input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writing_input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.files_manager.csv_creator" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function will create .csv files</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>writing_path_input</strong> (<em>string</em>) – Path where the .csv file will be created</p></li>
-<li><p><strong>writing_input</strong> (<em>TO BE DONE</em>) – What info we want to add to the .csv file, normally a Matrix/Array 3D</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="modules.files_manager.csv_mixer">
-<span class="sig-prename descclassname"><span class="pre">modules.files_manager.</span></span><span class="sig-name descname"><span class="pre">csv_mixer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_input1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_input2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writing_path_input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.files_manager.csv_mixer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Mixes two .csv files. Then, uses <a class="reference internal" href="#modules.files_manager.csv_creator" title="modules.files_manager.csv_creator"><code class="xref py py-func docutils literal notranslate"><span class="pre">csv_creator()</span></code></a> to generate a .csv with the mixed files.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>path_input1</strong> (<em>string</em>) – Path to the first .csv to mix. It will take the first rows in the final mixed file.</p></li>
-<li><p><strong>path_input2</strong> (<em>string</em>) – Path to the second .csv to mix. It will take rows adther the first .csv.</p></li>
-<li><p><strong>writing_path_input</strong> (<em>string</em>) – path to both .csv files</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="modules.files_manager.fasta_creator">
-<span class="sig-prename descclassname"><span class="pre">modules.files_manager.</span></span><span class="sig-name descname"><span class="pre">fasta_creator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fasta_output_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.files_manager.fasta_creator" title="Permalink to this definition">¶</a></dt>
-<dd><p>HAY QUE MODIFICARLO, NECESITO QUE EL NUMERING SEA 01, 02, 03, 04…09, 10, 11. Y no como lo tengo ahora, que es 1, 2, 3, 4, 5…10, 11, 12.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="modules.files_manager.folder_creator">
-<span class="sig-prename descclassname"><span class="pre">modules.files_manager.</span></span><span class="sig-name descname"><span class="pre">folder_creator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">options</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.files_manager.folder_creator" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a Folder in the current path</p>
-<dl class="field-list simple">
-<dt class="field-odd">Paran options</dt>
-<dd class="field-odd"><p>Name of the folder</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Folder in the current directory</p>
-</dd>
-</dl>
-</dd></dl>
-
 <span class="target" id="module-modules.blaster"></span><dl class="py function">
 <dt class="sig sig-object py" id="modules.blaster.blastn_blaster">
 <span class="sig-prename descclassname"><span class="pre">modules.blaster.</span></span><span class="sig-name descname"><span class="pre">blastn_blaster</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dict_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outfile_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">perc_identity</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.blaster.blastn_blaster" title="Permalink to this definition">¶</a></dt>
@@ -401,6 +352,110 @@ It is recommended to use a dedicated folder to this genome.</p>
 </div>
 </dd></dl>
 
+<span class="target" id="module-modules.files_manager"></span><dl class="py function">
+<dt class="sig sig-object py" id="modules.files_manager.csv_creator">
+<span class="sig-prename descclassname"><span class="pre">modules.files_manager.</span></span><span class="sig-name descname"><span class="pre">csv_creator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">writing_path_input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writing_input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.files_manager.csv_creator" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function will create .csv files</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>writing_path_input</strong> (<em>string</em>) – Path where the .csv file will be created</p></li>
+<li><p><strong>writing_input</strong> (<em>TO BE DONE</em>) – What info we want to add to the .csv file, normally a Matrix/Array 3D</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="modules.files_manager.csv_mixer">
+<span class="sig-prename descclassname"><span class="pre">modules.files_manager.</span></span><span class="sig-name descname"><span class="pre">csv_mixer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_input1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_input2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writing_path_input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.files_manager.csv_mixer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mixes two .csv files. Then, uses <a class="reference internal" href="#modules.files_manager.csv_creator" title="modules.files_manager.csv_creator"><code class="xref py py-func docutils literal notranslate"><span class="pre">csv_creator()</span></code></a> to generate a .csv with the mixed files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path_input1</strong> (<em>string</em>) – Path to the first .csv to mix. It will take the first rows in the final mixed file.</p></li>
+<li><p><strong>path_input2</strong> (<em>string</em>) – Path to the second .csv to mix. It will take rows adther the first .csv.</p></li>
+<li><p><strong>writing_path_input</strong> (<em>string</em>) – path to both .csv files</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="modules.files_manager.fasta_creator">
+<span class="sig-prename descclassname"><span class="pre">modules.files_manager.</span></span><span class="sig-name descname"><span class="pre">fasta_creator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fasta_output_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.files_manager.fasta_creator" title="Permalink to this definition">¶</a></dt>
+<dd><p>HAY QUE MODIFICARLO, NECESITO QUE EL NUMERING SEA 01, 02, 03, 04…09, 10, 11. Y no como lo tengo ahora, que es 1, 2, 3, 4, 5…10, 11, 12.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="modules.files_manager.folder_creator">
+<span class="sig-prename descclassname"><span class="pre">modules.files_manager.</span></span><span class="sig-name descname"><span class="pre">folder_creator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">options</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.files_manager.folder_creator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a Folder in the current path</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paran options</dt>
+<dd class="field-odd"><p>Name of the folder</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Folder in the current directory</p>
+</dd>
+</dl>
+</dd></dl>
+
+<span class="target" id="module-modules.filters"></span><dl class="py function">
+<dt class="sig sig-object py" id="modules.filters.chromosome_filter">
+<span class="sig-prename descclassname"><span class="pre">modules.filters.</span></span><span class="sig-name descname"><span class="pre">chromosome_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.filters.chromosome_filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>With this filter we obtain the labels/titles for each cromosome of our file, e.g., in <strong>Leishmania</strong> case we’ll obtain the labels “LinJ.01”, “LinJ.02”, etc.</p>
+<p>The objective of this function is to be able to correctly name the files since programming languages do not usually admit a non-string format, numbers that start at 0, in this way we can automate their correct labeling, especially for numbers from 01 to 09 .</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path_input</strong> (<em>string</em>) – Path to the <code class="docutils literal notranslate"><span class="pre">.fasta</span></code> file to read.</p></li>
+<li><p><strong>name</strong> (<em>string</em>) – Name to give the results. In <strong>Leishmania</strong>’s case, it’s “LinJ”.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>a python list with the chosen labels</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Pytho List</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="modules.filters.dash_filter">
+<span class="sig-prename descclassname"><span class="pre">modules.filters.</span></span><span class="sig-name descname"><span class="pre">dash_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writing_path_input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.filters.dash_filter" title="Permalink to this definition">¶</a></dt>
+<dd><p>With this function, we’ll filter all the “-” dashes in the sequences.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="modules.filters.filter_by_column">
+<span class="sig-prename descclassname"><span class="pre">modules.filters.</span></span><span class="sig-name descname"><span class="pre">filter_by_column</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size_filter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writing_path_input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.filters.filter_by_column" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function will filter a CSV data depending on <code class="docutils literal notranslate"><span class="pre">length</span></code> (if we want to firlter by sequence length) or <code class="docutils literal notranslate"><span class="pre">percent</span></code> (if we want to filter by identity percent).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path_input</strong> (<em>string</em>) – Path to the .csv file we want to filter data.</p></li>
+<li><p><strong>column</strong> (<em>string</em>) – Can be <code class="docutils literal notranslate"><span class="pre">length</span></code> (if we want to firlter by sequence length) or <code class="docutils literal notranslate"><span class="pre">percent</span></code> (if we want to filter by identity percent)</p></li>
+<li><p><strong>size_filter</strong> (<em>integer</em>) – Number to filter dependint of the <strong>column</strong> argument.</p></li>
+<li><p><strong>writing_path_input</strong> (<em>string</em>) – Path to the CSV file this function will create and save</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A CSV file with the dalta filtered depending on the <strong>column</strong> and <strong>size_filter</strong> argumetns.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>CSV file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="modules.filters.global_filters_main">
+<span class="sig-prename descclassname"><span class="pre">modules.filters.</span></span><span class="sig-name descname"><span class="pre">global_filters_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writing_path_input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">genome_fasta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">naming_short</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_diff</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.filters.global_filters_main" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function mixes every other filter made. Each one writes a CSV which is overwritten every time till the final step.</p>
+</dd></dl>
+
 <span class="target" id="module-modules.identifiers"></span><dl class="py function">
 <dt class="sig sig-object py" id="modules.identifiers.genome_specific_chromosome_main">
 <span class="sig-prename descclassname"><span class="pre">modules.identifiers.</span></span><span class="sig-name descname"><span class="pre">genome_specific_chromosome_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chromosome_ID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">main_folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">genome_fasta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">naming_short</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_diff</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.identifiers.genome_specific_chromosome_main" title="Permalink to this definition">¶</a></dt>
@@ -483,26 +538,10 @@ Then, it creates a .csv file  with all the selectes rows in a subfolder in a spe
 </dl>
 </dd></dl>
 
-<span class="target" id="module-modules.filters"></span><dl class="py function">
-<dt class="sig sig-object py" id="modules.filters.filter_by_column">
-<span class="sig-prename descclassname"><span class="pre">modules.filters.</span></span><span class="sig-name descname"><span class="pre">filter_by_column</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">column</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size_filter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writing_path_input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.filters.filter_by_column" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function will filter a CSV data depending on <code class="docutils literal notranslate"><span class="pre">length</span></code> (if we want to firlter by sequence length) or <code class="docutils literal notranslate"><span class="pre">percent</span></code> (if we want to filter by identity percent).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>path_input</strong> (<em>string</em>) – Path to the .csv file we want to filter data.</p></li>
-<li><p><strong>column</strong> (<em>string</em>) – Can be <code class="docutils literal notranslate"><span class="pre">length</span></code> (if we want to firlter by sequence length) or <code class="docutils literal notranslate"><span class="pre">percent</span></code> (if we want to filter by identity percent)</p></li>
-<li><p><strong>size_filter</strong> (<em>integer</em>) – Number to filter dependint of the <strong>column</strong> argument.</p></li>
-<li><p><strong>writing_path_input</strong> (<em>string</em>) – Path to the CSV file this function will create and save</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>A CSV file with the dalta filtered depending on the <strong>column</strong> and <strong>size_filter</strong> argumetns.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>CSV file</p>
-</dd>
-</dl>
+<span class="target" id="module-modules.subfamilies_finder"></span><dl class="py function">
+<dt class="sig sig-object py" id="modules.subfamilies_finder.subfamily_sorter">
+<span class="sig-prename descclassname"><span class="pre">modules.subfamilies_finder.</span></span><span class="sig-name descname"><span class="pre">subfamily_sorter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">corrected_elements_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writing_path_input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.subfamilies_finder.subfamily_sorter" title="Permalink to this definition">¶</a></dt>
+<dd><p>NEED TO MODIFY IT</p>
 </dd></dl>
 
 </div>

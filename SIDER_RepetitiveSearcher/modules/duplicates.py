@@ -1,6 +1,6 @@
 import csv
 
-from modules.filters import chromosome_IDs
+from modules.filters import chromosome_filter
 from modules.files_manager import csv_creator
 
 
@@ -16,7 +16,7 @@ from modules.files_manager import csv_creator
 def genome_pre_duplicate_filter(genome_fasta, naming_short, path_input, DNA_sense, max_diff):  # Todo STRING menos max_diff
 
     matrix_all_genome = []
-    chromosome_number = chromosome_IDs(genome_fasta, naming_short)  # I obtain a Python list, e.g., ["LinJ.01", "LinJ.02", ...]
+    chromosome_number = chromosome_filter(genome_fasta, naming_short)  # I obtain a Python list, e.g., ["LinJ.01", "LinJ.02", ...]
 
     for chromosome in chromosome_number:  # Aqui nos metemos dentro del cromosoma a buscar.
         location_start = []  # Almacenaremos los START de ese cromosoma

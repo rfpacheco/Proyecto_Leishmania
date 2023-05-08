@@ -1,7 +1,7 @@
 import csv
 import subprocess
 
-from modules.filters import chromosome_IDs
+from modules.filters import chromosome_filter
 from modules.files_manager import csv_creator
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
@@ -175,7 +175,7 @@ def Genome_Solap_Main(Genome_Fasta, Naming_Short, Path_Input, Max_Diff, Writing_
 
     Genome_Solap_Main_Matrix = []
 
-    Chromosome_Number = chromosome_IDs(Genome_Fasta, Naming_Short)
+    Chromosome_Number = chromosome_filter(Genome_Fasta, Naming_Short)
 
     for Chromosome in Chromosome_Number:
 

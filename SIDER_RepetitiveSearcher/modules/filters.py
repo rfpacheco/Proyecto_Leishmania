@@ -9,7 +9,7 @@ from modules.duplicates import genome_duplicate_filter
 # -----------------------------------------------------------------------------
 
 
-def chromosome_IDs(path_input, name):
+def chromosome_filter(path_input, name):
     """
     With this filter we obtain the labels/titles for each cromosome of our file, e.g., in **Leishmania** case we'll obtain the labels "LinJ.01", "LinJ.02", etc.
 
