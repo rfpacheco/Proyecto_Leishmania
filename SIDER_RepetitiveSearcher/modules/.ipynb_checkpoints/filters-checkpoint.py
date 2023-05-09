@@ -4,6 +4,7 @@ from Bio import SeqIO
 
 from modules.files_manager import csv_creator
 from modules.duplicates import genome_duplicate_filter
+from modules.overlap import genome_solap_main
 
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
@@ -124,7 +125,7 @@ def global_filters_main(path_input, writing_path_input, genome_fasta, naming_sho
 
     genome_duplicate_filter(genome_fasta, naming_short, path_input, max_diff, writing_path_input)
 
-    Genome_Solap_Main(genome_fasta, naming_short, path_input, max_diff, writing_path_input)
+    genome_solap_main(genome_fasta, naming_short, path_input, max_diff, writing_path_input)
     # En este ultima ya imprime los resultados finales
 
 # global_filters_main(path_input, writing_path_input, genome_fasta, naming_short, max_diff):

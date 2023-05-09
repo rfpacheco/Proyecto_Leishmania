@@ -4,6 +4,8 @@ import csv
 import shutil
 
 from modules.aesthetics import boxymcboxface  # Some aesthetics function
+from modules.identifiers import genome_specific_chromosome_main
+from modules.filters import global_filters_main
 
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
@@ -233,7 +235,7 @@ def repetitive_blaster(genome_fasta, path_input, folder_path, naming_short, max_
     # -----------------------------------------------------------------------------
     for chromosome_ID in chr_in_objetive:
         # if chromosome_ID != "LinJ.01":  # In case we'll need to delete searches of a special chromosome
-        Genome_Specific_chromosome_Main(path_input,
+        genome_specific_chromosome_main(path_input,
                                         chromosome_ID,
                                         folder_path,
                                         genome_fasta,
@@ -242,17 +244,17 @@ def repetitive_blaster(genome_fasta, path_input, folder_path, naming_short, max_
 
     # -----------------------------------------------------------------------------
     # Y cuando termine creando el archivo MIXER, lo que hago es purificarlo completamente
-    Global_Filters_Main_Output = folder_path + "/MIXER.csv"  # This one's got the call to "blastn_blaster"
-    Global_Filters_Main(Global_Filters_Main_Output,
-                        Global_Filters_Main_Output,
+    global_filters_main_output = folder_path + "/MIXER.csv"  # This one's got the call to "blastn_blaster"
+    global_filters_main(global_filters_main_output,
+                        global_filters_main_output,
                         genome_fasta,
                         naming_short,
                         max_diff)
 
     RUN_SAVER_Output = folder_path + "/RUNS/run_" + str(numbering) + ".csv"
-    shutil.copyfile(Global_Filters_Main_Output, RUN_SAVER_Output)
-    shutil.copyfile(Global_Filters_Main_Output, path_input)  # ## Asi reseteo el Path input con el nuevo documento para lanzarlo todo de nuevo. El path input antiguo ya no existe porque ha sido sobre escrito (aunque se ha guardado en RUNS)
-    os.remove(Global_Filters_Main_Output)  # ##Eliminamos el Mixer, para que luego se cree de nuevo
+    shutil.copyfile(global_filters_main_output, RUN_SAVER_Output)
+    shutil.copyfile(global_filters_main_output, path_input)  # ## Asi reseteo el Path input con el nuevo documento para lanzarlo todo de nuevo. El path input antiguo ya no existe porque ha sido sobre escrito (aunque se ha guardado en RUNS)
+    os.remove(global_filters_main_output)  # ##Eliminamos el Mixer, para que luego se cree de nuevo
 
     # -----------------------------------------------------------------------------
     if numbering == maximun_runs:
