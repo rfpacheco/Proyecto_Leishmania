@@ -1,6 +1,6 @@
 import csv
 
-from modules.filters import chromosome_filter
+# from modules.filters import chromosome_filter  # Don't call -> circular import
 from modules.files_manager import csv_creator
 
 

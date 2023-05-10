@@ -9,25 +9,25 @@ from modules.files_manager import csv_creator
 
 def specific_sequence_1000nt(path_input, chromosome_ID, main_folder_path):
     """
-    This function will expand the selected sequence to 1000 nt and will create a CSV file with it.
+    This function will expand the selected sequences to 1000 nt and will create a CSV file with it. For this, it will use ``blastdbcmd`` from BLAST `Command Line Application User Manual`_
 
     It uses the function :func:`~modules.file_manager.csv_creator`
 
-    :param path_input: Path where the .csv file we'll use to read and filter data is.
+    :param path_input: Path to the main CSV file where data will be filtered. In this case is the output of expanded sequences to 1000nt from :func:`~modules.identifiers.specific_sequence_extractor`.
     :type path_input: string
 
-    :param chromosome_ID: Chromosome identifier, e.g., *LinJ.07*.
-    :type chromosome_ID: string
+    :param chromosome_ID: Chromosome identifier, e.g., *LinJ.07*, which were present more then once in the ``path_input``. See :func:`~modules.blaster.repetitive_blaster` for more information.
+    :type chromosome_ID: member of a python list
 
     :param main_folder_path: Path where the results will be placed. It will create a subfolder with the chromosome_ID name + "_1000nt.csv".
     :type main_folder_path: string
 
-    :return: a csv file with the sufix "_1000nt.csv"
+    :return: a CSV file with the sufix "_1000nt.csv"
     :rtype: CSV file
     """
 
-    chrX_1000nt = []
-    with open(path_input, "r") as main_file:
+    chrX_1000nt = []  # Here, we'll add all the rows from the 1000 nt sequences
+    with open(path_input, "r") as main_file:  # It reads the 1000nt sequence CSV
         reader = csv.reader(main_file, delimiter=",")
 
         for row in reader:
@@ -97,9 +97,9 @@ def specific_sequence_corrected(path_input, nucleotides1000_directory, main_fold
     The main use of this function is to get the real "coordinates" of the sequence.
 
     Remember we've got first, after the initial BLASNn, sequence expanded to 1000nt. The next part of the program was launching them one against each other to get a BLASTn which can provide us useful information about the real coordinates:
-    
+
     Now we've got the 1000 nt sequences with an aproximade location of where the SIDER2 are. And then, we've got the BLASTn (of them against each other) which can provide us with the real coordinates.
-    
+
     With this, this function will get the real coordinates.
 
     :param path_input: Path to the CSV file we'll use to filter data. It's the result from a BLASTn made between the expanded 1000nt sequences.
@@ -114,8 +114,8 @@ def specific_sequence_corrected(path_input, nucleotides1000_directory, main_fold
     :param chromosome_ID: Identification of the cromosome, e.g., "LinJ.07"
     :type chromosome_ID: string
 
-    :return: 
-    :rtype:
+    :return: CSV File with the corrected coordinates of our sequences.
+    :rtype: CSV file
     """
 
     # First from the BLASTn (one againts each other), we get the IDs of the sequences.
@@ -212,10 +212,3 @@ def specific_sequence_corrected(path_input, nucleotides1000_directory, main_fold
     csv_creator(writing_path_input, chr_x_corrected)
 
     return (writing_path_input)
-
-# specific_sequence_corrected(path_input, nucleotides1000_directory, main_folder_path, chromosome_ID)
-
-    # Arg 0: STRING. Directorio del archivo en formato CSV de donde leeremos y filtraremos los datos
-    # Arg 1: Resultado del RETURN de la funcion Specific_sequence_1000nt
-    # Arg 2: STRING. Directorio de la carpeta en donde se disponen los resultados del programa
-    # Arg 3: STRING. Identificacion del cromosoma, e.g., "LinJ.07"

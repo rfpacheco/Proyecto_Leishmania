@@ -1,7 +1,7 @@
 import csv
 import subprocess
 
-from modules.filters import chromosome_filter
+# from modules.filters import chromosome_filter  # Don't call --> ciruclar import
 from modules.files_manager import csv_creator
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------

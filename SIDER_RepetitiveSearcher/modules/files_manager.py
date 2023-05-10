@@ -86,18 +86,30 @@ def csv_mixer(path_input1, path_input2, writing_path_input):
 
 def fasta_creator(path_input, fasta_output_path):
     """
-    HAY QUE MODIFICARLO, NECESITO QUE EL NUMERING SEA 01, 02, 03, 04...09, 10, 11. Y no como lo tengo ahora, que es 1, 2, 3, 4, 5...10, 11, 12.
+    This function will create a FASTA file from the input CSV file. For this it will use the **Biopyton** module.
+
+    :param path_input: Path of the CSV file we want to read to transform it to a FASTA file.
+    :type path_input: string
+
+    :param fasta_output_path: Path to where we want to save the FASTA file.
+    :type fasta_output_path: string
+
+    :return: All the data from the CSV in a FASTA format.
+    :rtype: FASTA File
+
+    .. warning::
+       MUST MODIFY IT, I NEED THE NUMBERING TO BE 01, 02, 03, 04...09, 10, 11. And not how I have it now, which is 1, 2, 3, 4, 5...10, 11, 12.
     """
     matrix_fasta_creator = []
     numbering = 0
     with open(path_input, "r") as main_file:
         reader = csv.reader(main_file, delimiter=",")
         for row in reader:
-            numbering += +1
+            numbering += 1
             rec = SeqRecord(
-                    Seq(row[15]),
-                    id="Seq_" + str(numbering) + "_" + row[1] + "_" + row[14],  # Que tenga aqui el sentido es esencial para luego filtrarlos
-                    description="Leishmania infantum " + row[14]
+                Seq(row[15]),
+                id="Seq_" + str(numbering) + "_" + row[1] + "_" + row[14],  # Que tenga aqui el sentido es esencial para luego filtrarlos
+                description="Leishmania infantum " + row[14]
             )
             matrix_fasta_creator.append(rec)
 

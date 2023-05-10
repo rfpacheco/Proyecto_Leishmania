@@ -1,3 +1,4 @@
+# At the moment this module it's due to be modified
 import csv
 
 from modules.files_manager import csv_creator
@@ -7,11 +8,12 @@ from modules.files_manager import csv_creator
 
 def subfamily_sorter(path_input, corrected_elements_path, writing_path_input):
     """
-    NEED TO MODIFY IT
+    .. warning::
+       Due to be modified
     """
 
     names = []
-    with open(path_input, "r") as main_file:  # ##path_input seria el documento del Blaster
+    with open(path_input, "r") as main_file:  # It opens the 1000nt BALSTn results after "filter_by_column"
         reader = csv.reader(main_file, delimiter=",")
         for row in reader:
             if row[0] not in names:
@@ -31,13 +33,13 @@ def subfamily_sorter(path_input, corrected_elements_path, writing_path_input):
             new_row = [row[0], row[3]]
             for_subfamilies2.append(new_row)
 
-    for row in for_subfamilies2:
-        for row2 in for_subfamilies:
-            if row[0] in row2[0]:
-                row2[3] = row[1]
+    for row_sub2 in for_subfamilies2:
+        for row_sub1 in for_subfamilies:
+            if row_sub2[0] in row_sub1[0]:
+                row_sub1[3] = row_sub2[1]
 
-            if row[0] in row2[1]:
-                row2[4] = row[1]
+            if row_sub2[0] in row_sub1[1]:
+                row_sub1[4] = row_sub2[1]
 
     # Aqui vamos a cambiar el % a valores de 1.
     for_subfamilies3 = []

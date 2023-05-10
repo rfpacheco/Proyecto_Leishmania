@@ -1,11 +1,11 @@
-import pdb # In case of debbuging
+import pdb  # In case of debbuging
 import os
 import csv
 import shutil
 
 from modules.aesthetics import boxymcboxface  # Some aesthetics function
 from modules.identifiers import genome_specific_chromosome_main
-from modules.filters import global_filters_main
+# from modules.filters import global_filters_main
 
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
@@ -17,11 +17,14 @@ def blastn_dic(path_input):
     `Command Line Application User Manual`_ for more information.
 
 
-    The generation of the properly database will be placed in the **.fasta directory**.
-    It is recommended to use a dedicated folder to this genome.
+    The generation of the properly database will be placed in the directory where ``path_input`` is.
+    It is recommended to use a dedicated folder to this FASTA file so the database is written next to it.
 
-    :param path_input: path to where our file genome sequence .fasta is
+    :param path_input: path to a FASTA file.
     :type path_input: string
+
+    :return: a BLAST database.
+    :rtype: Muitiples files (**.nhr**, **.nin**, **.nog**, **.nsd**, **.nsi** and **.nsq** extensions)
     """
 
     try:
@@ -40,20 +43,20 @@ def blastn_blaster(query_path, dict_path, outfile_path, perc_identity):
     This module calls for `blastn` in the BLAST\ :sup:`R` \command line.
     See `Command Line Application User Manual`_ for more information.
 
-    :param query_path: Path to our .fasta query used in BLASTn against our database.
+    :param query_path: Path to our FASTA query used in BLASTn against our database.
     :type query_path: string
 
-    :param dict_path: Path to our database we made with :func:`~blastn_dic`.
+    :param dict_path: Path to the FASTA file ``query_path`` will be launched to. In the same directory should be the BLAST data base created with :func:`~blastn_dic`.
     :type dict_path: string
 
-    :param outfile_path: path where the results will be saved. **Remember to write it with the .csv ending**.
+    :param outfile_path: Path where the results will be saved.
     :type outfile_path: string
 
-    :param perc_identity: Percent oh identity which we want to make the BLASTn
+    :param perc_identity: Percent of sequence identity which we want to make the BLASTn. **Important**.
     :type perc_identity: string
 
-    :return: a .csv file with the results of the BLASTN
-    :rtype: .csv file
+    :return: A CSV file with the results of the BLASTn.
+    :rtype: CSV file
 
 
     .. list-table:: Arguments used in ``blastn``
@@ -178,10 +181,10 @@ def repetitive_blaster(genome_fasta, path_input, folder_path, naming_short, max_
     """
     This function will iterate till a number of ``maximun_runs`` defined.
 
-    :param genome_fasta: Path to our genome sequence in .fasta.
+    :param genome_fasta: Path to our whole genome sequence in .fasta.
     :type genome_fasta: string
 
-    :param path_input: Path to the .csv file where data will be filtered.
+    :param path_input: Path to the main CSV file where data will be filtered. Initially is a CSV file wich was output from :func:`~blastn_blaster` alone to obtain the initial data.
     :type path_input: string
 
     :param folder_path: Path to a folder where the results will be placed. Subfolder will be created with the cromosome names.
