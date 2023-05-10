@@ -70,13 +70,13 @@ def genome_specific_chromosome_main(path_input, chromosome_ID, main_folder_path,
     :param main_folder_path: Path where the results will be placed.
     :type main_folder_path: string
 
-    :param genome_fasta: Path to our whole genome sequence in .fasta.
+    :param genome_fasta: Path to our whole genome sequence in FASTA format.
     :type genome_fasta: string
 
-    :param naming_short: Label needed to read the ID of each cromosome in the .csv file. In the case of **L. infantum** for example, would be *LinJ* since the .csv file IDs are *LinJ.XX*
+    :param naming_short: Label needed to read the ID of each cromosome in the .csv file. In the case of **L. infantum** for example, would be *LinJ* since the .csv file IDs are *LinJ.XX*.
     :type naming_short: string
 
-    :param max_diff: Maximun proxomity value for the different sequences when they have to be grouped. **Important**
+    :param max_diff: Maximun proxomity value for the different sequences when they have to be grouped. **Important**.
     :type max_diff: integer
 
     :return:

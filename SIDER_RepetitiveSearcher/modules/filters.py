@@ -46,7 +46,7 @@ def filter_by_column(path_input, column, size_filter, writing_path_input):
     """
     This function will filter a CSV data depending on ``length`` (if we want to firlter by sequence length) or ``percent`` (if we want to filter by identity percent).
 
-    :param path_input: Path to the CSV file we want to filter data.
+    :param path_input: Path to the CSV file we want to filter data. It's the output file created by :func:`~modules.blaster.blastn_blaster`.
     :type path_input: string
 
     :param column: Can be ``length`` (if we want to firlter by sequence length) or ``percent`` (if we want to filter by identity percent)
@@ -85,12 +85,18 @@ def filter_by_column(path_input, column, size_filter, writing_path_input):
 # -----------------------------------------------------------------------------
 
 
-# 3) Filtrado de los "-" en las secuencias
-
-
-def dash_filter(path_input, writing_path_input):  # Todo son strings
+def dash_filter(path_input, writing_path_input):
     """
-    With this function, we'll filter all the "-" dashes in the sequences.
+    With this function will filter all the "-" dashes in the sequences.
+
+    :param path_input: Path to a CSV file we want to filter the data from. The data came from the output of :func:`~modelos.filters.filter_by_column`.
+    :type path_input: string
+
+    :param writing_path_input: Path to a CSV file where the filtered data will be written.
+    :type writing_path_input: string
+
+    :return: A CSV file with all the "-" dashes filtered.
+    :rtype: CSV file
     """
     matrix_dash_filter = []
     with open(path_input, "r") as main_file:
@@ -101,11 +107,6 @@ def dash_filter(path_input, writing_path_input):  # Todo son strings
 
     csv_creator(writing_path_input, matrix_dash_filter)
 
-# dash_filter(path_input, writing_path_input)
-
-    # Arg 0: STRING. Directorio del archivo en formato CSV al que queremos filtrar los datos. Tiene que estar en STRING.
-    # Arg 1: STRING. Directorio del archivo en formato CSV en donde guardaremos los resultados del filtrado. Tiene que estar en formato STRING.
-
 
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
@@ -115,20 +116,20 @@ def global_filters_main(path_input, writing_path_input, genome_fasta, naming_sho
     """
     This function mixes every other filter made. Each one writes a CSV which is overwritten every time till the final step.
 
-    :param path_input:
-    :type path_input:
+    :param path_input: Path to the CSV file we want to filter data. It's the output file created by :func:`~modules.blaster.blastn_blaster`.
+    :type path_input: string
 
-    :param writing_path_input:
-    :type writing_path_input:
+    :param writing_path_input: Path where the CSV file will be saved.
+    :type writing_path_input: string
 
-    :param genome_fasta:
-    :type genome_fasta:
+    :param genome_fasta: Path to our whole genome sequence in FASTA format.
+    :type genome_fasta: string
 
-    :param naming_short:
-    :type naming_short:
+    :param naming_short: Label needed to read the ID of each cromosome in the .csv file. In the case of **L. infantum** for example, would be *LinJ* since the .csv file IDs are *LinJ.XX*.
+    :type naming_short: string
 
-    :param max_diff:
-    :type max_diff:
+    :param max_diff: Maximun proxomity value for the different sequences when they have to be grouped. **Important**.
+    :type max_diff: intenger
 
     :return:
     :rtype:
@@ -136,9 +137,13 @@ def global_filters_main(path_input, writing_path_input, genome_fasta, naming_sho
 
     column = "length"
     size_filter = 100
+
+    # ArithmeticErrorThis will take name "X" CSV file "_BLAST_MAIN.csv" and it will overwrite it with the same name "X"
     filter_by_column(path_input, column, size_filter, writing_path_input)
 
-    path_input = writing_path_input  # Así le decimos que el archivo de entrada es el de salida del anterior, y que en el mismo, escriba los nuevos datos
+    path_input = writing_path_input  # This way we tell the program the input file "path_input" is the same as the output file of "filter_by_column". Tbh it's not needed, but its like to improve the understanding.
+
+    # This will take name "X" CSV file "_BLAST_MAIN.csv" and it will overwrite it with the same name "X"
     dash_filter(path_input, writing_path_input)
 
     genome_duplicate_filter(genome_fasta, naming_short, path_input, max_diff, writing_path_input)
