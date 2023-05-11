@@ -13,7 +13,19 @@ from modules.overlap import genome_solap_main
 def chromosome_filter(path_input, name):
     """
     With this filter we obtain the labels/titles for each cromosome of our file, e.g., in **Leishmania** case we'll obtain the labels "LinJ.01", "LinJ.02", etc.
+    This filter reads all the sequences in a FASTA file. Then with a prefix ``name``, it adds a numbering in the format ``.XX``, being X the numbers in order for each sequences it finds.
 
+
+    For example, for:
+
+    - ``name = "LinJ"``
+    - A fasta file of 36 sequences:
+
+    The output would be:
+
+    .. code-block:: bash
+
+       ['LinJ.01', 'LinJ.02', 'LinJ.03', 'LinJ.04', 'LinJ.05', 'LinJ.06', 'LinJ.07', 'LinJ.08', 'LinJ.09', 'LinJ.10', 'LinJ.11', 'LinJ.12', 'LinJ.13', 'LinJ.14', 'LinJ.15', 'LinJ.16', 'LinJ.17', 'LinJ.18', 'LinJ.19', 'LinJ.20', 'LinJ.21', 'LinJ.22', 'LinJ.23', 'LinJ.24', 'LinJ.25', 'LinJ.26', 'LinJ.27', 'LinJ.28', 'LinJ.29', 'LinJ.30', 'LinJ.31', 'LinJ.32', 'LinJ.33', 'LinJ.34', 'LinJ.35', 'LinJ.36']
 
     The objective of this function is to be able to correctly name the files since programming languages do not usually admit a non-string format, numbers that start at 0, in this way we can automate their correct labeling, especially for numbers from 01 to 09 .
 
@@ -23,12 +35,12 @@ def chromosome_filter(path_input, name):
     :param name: Name to give the results. In **Leishmania**'s case, it's "LinJ".
     :type name: string
 
-    :return: a python list with the chosen labels
-    :rtype: Pytho List
+    :return: A python list with the chosen labels
+    :rtype: Python list
     """
-    max_chr = len(list(SeqIO.parse(path_input, "fasta")))  # Leemos el archivo fasta y obtenemos su numero de cromosomas.
+    max_chr = len(list(SeqIO.parse(path_input, "fasta")))  # It reads the FASTA file and gets the total number of chromosomes.
     chromosome_number = []
-    main_list = (list(range(1, max_chr + 1)))
+    main_list = (list(range(1, max_chr + 1)))  # We index correctly with "+ 1" since Python starts everython in 0
     for number in main_list:
         number = str(number)
         if len(number) == 1:
@@ -143,9 +155,10 @@ def global_filters_main(path_input, writing_path_input, genome_fasta, naming_sho
 
     path_input = writing_path_input  # This way we tell the program the input file "path_input" is the same as the output file of "filter_by_column". Tbh it's not needed, but its like to improve the understanding.
 
-    # This will take name "X" CSV file "_BLAST_MAIN.csv" and it will overwrite it with the same name "X"
+    # This will take name "X" CSV file "_BLAST_MAIN.csv" and it will overwrite it with the same name "X". So path_input is the same as writing_path_input
     dash_filter(path_input, writing_path_input)
 
+    # Remember "path_input" is the same as "writing_path_input"
     genome_duplicate_filter(genome_fasta, naming_short, path_input, max_diff, writing_path_input)
 
     genome_solap_main(genome_fasta, naming_short, path_input, max_diff, writing_path_input)

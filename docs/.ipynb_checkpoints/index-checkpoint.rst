@@ -28,6 +28,7 @@ Program
    seq_modifier
    files_manager
    filters
+   duplicates
    
 Indices and tables
 ==================

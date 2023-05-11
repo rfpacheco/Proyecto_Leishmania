@@ -8,85 +8,113 @@ from modules.files_manager import csv_creator
 # -----------------------------------------------------------------------------
 
 
-# 1) Este filtro de duplicado ya funcionan a nivel del genoma entero. Se revisan las secuencias de las filas una,y por el cromosoma, sentido de la hebra y agurpaciones, se eliminan las duplicaciones.
+def genome_pre_duplicate_filter(genome_fasta, naming_short, path_input, DNA_sense, max_diff):
+    """
+    This one is a filter for duplications in the whole genome. First we check the neighborhood sequences inside one chromosome (by coordinates) and search for equal sequences insice that neighborhood.
 
-# 1.1) El primero es el filtro para Duplicados, funciona igual que el anterior pero es para todo un genoma y necesita tanto el CSV como el fasta.
+    :param genome_fasta: Path to our whole genome sequence in FASTA format.
+    :type genome_fasta: string
 
+    :param naming_short: Label needed to read the ID of each cromosome in the .csv file. In the case of **L. infantum** for example, would be *LinJ* since the .csv file IDs are *LinJ.XX*.
+    :type naming_short: string
 
-def genome_pre_duplicate_filter(genome_fasta, naming_short, path_input, DNA_sense, max_diff):  # Todo STRING menos max_diff
+    :param path_input: Path to the CSV file we want to filter data. It's the output file created by :func:`~modules.filters.dash_filter` and given by :func:`~modules.filters.genome_duplicate_filter`.
+    :type path_input:
 
+    :param DNA_sense: Be it ``plus`` be it ``minus``, it's used to differentiate the DNA strand.
+    :type DNA_sense: string
+
+    :param max_diff: Maximun proxomity value for the different sequences when they have to be grouped. **Important**.
+    :type max_diff: integer
+
+    :return: All the rows from the CSV file without duplications in a Python matrix.
+    :rtype: A Python matrix
+    """
     matrix_all_genome = []
     chromosome_number = chromosome_filter(genome_fasta, naming_short)  # I obtain a Python list, e.g., ["LinJ.01", "LinJ.02", ...]
 
-    for chromosome in chromosome_number:  # Aqui nos metemos dentro del cromosoma a buscar.
-        location_start = []  # Almacenaremos los START de ese cromosoma
-        with open(path_input, "r") as main_file:
-            reader = csv.reader(main_file, delimiter=",")  # Here we read the CSV file "BLAST_MAIN.csv"
+    for chromosome in chromosome_number:  # For each chromosome
+        location_start = []  # It saves the "Start of alignment"
+        with open(path_input, "r") as main_file:  # Opens CSV file "BLAST_MAIN.csv"
+            reader = csv.reader(main_file, delimiter=",")  # Reads CSV file "BLAST_MAIN.csv"
             for row in reader:
-                if chromosome in row[1]:  # CHROMOSOME FILTER
-                    if DNA_sense in row[14]:  # DNA_sense hay que poner PLUS o MINUS
-                        location_start.append(int(row[10]))  # We save the "Start of alignment in query" from the CSV file.
+                if chromosome in row[1]:  # Chromosome filter
+                    if DNA_sense in row[14]:  # Filter correct DNA sense ("plus" or "minus")
+                        location_start.append(int(row[10]))  # We save the "Start of alignment in query" from the CSV file to "location_start" Python list.
 
             # -----------------------------------------------------------------------------
             matrix_filter = []
-            position_global = []  # #!!!!!MUY IMPORTANTE¡¡¡¡Con esto le decimos que no repita localizaciones, es vital
+            position_global = []  # VERY IMPORTANT! With this we prevent repeated locations. This one will reset for each chromosome in "chromosome_number"
             with open(path_input, "r") as main_file:  # we read the CSV "BLAST_MAIN.csv" again
                 reader = csv.reader(main_file, delimiter=",")
                 for row in reader:
-                    if chromosome in row[1]:  # CHROMOSOME FILTER
-                        if DNA_sense in row[14] and int(row[10]) not in position_global:
-                            # Arriba le hemos dicho que revise las localizaciones en el "position_global", para que no se repita. Se hace aquí porque "position_rec" va cambiando constantemente.
-                            position_rec = []
+                    if chromosome in row[1]:  # Chromosome filter
+                        if DNA_sense in row[14] and int(row[10]) not in position_global:  # Here it will check "position_global" for repeated locations.
+                            position_rec = []  # This one will reset to [] for row of "BLAST_MAIN.csv"
+
                             for position in location_start:
-                                if abs(int(row[10]) - position) < max_diff:  # In this part we make sure we are NEAR our position in the genome. If the "position" is 35000 and row[10] is 35400 and max_diff = 600, then abs(35400-35000)=400 < 600, so we are near.
+                                if abs(int(row[10]) - position) < max_diff:  # We compare this row[10] with each "position" in "location_start"
+                                    # In this part we make sure we are NEAR our position in the genome. If the "position" is 35000 and row[10] is 35400 and max_diff = 600, then abs(35400-35000)=400 < 600, so we are near.
                                     # If position is 35000 and row[10] is 10000, then abs(10000-35000)=25000 > 600, so we are FAR AWAY.
-                                    if position not in position_rec:  # Esta parte es para que en lo que dura una organizacion de "position_rec", no se repitan ningun valor dentro de ella y por consiguiente, dentro del Global
+                                    if position not in position_rec:  # Here we check for repeated locations inside "position_rec", which resets for each chromosome.
+                                        # We add all non-repeated positions near this row[10]
                                         position_rec.append(position)
                                         position_global.append(position)
 
+                            # For a chromosome we've got "position_rec" and "position_global".
                             DNAseq_filter = []
-                            with open(path_input, "r") as main_file:  # Tengo que abrirlo de nuevo para empezar en la primera row siempre
+                            with open(path_input, "r") as main_file:  # Need to open it again to start reading from the first row
                                 reader = csv.reader(main_file, delimiter=",")
                                 for row in reader:
-                                    if chromosome in row[1]:  # CHROMOSOME FILTER
-                                        if int(row[10]) in position_rec:  # Comprobamos si la localizacion de START esta dentro de "position_rec" de este momento -recordar que va cambiando-. Si esta dentro de estas localizaciones, entonces nos centramos en mirar duplicaciones solo dentro de estas localizaciones.
+                                    if chromosome in row[1]:  # Chromosome filter
+                                        if int(row[10]) in position_rec:  # if it's in "position_rec", then we check for duplications, since they are more or less near each other.
+
                                             if row[15] in DNAseq_filter:
-                                                continue  # Si la secuencia esta dentro de nuestra base de datos, el CONTINUE salta el resto del codigo y vuelve al anterior loop FOR, evitando asi añadir duplicados
-                                            else:  # Al no estar la secuencia dentro de nuestra base de datos, se le añade a nuestra base de datos Y a la matrix final global.
+                                                continue  # If the seq is inside our "DNAseq_filter", it will skip the rest of the code and jump back to the last loop "for". This way we avoid adding duplications.
+                                            else:  # If it's not inside "DNAseq_filter", we add it and to "matrix_filter" as well
                                                 DNAseq_filter.append(row[15])
                                                 matrix_filter.append(row)
         matrix_all_genome += matrix_filter
 
     return (matrix_all_genome)
 
-# genome_pre_duplicate_filter(genome_fasta, naming_short, path_input, DNA_sense, max_diff)
 
-    # Arg 0: STRING. Directorio del archivo en formato fasta al que queremos leer la cantidad de cromosomas, es el FASTA del genoma entero
-    # Arg 1: STRING. Etiqueta para leer de identificacion y numeracion de cada cromosoma en el archivo CSV. Depende del propio archivo CSV. En el caso de L. infantum es "LinJ"
-    # Arg 2: STRING. Directorio del archivo en formato CSV de donde leeremos y filtraremos los datos
-    # Arg 3: STRING. Sentido de la hebra, puede ser "plus" o "minus"
-    # Arg 4: INT. Numeracion con la que le indicamos el maximo valor de proximidad para las diferentes secuancias cuando tienen que ser agrupadas. MUY IMPORTANTE
-
-
-# 1.2) Este es el principal:
+# -----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 
 
 def genome_duplicate_filter(genome_fasta, naming_short, path_input, max_diff, writing_path_input):  # Todo STRING menos max_diff
+    """
+    This functions just calls :func:`~modules.duplicates.genome_pre_duplicate_filter` for the *plus* and *minus* DNA strand, unites them in a matrix, and creates a CSV file with it.
 
-    DNA_sense = ["plus", "minus"]
+    :param genome_fasta: Path to our whole genome sequence in FASTA format.
+    :type genome_fasta: string
 
+    :param naming_short: Label needed to read the ID of each cromosome in the .csv file. In the case of **L. infantum** for example, would be *LinJ* since the .csv file IDs are *LinJ.XX*.
+    :type naming_short: string
+
+    :param path_input: Path to the CSV file we want to filter data. It's the output file created by :func:`~modules.filters.dash_filter`.
+    :type path_input:
+
+    :param max_diff: Maximun proxomity value for the different sequences when they have to be grouped. **Important**.
+    :type max_diff: integer
+
+    :param writing_path_input: Path where the CSV file will be saved.
+    :type writing_path_input: string
+
+    :return: A CSV file with all the data filtered without duplications.
+    :rtype: CSV file
+    """
+
+    DNA_sense = ["plus", "minus"]  # To differentiate between "+" and "-" strand
+
+    # We call first the "plus" strand
     matrix_main1 = genome_pre_duplicate_filter(genome_fasta, naming_short, path_input, DNA_sense[0], max_diff)
 
+    # And then the "minus" strand
     matrix_main2 = genome_pre_duplicate_filter(genome_fasta, naming_short, path_input, DNA_sense[1], max_diff)
 
+    # Then we add one matrix after the other
     matrix_main = matrix_main1 + matrix_main2
 
     csv_creator(writing_path_input, matrix_main)
-
-# genome_duplicate_filter(genome_fasta, naming_short, path_input, max_diff, writing_path_input)
-
-    # Arg 0: STRING. Directorio del archivo en formato fasta al que queremos leer la cantidad de cromosomas, es el fasta FASTA del genoma entero
-    # Arg 1: STRING. Etiqueta para leer de identificacion y numeracion de cada cromosoma en el archivo CSV. Depende del propio archivo CSV. En el caso de L. infantum es "LinJ"
-    # Arg 2: STRING. Directorio del archivo en formato CSV de donde leeremos y filtraremos los datos
-    # Arg 3: INT. Numeracion con la que le indicamos el maximo valor de proximidad para las diferentes secuancias cuando tienen que ser agrupadas. MUY IMPORTANTE
-    # Arg 4: STRING. Directorio del archivo en formato CSV en donde guardaremos los resultados del filtrado, Recordar la extension .csv
