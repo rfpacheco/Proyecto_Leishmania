@@ -3,6 +3,8 @@ Module blaster.py
 
 .. automodule:: modules.blaster
    :members:
+   :undoc-members:
+   :show-inheritance:
    
 
 .. References

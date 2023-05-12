@@ -1,9 +1,12 @@
 Module blaster.py
 =================
 
+Let's see it this gets through
+
 .. automodule:: modules.blaster
    :members:
-   
+   :undoc-members:
+   :show-inheritance:
    
 
 .. References
