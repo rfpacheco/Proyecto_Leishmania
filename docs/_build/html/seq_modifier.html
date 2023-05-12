@@ -92,7 +92,7 @@
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="support.html">Support</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Modules:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="blaster.html">Module blaster.py</a></li>
 <li class="toctree-l1"><a class="reference internal" href="aesthetics.html">Module aesthetics.py</a></li>
@@ -100,6 +100,8 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Module seq_modifier.py</a></li>
 <li class="toctree-l1"><a class="reference internal" href="files_manager.html">Module files_manager.py</a></li>
 <li class="toctree-l1"><a class="reference internal" href="filters.html">Module filters.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="duplicates.html">Module duplicates.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overlap.html">Module overlap.py</a></li>
 </ul>
 
             
@@ -177,8 +179,8 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>path_input</strong> (<em>string</em>) – Path to the main CSV file where data will be filtered. In this case is the output of expanded sequences to 1000nt from <code class="xref py py-func docutils literal notranslate"><span class="pre">specific_sequence_extractor()</span></code>.</p></li>
-<li><p><strong>chromosome_ID</strong> (<em>member of a python list</em>) – Chromosome identifier, e.g., <em>LinJ.07</em>, which were present more then once in the <code class="docutils literal notranslate"><span class="pre">path_input</span></code>. See <code class="xref py py-func docutils literal notranslate"><span class="pre">repetitive_blaster()</span></code> for more information.</p></li>
+<li><p><strong>path_input</strong> (<em>string</em>) – Path to the main CSV file where data will be filtered. In this case is the output of expanded sequences to 1000nt from <a class="reference internal" href="identifiers.html#modules.identifiers.specific_sequence_extractor" title="modules.identifiers.specific_sequence_extractor"><code class="xref py py-func docutils literal notranslate"><span class="pre">specific_sequence_extractor()</span></code></a>.</p></li>
+<li><p><strong>chromosome_ID</strong> (<em>member of a python list</em>) – Chromosome identifier, e.g., <em>LinJ.07</em>, which were present more then once in the <code class="docutils literal notranslate"><span class="pre">path_input</span></code>. See <a class="reference internal" href="blaster.html#modules.blaster.repetitive_blaster" title="modules.blaster.repetitive_blaster"><code class="xref py py-func docutils literal notranslate"><span class="pre">repetitive_blaster()</span></code></a> for more information.</p></li>
 <li><p><strong>main_folder_path</strong> (<em>string</em>) – Path where the results will be placed. It will create a subfolder with the chromosome_ID name + “_1000nt.csv”.</p></li>
 </ul>
 </dd>
