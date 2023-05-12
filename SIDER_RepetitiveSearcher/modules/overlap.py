@@ -183,6 +183,21 @@ def genome_solap_by_pairs(rows_to_filter):  # Su argumento es un ARRAY 3D
 # 1.5)Este es el principal --> utiliza todos los de arriba y le lleva chromosome_rows
 def genome_solap_main(genome_fasta, naming_short, path_input, max_diff, writing_path_input):  # Todo STRING menos max_diff
     """
+
+    :param genome_fasta:
+    :type genome_fasta:
+
+    :param naming_short:
+    :type naming_short:
+
+    :param path_input:
+    :type path_input:
+
+    :param max_diff:
+    :type max_diff:
+
+    :param writing_path_input:
+    :type writing_path_input:
     """
     genome_solap_main_matrix = []
 
