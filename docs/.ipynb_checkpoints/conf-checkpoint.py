@@ -27,6 +27,8 @@ extensions = [
     'sphinx.ext.napoleon',
 ]
 
+autodoc_mock_imports = ["biopython", "Bio"]
+
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store', ".env/*",
                     ".ipynb_checkpoints/*"]
