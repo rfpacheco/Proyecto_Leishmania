@@ -1,7 +1,13 @@
 __all__ = [
-    "Module_Test",
     "blaster",
-    "aesthetics"
+    "aesthetics",
+    "identifiers",
+    "files_manager",
+    "seq_modifier",
+    "filters",
+    "subfamilies_finder",
+    "duplicates",
+    "overlap"
 ]
 
 from modules import *

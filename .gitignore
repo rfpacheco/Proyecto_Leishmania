@@ -1,1 +1,4 @@
 .virtual_documents/SIDER_RepetitiveSearcher/Main_Test1.ipynb
+.ipynb_checkpoints/*
+SIDER_RepetitiveSearcher/modules/.ipynb_checkpoints
+

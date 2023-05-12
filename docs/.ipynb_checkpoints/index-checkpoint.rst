@@ -18,13 +18,18 @@ Program
 .. here I will post the program modules and reStructured Text Anotation
 .. the location of my code is written in config.py in ../SIDER_RepetitiveSearcher
 
-
-.. automodule:: modules.Module_Test
-   :members:
-
-.. automodule:: modules.blaster
-   :members:
-
+.. toctree::
+   :maxdepth: 3
+   :caption: Contents:
+   
+   blaster
+   aesthetics
+   identifiers
+   seq_modifier
+   files_manager
+   filters
+   duplicates
+   
 Indices and tables
 ==================
 
@@ -33,10 +38,5 @@ Indices and tables
 * :ref:`search`
 
 
-.. References:
+.. _ARIBA GitHub: https://github.com/sanger-pathogens/ariba
 
-.. _Command Line Application User Manual: https://www.ncbi.nlm.nih.gov/books/NBK279690
-
-.. _world_size info: https://www.metagenomics.wiki/tools/blast/default-word-size
-
-.. _Metagenomics BLASTn manual: https://www.metagenomics.wiki/tools/blast/blastn-output-format-6s
