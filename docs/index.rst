@@ -13,14 +13,14 @@ Welcome to Leishmania_Project's documentation!
    install
    support
    
-Program
+Modules
 =======
 .. here I will post the program modules and reStructured Text Anotation
 .. the location of my code is written in config.py in ../SIDER_RepetitiveSearcher
 
 .. toctree::
    :maxdepth: 3
-   :caption: Contents:
+   :caption: Modules:
    
    blaster
    aesthetics
@@ -29,6 +29,7 @@ Program
    files_manager
    filters
    duplicates
+   overlap
    
 Indices and tables
 ==================

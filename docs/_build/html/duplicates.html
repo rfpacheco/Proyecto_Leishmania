@@ -41,6 +41,7 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Module overlap.py" href="overlap.html" />
     <link rel="prev" title="Module filters.py" href="filters.html" /> 
 </head>
 
@@ -100,6 +101,7 @@
 <li class="toctree-l1"><a class="reference internal" href="files_manager.html">Module files_manager.py</a></li>
 <li class="toctree-l1"><a class="reference internal" href="filters.html">Module filters.py</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Module duplicates.py</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overlap.html">Module overlap.py</a></li>
 </ul>
 
             
@@ -195,7 +197,7 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="modules.duplicates.genome_pre_duplicate_filter">
 <span class="sig-prename descclassname"><span class="pre">modules.duplicates.</span></span><span class="sig-name descname"><span class="pre">genome_pre_duplicate_filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">genome_fasta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">naming_short</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DNA_sense</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_diff</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.duplicates.genome_pre_duplicate_filter" title="Permalink to this definition">¶</a></dt>
-<dd><p>This one is a filter for duplications in the whole genome. First we check the sequences one by one and depending on the chromosome and the DNA sense. It groups then by near placement and continues filtering the duplications.</p>
+<dd><p>This one is a filter for duplications in the whole genome. First we check the neighborhood sequences inside one chromosome (by coordinates) and search for equal sequences insice that neighborhood.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -223,6 +225,7 @@
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="overlap.html" class="btn btn-neutral float-right" title="Module overlap.py" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
         <a href="filters.html" class="btn btn-neutral float-left" title="Module filters.py" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
