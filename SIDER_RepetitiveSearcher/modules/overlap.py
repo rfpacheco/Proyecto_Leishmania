@@ -89,6 +89,15 @@ def genome_solap_location_grouping(chromosome_rows, DNA_sense, max_diff):  # Tod
 # 1.3)Aqui obtenemos los minimos y maximos dependiendo de la hebra que tengamos. Se usa la funcion anterior y le impone el Genome_Rows
 def genome_solap_minmax(chromosome_rows, max_diff):  # Todo STRING menos max_diff
     """
+    
+    :param chromosome_rows: Given by :func:`~modules.overlap.genome_solap_main`. It's a Python list with all the rows from a CSV of one specific chromosome.
+    :type chromosome_rows: python list
+    
+    :param max_diff: Maximun proxomity value for the different sequences when they have to be grouped. **Important**.
+    :type max_diff: integer
+    
+    :return:
+    :rtype:
     """
     plus = genome_solap_location_grouping(chromosome_rows, "plus", max_diff)
     minus = genome_solap_location_grouping(chromosome_rows, "minus", max_diff)
@@ -184,34 +193,32 @@ def genome_solap_by_pairs(rows_to_filter):  # Su argumento es un ARRAY 3D
 def genome_solap_main(genome_fasta, naming_short, path_input, max_diff, writing_path_input):  # Todo STRING menos max_diff
     """
 
-    :param genome_fasta:
-    :type genome_fasta:
+    :param genome_fasta: Path to our whole genome sequence in FASTA format.
+    :type genome_fasta: string
 
-    :param naming_short:
-    :type naming_short:
+    :param naming_short: Label needed to read the ID of each cromosome in the .csv file. In the case of **L. infantum** for example, would be *LinJ* since the .csv file IDs are *LinJ.XX*.
+    :type naming_short: string
 
-    :param path_input:
+    :param path_input: Path to the CSV file we want to filter data. It's the output file created by :func:`~modules.blaster.blastn_blaster` and given here by :func:`modules.filters.global_filters_main`.
     :type path_input:
 
-    :param max_diff:
-    :type max_diff:
+    :param max_diff: Maximun proxomity value for the different sequences when they have to be grouped. **Important**.
+    :type max_diff: intenger
 
-    :param writing_path_input:
-    :type writing_path_input:
+    :param writing_path_input: Path where the CSV file will be saved.
+    :type writing_path_input: string
     """
     genome_solap_main_matrix = []
-
+    # Here we get the names for the sequences, e.g., "LinJ.01" for chromosome 1
     chromosome_number = chromosome_filter(genome_fasta, naming_short)
-
+    
     for chromosome in chromosome_number:
-
         solap_main_matrix = []
-
         chromosome_rows = []  # ESENCIAL PARA LA PRIMERA DEFINICION A LA QUE SE LLAMA. Tiene que ir antes de minmax
-        with open(path_input, "r") as main_file:
+        with open(path_input, "r") as main_file:  # We read the CSV "_BLAST_MAIN.csv" 
             reader = csv.reader(main_file, delimiter=",")
             for row in reader:
-                if chromosome in row[1]:  # chromosome FILTER
+                if chromosome in row[1]:  # chromosome filter
                     chromosome_rows.append(row)
 
         minmax = genome_solap_minmax(chromosome_rows, max_diff)  # Aqui metemos los minimos y maximos anteriores en n array 3D. [0] --> Plus_min | [1] --> Plus_max | [2] --> Minus_max | [3] --> Minus_min
