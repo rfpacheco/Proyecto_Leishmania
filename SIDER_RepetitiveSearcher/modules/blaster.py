@@ -166,7 +166,6 @@ def blastn_blaster(query_path, dict_path, outfile_path, perc_identity):
 
     try:
         boxymcboxface("BLASTn searcher initiated")
-        pdb.set_trace()
         os.system("blastn -word_size 15 -query "
                   + query_path + " -db "
                   + dict_path + " -out "
