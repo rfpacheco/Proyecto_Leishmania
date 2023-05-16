@@ -27,9 +27,11 @@ def blastn_dic(path_input):
     :rtype: Muitiples files (**.nhr**, **.nin**, **.nog**, **.nsd**, **.nsi** and **.nsq** extensions)
     """
 
+    # Remember is "path.input.dic_path" for "argparse".
     try:
         boxymcboxface("BLASTn Database creator started")
-        os.system("makeblastdb -in " + path_input.dic_path + " -dbtype nucl -parse_seqids")
+        # pdb.set_trace()
+        os.system("makeblastdb -in " + path_input + " -dbtype nucl -parse_seqids")
         print("\nBlast Dictionary created in", path_input)
     except Exception:
         print("\nError: Blast Dictionary couldn't be created")
@@ -49,7 +51,7 @@ def blastn_blaster(query_path, dict_path, outfile_path, perc_identity):
     :param dict_path: Path to the FASTA file ``query_path`` will be launched to. In the same directory should be the BLAST data base created with :func:`~blastn_dic`.
     :type dict_path: string
 
-    :param outfile_path: Path where the results will be saved.
+    :param outfile_path: Path where the results will be saved. Name the whole file, not only the path.
     :type outfile_path: string
 
     :param perc_identity: Percent of sequence identity which we want to make the BLASTn. **Important**.
@@ -164,11 +166,12 @@ def blastn_blaster(query_path, dict_path, outfile_path, perc_identity):
 
     try:
         boxymcboxface("BLASTn searcher initiated")
-        os.system("blastn -word_size 28 -query "
+        pdb.set_trace()
+        os.system("blastn -word_size 15 -query "
                   + query_path + " -db "
                   + dict_path + " -out "
                   + outfile_path + " -perc_identity "
-                  + perc_identity + " -outfmt '10 qseqid sseqid pident length qlen slen mismatch gapopen qstart qend sstart send evalue bitscore sstrand sseq'")
+                  + str(perc_identity) + " -outfmt '10 qseqid sseqid pident length qlen slen mismatch gapopen qstart qend sstart send evalue bitscore sstrand sseq'")
         print("\nBlaster succesful", outfile_path, "created.")
     except Exception:
         print("\nError: Blaster couldn't be loaded, somthing happened")

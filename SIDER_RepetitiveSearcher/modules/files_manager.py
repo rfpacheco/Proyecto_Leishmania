@@ -20,7 +20,7 @@ def folder_creator(options):
     :returns: Folder in the current directory
     """
     pdb.set_trace()  # Debugging mark
-    options = str(options.file_name)
+    options = str(options)  # "options.file_name" for argparse
     if not os.path.exists(options):
         os.mkdir(options)
         print("\nDirectory", options, "created at:\n",
