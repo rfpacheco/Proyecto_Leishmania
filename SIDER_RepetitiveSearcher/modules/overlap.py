@@ -122,7 +122,7 @@ def genome_solap_minmax(chromosome_rows, max_diff):  # Todo STRING menos max_dif
 # -----------------------------------------------------------------------------
 
 
-def genome_solap_by_pairs(rows_to_filter):
+def genome_solap_by_pairs(rows_to_filter, genome_fasta):
     """
     Partials overlaps will be filtered and joined.
 
@@ -162,7 +162,7 @@ def genome_solap_by_pairs(rows_to_filter):
             max_end = max(sequence_end)
             seq_length = str(int(max_end) - int(min_start) + 1)
 
-            seq = subprocess.check_output("blastdbcmd -db ./AA_Archivos/L_infantum_ALL_36Chr.fasta -entry "
+            seq = subprocess.check_output("blastdbcmd -db " + genome_fasta + " -entry "
                                           + first[1] + " -range " + min_start + "-" + max_end
                                           + " -strand plus -outfmt %s",
                                           shell=True,
@@ -178,7 +178,7 @@ def genome_solap_by_pairs(rows_to_filter):
             min_end = min(sequence_end)
             seq_length = str(int(max_start) - int(min_end) + 1)
 
-            seq = subprocess.check_output("blastdbcmd -db ./AA_Archivos/L_infantum_ALL_36Chr.fasta -entry "
+            seq = subprocess.check_output("blastdbcmd -db " + genome_fasta + " -entry "
                                           + first[1] + " -range " + min_end + "-" + max_start
                                           + " -strand minus -outfmt %s",
                                           shell=True,
@@ -289,7 +289,7 @@ def genome_solap_main(genome_fasta, naming_short, path_input, max_diff, writing_
 
         # Here 4 list of overlaps for each posible strand and "stars" or "end"
         # And one list with all the rows representing those 4 lists.
-        solap_by_pairs_definitive = genome_solap_by_pairs(solap_segments)  # Very IMPORTANT.
+        solap_by_pairs_definitive = genome_solap_by_pairs(solap_segments, genome_fasta)  # Very IMPORTANT.
         solap_main_matrix += solap_by_pairs_definitive
 
         genome_solap_main_matrix += solap_main_matrix

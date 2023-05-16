@@ -89,7 +89,7 @@ def specific_sequence_1000nt(path_input, chromosome_ID, main_folder_path, genome
 # 3) Corrector se secuencias, obtendra las secuencias originales.
 
 
-def specific_sequence_corrected(path_input, nucleotides1000_directory, main_folder_path, chromosome_ID):
+def specific_sequence_corrected(path_input, nucleotides1000_directory, main_folder_path, chromosome_ID, genome_fasta):
     """
     .. danger::
        NEED TO MODIFY IT BECAUSE OF SOME ERRORS
@@ -178,7 +178,7 @@ def specific_sequence_corrected(path_input, nucleotides1000_directory, main_fold
                             new_start = int(row[10]) + min_start - 1
                             new_end = int(row[11]) - x
 
-                            seq = subprocess.check_output("blastdbcmd -db ./AA_Archivos/L_infantum_ALL_36Chr.fasta -entry "
+                            seq = subprocess.check_output("blastdbcmd -db " + genome_fasta + " -entry "
                                                           + row[1] + " -range " + str(new_start) + "-" + str(new_end)
                                                           + " -strand plus -outfmt %s",
                                                           shell=True,
@@ -194,7 +194,7 @@ def specific_sequence_corrected(path_input, nucleotides1000_directory, main_fold
                             new_start = int(row[10]) - min_start + 1
                             new_end = int(row[11]) + x
 
-                            seq = subprocess.check_output("blastdbcmd -db ./AA_Archivos/L_infantum_ALL_36Chr.fasta -entry " 
+                            seq = subprocess.check_output("blastdbcmd -db " + genome_fasta + " -entry "
                                                           + row[1] + " -range " + str(new_end) + "-" + str(new_start) 
                                                           + " -strand minus -outfmt %s", 
                                                           shell=True, 

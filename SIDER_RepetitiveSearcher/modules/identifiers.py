@@ -107,7 +107,7 @@ def genome_specific_chromosome_main(path_input, chromosome_ID, main_folder_path,
                      blaster_output)
 
     # -----------------------------------------------------------------------------
-    corrected_sequences = specific_sequence_corrected(blaster_output, nucleotides1000_directory, main_folder_path, chromosome_ID)
+    corrected_sequences = specific_sequence_corrected(blaster_output, nucleotides1000_directory, main_folder_path, chromosome_ID, genome_fasta)
 
     # -----------------------------------------------------------------------------
     # This module doesn't work --> need to be redone
