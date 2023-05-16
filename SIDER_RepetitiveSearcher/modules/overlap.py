@@ -200,7 +200,7 @@ def genome_solap_main(genome_fasta, naming_short, path_input, max_diff, writing_
     Will call a variety of functions with the purpose of filtering overlaps in the data.
 
 
-    It uses :func:``~modules.filters.chromosome_filter`
+    It uses :func:`~modules.filters.chromosome_filter`
 
     :param genome_fasta: Path to our whole genome sequence in FASTA format.
     :type genome_fasta: string

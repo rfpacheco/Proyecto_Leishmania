@@ -59,7 +59,7 @@ def specific_sequence_extractor(path_input, chromosome_ID, main_folder_path):
 
 def genome_specific_chromosome_main(path_input, chromosome_ID, main_folder_path, genome_fasta, naming_short, max_diff):
     """
-    Need to write it
+    Main program, which calls the iterative blaster and all the filters needed.
 
     :param path_input: Path to the main CSV file where data will be filtered. Initially is a CSV file wich was output from :func:`~modules.blaster.blastn_blaster` alone to obtain the initial data.
     :type path_input: string
@@ -79,8 +79,8 @@ def genome_specific_chromosome_main(path_input, chromosome_ID, main_folder_path,
     :param max_diff: Maximun proxomity value for the different sequences when they have to be grouped. **Important**.
     :type max_diff: integer
 
-    :return:
-    :rtype:
+    :return: A CSV file with all the data filtered
+    :rtype: CSV file
     """
 
     new_directories = specific_sequence_extractor(path_input, chromosome_ID, main_folder_path)  # We get a .csv with the specified chromosome_ID.
@@ -134,16 +134,7 @@ def genome_specific_chromosome_main(path_input, chromosome_ID, main_folder_path,
     # -----------------------------------------------------------------------------
     csv_mixer_output = main_folder_path + "/" + "MIXER.csv"
 
-    if os.path.isfile(csv_mixer_output) is False:  # #Cuando no existe, se crea
-        csv_mixer(path_input, second_blaster_output, csv_mixer_output)  # Para mezclar
-    else:  # Si existe ya el archivo porque ha sido creado, se cambia el path_input por csv_mixer_output
+    if os.path.isfile(csv_mixer_output) is False:  # When it doesn't exist, we create it
+        csv_mixer(path_input, second_blaster_output, csv_mixer_output)  # To mix it
+    else:  # If the file already exist (already been created), the path changes to "csv_mixer_outpu"
         csv_mixer(csv_mixer_output, second_blaster_output, csv_mixer_output)
-
-# genome_specific_chromosome_main(path_input, chromosome_ID, main_folder_path, genome_fasta, naming_short, max_diff)
-
-    # Arg 0: STRING. Directorio del archivo en formato CSV de donde leeremos y filtraremos los datos
-    # Arg 1: STRING. Identificacion del cromosoma, e.g., "LinJ.07"
-    # Arg 2: STRING. Directorio de la carpeta en donde se disponen los resultados del programa
-    # Arg 4: STRING. Directorio del archivo en formato fasta al que queremos leer la cantidad de cromosomas, es el fasta FASTA del genoma entero
-    # Arg 5: STRING. Etiqueta para leer de identificacion y numeracion de cada cromosoma en el archivo CSV. Depende del propio archivo CSV. En el caso de L. infantum es "LinJ"
-    # Arg 6: INT. Numeracion con la que le indicamos el maximo valor de proximidad para las diferentes secuancias cuando tienen que ser agrupadas. MUY IMPORTANTE
