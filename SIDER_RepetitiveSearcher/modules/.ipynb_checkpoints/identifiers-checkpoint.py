@@ -88,7 +88,7 @@ def genome_specific_chromosome_main(path_input, chromosome_ID, main_folder_path,
     last_output = new_directories[1]  # Chromosome's .csv file inside Chromosome's directory, i.e., writing_path_input from return (folder_path, writing_path_input).
 
     # -----------------------------------------------------------------------------
-    nucleotides1000_directory = specific_sequence_1000nt(last_output, chromosome_ID, main_folder_path)  # Extend sequence to 1000 nt.
+    nucleotides1000_directory = specific_sequence_1000nt(last_output, chromosome_ID, main_folder_path, genome_fasta)  # Extend sequence to 1000 nt.
 
     fasta_creator_output = main_folder_path + "/" + chromosome_ID + "/" + chromosome_ID + "_1000nt.fasta"
     fasta_creator(nucleotides1000_directory, fasta_creator_output)

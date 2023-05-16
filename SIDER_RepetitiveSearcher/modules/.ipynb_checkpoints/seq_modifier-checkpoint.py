@@ -7,7 +7,7 @@ from modules.files_manager import csv_creator
 # -----------------------------------------------------------------------------
 
 
-def specific_sequence_1000nt(path_input, chromosome_ID, main_folder_path):
+def specific_sequence_1000nt(path_input, chromosome_ID, main_folder_path, genome_fasta):
     """
     This function will expand the selected sequences to 1000 nt and will create a CSV file with it. For this, it will use ``blastdbcmd`` from BLAST `Command Line Application User Manual`_
 
@@ -41,7 +41,7 @@ def specific_sequence_1000nt(path_input, chromosome_ID, main_folder_path):
                 new_end = int(row[11]) + number_add_length  # New coordinates for End
 
                 # Now we select the sequence with new coordinates with "blastdbcmd"
-                seq = subprocess.check_output("blastdbcmd -db ./AA_Archivos/L_infantum_ALL_36Chr.fasta -entry "
+                seq = subprocess.check_output("blastdbcmd -db " + genome_fasta + " -entry "
                                               + row[1] + " -range " + str(new_start) + "-" + str(new_end)
                                               + " -strand plus -outfmt %s",
                                               shell=True,
@@ -63,7 +63,7 @@ def specific_sequence_1000nt(path_input, chromosome_ID, main_folder_path):
                 new_start = int(row[10]) + number_add_length  # Upside down because its "minus"
                 new_end = int(row[11]) - number_add_length  # Upside down because its "minus"
 
-                seq = subprocess.check_output("blastdbcmd -db ./AA_Archivos/L_infantum_ALL_36Chr.fasta -entry "
+                seq = subprocess.check_output("blastdbcmd -db " + genome_fasta + " -entry "
                                               + row[1] + " -range " + str(new_end) + "-" + str(new_start)
                                               + " -strand minus -outfmt %s",
                                               shell=True,
