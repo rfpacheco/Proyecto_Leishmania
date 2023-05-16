@@ -12,7 +12,7 @@ from Bio.SeqRecord import SeqRecord
 
 def folder_creator(options):
     """
-    Creates a Folder in the current path
+    Creates a Folder in the current path.
 
     :paran options: Name of the folder
     :type options: string
@@ -114,8 +114,3 @@ def fasta_creator(path_input, fasta_output_path):
 
     SeqIO.write(matrix_fasta_creator, fasta_output_path, "fasta")
     print("\nFasta created at:", fasta_output_path)
-
-# fasta_creator(path_input, fasta_output_path)
-
-    # Arg 0: STRING. Directorio del archivo CSV a leer de donde queremos extraer las secuencias FASTA
-    # Arg 1: STRING. Directorio del archivo FASTA que contiene las secuencias del archivo CSV. Recordar terminar en la extension .fasta

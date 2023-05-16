@@ -12,6 +12,7 @@ Welcome to Leishmania_Project's documentation!
    
    install
    support
+   maps
    
 Modules
 =======

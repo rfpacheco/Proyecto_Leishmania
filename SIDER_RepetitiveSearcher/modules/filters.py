@@ -143,8 +143,8 @@ def global_filters_main(path_input, writing_path_input, genome_fasta, naming_sho
     :param max_diff: Maximun proxomity value for the different sequences when they have to be grouped. **Important**.
     :type max_diff: intenger
 
-    :return:
-    :rtype:
+    :return: All data filtered without duplications and overlaps.
+    :rtype: CSV file
     """
 
     column = "length"
@@ -160,14 +160,6 @@ def global_filters_main(path_input, writing_path_input, genome_fasta, naming_sho
 
     # Remember "path_input" is the same as "writing_path_input"
     genome_duplicate_filter(genome_fasta, naming_short, path_input, max_diff, writing_path_input)
-
+    
+    # Now let's work with the overlaps
     genome_solap_main(genome_fasta, naming_short, path_input, max_diff, writing_path_input)
-    # En este ultima ya imprime los resultados finales
-
-# global_filters_main(path_input, writing_path_input, genome_fasta, naming_short, max_diff):
-
-    # Arg 0: STRING. Directorio del archivo en formato CSV de donde leeremos y filtraremos los datos
-    # Arg 1: STRING. Directorio del archivo en formato CSV en donde guardaremos los resultados del filtrado, Recordar la extension .csv
-    # Arg 2: STRING. Directorio del archivo en formato fasta al que queremos leer la cantidad de cromosomas, es el fasta FASTA del genoma entero
-    # Arg 3: STRING. Etiqueta para leer de identificacion y numeracion de cada cromosoma en el archivo CSV. Depende del propio archivo CSV. En el caso de L. infantum es "LinJ"
-    # Arg 4: INT. Numeracion con la que le indicamos el maximo valor de proximidad para las diferentes secuancias cuando tienen que ser agrupadas. MUY IMPORTANTE
