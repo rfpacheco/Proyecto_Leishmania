@@ -3,24 +3,19 @@ import subprocess
 
 # from modules.filters import chromosome_filter  # Don't call --> ciruclar import
 from modules.files_manager import csv_creator
-# -----------------------------------------------------------------------------
-# -----------------------------------------------------------------------------
-
-# 1)En este caso hacemos lo mismo que antes con los solapamientos pero a escala de todo el genoma. El principal cambio importante y MUY importante es el de la edicion del array chromosome_rows, el cual va hasta la primera funcion de "genome_solap_location_filter"
 
 
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
 
 
-# 1.1)Aqui metemos todos los START y END para tenerlos localizados.
 def genome_solap_location_filter(chromosome_rows):  # Todo STRING menos chromosome_rows
     """
     For the DNA ("minus" or "plus" strand) we get the *start* and *end* coordinates.
-    
+
     :param chromosome_rows: Given by :func:`~modules.overlap.genome_solap_location_grouping`. It's a Python list with all the rows from a CSV of one specific chromosome.
     :type chromosome_rows: python list
-    
+
     :return: 4 lists with the start and end coordinates for "minus" and "plus" DNA strands.
     :rtype: python list
     """
@@ -44,20 +39,19 @@ def genome_solap_location_filter(chromosome_rows):  # Todo STRING menos chromoso
 # -----------------------------------------------------------------------------
 
 
-
 def genome_solap_location_grouping(chromosome_rows, DNA_sense, max_diff):
     """
     This function will analyze each position of coordinates (start and end) for each DNA strand. It will group them depending on nearness.
-    
+
     :param chromosome_rows: Given by :func:`~modules.overlap.genome_solap_minmax`. It's a Python list with all the rows from a CSV of one specific chromosome.
     :type chromosome_rows: python list
-    
+
     :param DNA_sense: Maximun proxomity value for the different sequences when they have to be grouped. **Important**.
     :type DNA_sense: integer
-    
+
     :param max_diff:
     :type max_diff:
-    
+
     :return: An Array 3D with the positions for "starts" and ends" in "groups" like ``[[[group1 starts][group2 starts][...]]   [[group1 ends][group2 ends][...]]]``
     :rtype: Array 3D
     """
@@ -84,7 +78,7 @@ def genome_solap_location_grouping(chromosome_rows, DNA_sense, max_diff):
                     if abs(member - position) <= max_diff:
                         group.append(position)  # If it's near, we'll append it to the "group"
                         main_statement = True
-                        break  #  It breaks the code, exit this loot "for member..." and continue with "if not main_statement"
+                        break  # It breaks the code, exit this loot "for member..." and continue with "if not main_statement"
             if not main_statement:  # If "group" its empty at first, it will go here first. The number will be added like ([]) inside matrix, creating a "group"
                 matrix.append([position])  # If not found, We create a List inside a list [[x]], which I called before as "group".
 
@@ -98,17 +92,16 @@ def genome_solap_location_grouping(chromosome_rows, DNA_sense, max_diff):
 # -----------------------------------------------------------------------------
 
 
-# 1.3)Aqui obtenemos los minimos y maximos dependiendo de la hebra que tengamos. Se usa la funcion anterior y le impone el Genome_Rows
 def genome_solap_minmax(chromosome_rows, max_diff):  # Todo STRING menos max_diff
     """
     After doing the groupings with :func:`~modules.overlap.genome_solap_location_grouping` for each DNA strand. We simply get the minimun or maximun value depending if it's a groupings of "starts" or "ends", but mainly on the *strand* (because "plus" and "minus" strands have like inverted coordinates).
-    
+
     :param chromosome_rows: Given by :func:`~modules.overlap.genome_solap_main`. It's a Python list with all the rows from a CSV of one specific chromosome.
     :type chromosome_rows: python list
-    
+
     :param max_diff: Maximun proxomity value for the different sequences when they have to be grouped. **Important**.
     :type max_diff: integer
-    
+
     :return: 4 list with the minimum or maximun values depending if it's a groupings of "starts" or "ends", but mainly on the *strand*
     :rtype: 4 python lists.
     """
@@ -117,10 +110,10 @@ def genome_solap_minmax(chromosome_rows, max_diff):  # Todo STRING menos max_dif
     minus = genome_solap_location_grouping(chromosome_rows, "minus", max_diff)
 
     # For each group (see "genome_solap_location_grouping"):
-    plus_min = [min(x) for x in plus[0]]  # "plus" strand "starts", we get the minimum value
-    plus_max = [max(x) for x in plus[1]]  # "plus" strand "ends", we get the maximum value
-    minus_max = [max(x) for x in minus[0]]  # "minus" strand "starts", we get the maximum value
-    minus_min = [min(x) for x in minus[1]]  # "minus" strand "ends", we get the minimum value
+    plus_min = [min(x) for x in plus[0]]  # "plus" strand "starts", we get a list with the minimum value of each group
+    plus_max = [max(x) for x in plus[1]]  # "plus" strand "ends", we get a list with the maximum value of each group
+    minus_max = [max(x) for x in minus[0]]  # "minus" strand "starts", we get  a list with the maximum value of each group
+    minus_min = [min(x) for x in minus[1]]  # "minus" strand "ends", we get a list with the minimum value of each group
 
     return (plus_min, plus_max, minus_max, minus_min)
 
@@ -129,18 +122,18 @@ def genome_solap_minmax(chromosome_rows, max_diff):  # Todo STRING menos max_dif
 # -----------------------------------------------------------------------------
 
 
-# 1.4)Modulo para solapantes, es MUY importante, ya que con el se filtran los solapantes parciales que no han sido filtrados por el modulo de solapantes totales de genome_solap_main. Los analiza por parejas.
-def genome_solap_by_pairs(rows_to_filter):  # Su argumento es un ARRAY 3D
+def genome_solap_by_pairs(rows_to_filter):
     """
-    
+    Partials overlaps will be filtered and joined.
+
     :param rows_to_filter: A Array 3D given by :func:`~modules.overlap.genome_solap_main` with all the supossed rows with overlaps.
     :type rows_to_filter: array 3D
-    
+
     :return:
     :rtype:
     """
     rows_final = []
-    for first, second in zip(*[iter(rows_to_filter)] * 2): # This way we take them two by two
+    for first, second in zip(*[iter(rows_to_filter)] * 2):  # This way we take them two by two
         two_sequence_rec = []
         two_sequence_rec.append(first)
         two_sequence_rec.append(second)
@@ -151,7 +144,7 @@ def genome_solap_by_pairs(rows_to_filter):  # Su argumento es un ARRAY 3D
         homology1 = []
         e_value1 = []
         bit_score1 = []
-        
+
         for sequence in two_sequence_rec:
             sequence_start.append(sequence[10])
             sequence_end.append(sequence[11])
@@ -202,9 +195,12 @@ def genome_solap_by_pairs(rows_to_filter):  # Su argumento es un ARRAY 3D
 # -----------------------------------------------------------------------------
 
 
-# 1.5)Este es el principal --> utiliza todos los de arriba y le lleva chromosome_rows
 def genome_solap_main(genome_fasta, naming_short, path_input, max_diff, writing_path_input):  # Todo STRING menos max_diff
     """
+    Will call a variety of functions with the purpose of filtering overlaps in the data.
+
+
+    It uses :func:``~modules.filters.chromosome_filter`
 
     :param genome_fasta: Path to our whole genome sequence in FASTA format.
     :type genome_fasta: string
@@ -224,11 +220,11 @@ def genome_solap_main(genome_fasta, naming_short, path_input, max_diff, writing_
     genome_solap_main_matrix = []
     # Here we get the names for the sequences, e.g., "LinJ.01" for chromosome 1
     chromosome_number = chromosome_filter(genome_fasta, naming_short)
-    
+
     for chromosome in chromosome_number:
         solap_main_matrix = []
         chromosome_rows = []  # We get the rows from the CSV from a "chromosome"
-        with open(path_input, "r") as main_file:  # We read the CSV "_BLAST_MAIN.csv" 
+        with open(path_input, "r") as main_file:  # We read the CSV "_BLAST_MAIN.csv"
             reader = csv.reader(main_file, delimiter=",")
             for row in reader:
                 if chromosome in row[1]:  # chromosome filter
@@ -258,8 +254,8 @@ def genome_solap_main(genome_fasta, naming_short, path_input, max_diff, writing_
                             minus_start_matrix.append(int(row[10]))
                             minus_end_matrix.append(int(row[11]))
 
-        # SEQUENCES WITH OVERLAPS
-        # Now if we get for example 2 overlaps, one with the "minimum" and the other with the "maximum" ---> we need both. We then check the past coordinates (to not repeat) and search for overlaps.
+        # SEQUENCES WITH ONLY ONE, i.e., WITH OVERLAPS
+        # Now if we get for example 2 overlaps, one with the "minimum" and the other with the "maximum" ---> we need both to join them. We then check the past coordinates (to not repeat) and search for overlaps.
         solap_segments = []  # Here are all the small overlaps segments
         solap_segments_plus_start = []
         solap_segments_plus_end = []
