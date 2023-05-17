@@ -5,7 +5,7 @@ import shutil
 
 from modules.aesthetics import boxymcboxface  # Some aesthetics function
 from modules.identifiers import genome_specific_chromosome_main
-# from modules.filters import global_filters_main
+from modules.filters import global_filters_main
 
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
@@ -208,7 +208,7 @@ def repetitive_blaster(genome_fasta, path_input, folder_path, naming_short, max_
         Pay special attention to the ``max_diff`` argument.
     """
 
-    boxymcboxface("RUN ", + str(numbering))
+    boxymcboxface("RUN " + str(numbering))
 
     # -----------------------------------------------------------------------------
     # Searching all "Linj.XX" in the .fasta file
@@ -238,6 +238,7 @@ def repetitive_blaster(genome_fasta, path_input, folder_path, naming_short, max_
             chr_in_objetive.append(chromosome)
 
     # -----------------------------------------------------------------------------
+    pdb.set_trace()
     for chromosome_ID in chr_in_objetive:
         # if chromosome_ID != "LinJ.01":  # In case we'll need to delete searches of a special chromosome
         genome_specific_chromosome_main(path_input,
@@ -249,7 +250,7 @@ def repetitive_blaster(genome_fasta, path_input, folder_path, naming_short, max_
 
     # -----------------------------------------------------------------------------
     # Y cuando termine creando el archivo MIXER, lo que hago es purificarlo completamente
-    global_filters_main_output = folder_path + "/MIXER.csv"  # This one's got the call to "blastn_blaster"
+    global_filters_main_output = folder_path + "MIXER.csv"  # This one's got the call to "blastn_blaster"
     global_filters_main(global_filters_main_output,
                         global_filters_main_output,
                         genome_fasta,

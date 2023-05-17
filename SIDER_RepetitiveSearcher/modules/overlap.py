@@ -1,3 +1,4 @@
+import pdb  # In case of debbuging
 import csv
 import subprocess
 
@@ -156,7 +157,11 @@ def genome_solap_by_pairs(rows_to_filter, genome_fasta):
         e_value2 = (e_value1[0] + e_value1[1]) / 2
         e_value2 = str("{:.2e}".format(e_value2))
         bit_score2 = str(round((bit_score1[0] + bit_score1[1]) / 2, 1))
-
+        
+        ################
+        pdb.set_trace()
+        ################
+        
         if "plus" in first[14] and abs(int(first[10]) - int(second[10])) <= 1000:  # This number is important
             min_start = min(sequence_start)
             max_end = max(sequence_end)

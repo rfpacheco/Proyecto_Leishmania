@@ -1,8 +1,9 @@
+import pdb
 import os
 import csv
 
 from modules.files_manager import folder_creator, csv_creator, fasta_creator, csv_mixer
-# from modules.blaster import blastn_dic, blastn_blaster  # IMPORTANT -> Since "blaster.py" is importing "identifiers.py" I can't make "identifiers.py" import "blaster.py" --> ERROR: CIRCULAR IMPORT
+from modules.blaster import blastn_dic  # IMPORTANT -> Since "blaster.py" is importing "identifiers.py" I can't make "identifiers.py" import "blaster.py" --> ERROR: CIRCULAR IMPORT
 from modules.seq_modifier import specific_sequence_1000nt, specific_sequence_corrected
 from modules.filters import filter_by_column, global_filters_main
 # from modules.subfamilies_finder import subfamily_sorter  # Needs to be modified
@@ -43,11 +44,12 @@ def specific_sequence_extractor(path_input, chromosome_ID, main_folder_path):
                 chr_x_seqs.append(row)
 
     # Writing output for a folder creation
-    folder_path = main_folder_path + "/" + chromosome_ID
+    folder_path = main_folder_path + chromosome_ID
     folder_creator(folder_path)
 
     # In the folder, writing ouput for the CSV file
-    writing_path_input = main_folder_path + "/" + chromosome_ID + "/" + chromosome_ID + ".csv"
+    pdb.set_trace()
+    writing_path_input = main_folder_path + chromosome_ID + "/" + chromosome_ID + ".csv"
     csv_creator(writing_path_input, chr_x_seqs)
 
     # We return the folder path and the CSV path
@@ -90,12 +92,13 @@ def genome_specific_chromosome_main(path_input, chromosome_ID, main_folder_path,
     # -----------------------------------------------------------------------------
     nucleotides1000_directory = specific_sequence_1000nt(last_output, chromosome_ID, main_folder_path, genome_fasta)  # Extend sequence to 1000 nt.
 
-    fasta_creator_output = main_folder_path + "/" + chromosome_ID + "/" + chromosome_ID + "_1000nt.fasta"
+    fasta_creator_output = main_folder_path + chromosome_ID + "/" + chromosome_ID + "_1000nt.fasta"
     fasta_creator(nucleotides1000_directory, fasta_creator_output)
 
+    pdb.set_trace()
     blastn_dic(fasta_creator_output)
 
-    blaster_output = main_folder_path + "/" + chromosome_ID + "/" + chromosome_ID + "_1000nt_Blaster.csv"
+    blaster_output = main_folder_path + chromosome_ID + "/" + chromosome_ID + "_1000nt_Blaster.csv"
     blastn_blaster(fasta_creator_output,  # They are the same
                    fasta_creator_output,  # Because we are launching one against each other --> this way we'll get the correc coordinates in the future.
                    blaster_output,
@@ -115,10 +118,10 @@ def genome_specific_chromosome_main(path_input, chromosome_ID, main_folder_path,
     # subfamily_sorter(blaster_output, corrected_sequences, subfamilies_file_path_writing)
 
     # -----------------------------------------------------------------------------
-    second_fasta_creator_output = main_folder_path + "/" + chromosome_ID + "/" + chromosome_ID + "_Corrected.fasta"
+    second_fasta_creator_output = main_folder_path + chromosome_ID + "/" + chromosome_ID + "_Corrected.fasta"
     fasta_creator(corrected_sequences, second_fasta_creator_output)
 
-    second_blaster_output = main_folder_path + "/" + chromosome_ID + "/" + chromosome_ID + "_BLAST_MAIN.csv"
+    second_blaster_output = main_folder_path + chromosome_ID + "/" + chromosome_ID + "_BLAST_MAIN.csv"
     blastn_blaster(second_fasta_creator_output,
                    genome_fasta,
                    second_blaster_output,
@@ -132,7 +135,7 @@ def genome_specific_chromosome_main(path_input, chromosome_ID, main_folder_path,
                         max_diff)
 
     # -----------------------------------------------------------------------------
-    csv_mixer_output = main_folder_path + "/" + "MIXER.csv"
+    csv_mixer_output = main_folder_path + "MIXER.csv"
 
     if os.path.isfile(csv_mixer_output) is False:  # When it doesn't exist, we create it
         csv_mixer(path_input, second_blaster_output, csv_mixer_output)  # To mix it

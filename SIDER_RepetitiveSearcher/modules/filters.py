@@ -160,6 +160,6 @@ def global_filters_main(path_input, writing_path_input, genome_fasta, naming_sho
 
     # Remember "path_input" is the same as "writing_path_input"
     genome_duplicate_filter(genome_fasta, naming_short, path_input, max_diff, writing_path_input)
-    
+
     # Now let's work with the overlaps
     genome_solap_main(genome_fasta, naming_short, path_input, max_diff, writing_path_input)

@@ -18,6 +18,7 @@ def boxymcboxface(message):
     :rtype: output text display box.
 
     """
+    str(message)
     #print('-' * 79)
     print ('\n')
     print('|', '=' * 50, '|', sep='')

@@ -77,7 +77,7 @@ def specific_sequence_1000nt(path_input, chromosome_ID, main_folder_path, genome
                 # -----------------------------------------------------------------------------
 
     # We create a CSV file called 1000nt.csv
-    writing_path_input = main_folder_path + "/" + chromosome_ID + "/" + chromosome_ID + "_1000nt.csv"
+    writing_path_input = main_folder_path + chromosome_ID + "/" + chromosome_ID + "_1000nt.csv"
     csv_creator(writing_path_input, chrX_1000nt)
 
     return (writing_path_input)  # Important to know the path to this file.
@@ -195,7 +195,7 @@ def specific_sequence_corrected(path_input, nucleotides1000_directory, main_fold
                             new_end = int(row[11]) + x
 
                             seq = subprocess.check_output("blastdbcmd -db " + genome_fasta + " -entry "
-                                                          + row[1] + " -range " + str(new_end) + "-" + str(new_start) 
+                                                          + row[1] + " -range " + str(new_end) + "-" + str(new_start)
                                                           + " -strand minus -outfmt %s", 
                                                           shell=True, 
                                                           universal_newlines=True)  # MUY IMPORTANTE EL SUBPROCESS
@@ -208,7 +208,7 @@ def specific_sequence_corrected(path_input, nucleotides1000_directory, main_fold
         if len(start) == 0 and len(end) == 0:  # para casos en los que solo tenga homologia con el mismo, la secuencia se descarta, pero seria mejor cambiar este codigo para insertarla en los siguientes documentos pero no en la forma de 1000nt
             print("\nALERT: individual " + query + " has no homology with no other seq, so it will not be added to the corrected seqs")
 
-    writing_path_input = main_folder_path + "/" + chromosome_ID + "/" + chromosome_ID + "_Corrected.csv"
+    writing_path_input = main_folder_path + chromosome_ID + "/" + chromosome_ID + "_Corrected.csv"
     csv_creator(writing_path_input, chr_x_corrected)
 
     return (writing_path_input)
