@@ -222,6 +222,8 @@ def genome_solap_main(genome_fasta, naming_short, path_input, max_diff, writing_
     :param writing_path_input: Path where the CSV file will be saved.
     :type writing_path_input: string
     """
+    from modules.filters import chromosome_filter  # Delayed import --> to break the ciruclar import. Need to be at the start of function.
+
     genome_solap_main_matrix = []
     # Here we get the names for the sequences, e.g., "LinJ.01" for chromosome 1
     chromosome_number = chromosome_filter(genome_fasta, naming_short)
@@ -299,4 +301,7 @@ def genome_solap_main(genome_fasta, naming_short, path_input, max_diff, writing_
 
         genome_solap_main_matrix += solap_main_matrix
 
+    print("\n")
+    print('|', '=' * 50, '|', sep='')
+    print("\nFiltering overlaps proceeding:")
     csv_creator(writing_path_input, genome_solap_main_matrix)

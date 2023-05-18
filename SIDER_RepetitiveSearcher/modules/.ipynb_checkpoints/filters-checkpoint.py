@@ -90,6 +90,10 @@ def filter_by_column(path_input, column, size_filter, writing_path_input):
                 if float(row[column]) >= size_filter:  # Needed to go from string to floar
                     matrix_filter_by_column.append(row)
 
+    print("\n")
+    print('|', '=' * 50, '|', sep='')
+    print("\nFiltering columns proceeding:")
+
     csv_creator(writing_path_input, matrix_filter_by_column)
 
 
@@ -117,6 +121,9 @@ def dash_filter(path_input, writing_path_input):
             row[15] = row[15].replace("-", "")
             matrix_dash_filter.append(row)
 
+    print("\n")
+    print('|', '=' * 50, '|', sep='')
+    print("\nFiltering dashes proceeding:")
     csv_creator(writing_path_input, matrix_dash_filter)
 
 

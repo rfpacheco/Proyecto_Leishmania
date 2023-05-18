@@ -1,5 +1,8 @@
 from Bio import SeqIO
 
+# This thing here to now my "functions" imported or made that doesn't start with "_"
+print("\n".join([x for x in dir() if not x.startswith("_")]))
+
 
 # This code let's me choose which sequences I want in a fasta output (NEED TO CHANGE FOR MY USE)
 # This one chooses from "../ref/L_infantum_ALL_36Chr.fasta" the chromosome 2 and 3 and outputs it like "../Prueba1/Results/Test1"

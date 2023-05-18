@@ -2,10 +2,12 @@ import pdb  # In case of debbuging
 import os
 import csv
 import shutil
+from pathlib import Path
 
 from modules.aesthetics import boxymcboxface  # Some aesthetics function
 from modules.identifiers import genome_specific_chromosome_main
 from modules.filters import global_filters_main
+from modules.files_manager import folder_creator
 
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
@@ -238,7 +240,6 @@ def repetitive_blaster(genome_fasta, path_input, folder_path, naming_short, max_
             chr_in_objetive.append(chromosome)
 
     # -----------------------------------------------------------------------------
-    pdb.set_trace()
     for chromosome_ID in chr_in_objetive:
         # if chromosome_ID != "LinJ.01":  # In case we'll need to delete searches of a special chromosome
         genome_specific_chromosome_main(path_input,
@@ -257,10 +258,22 @@ def repetitive_blaster(genome_fasta, path_input, folder_path, naming_short, max_
                         naming_short,
                         max_diff)
 
-    RUN_SAVER_Output = folder_path + "/RUNS/run_" + str(numbering) + ".csv"
+    pdb.set_trace()
+    folder_output = folder_path + "RUNS"
+    folder_creator(folder_output)
+
+    RUN_SAVER_Output = folder_output + "/run_" + str(numbering) + ".csv"
     shutil.copyfile(global_filters_main_output, RUN_SAVER_Output)
-    shutil.copyfile(global_filters_main_output, path_input)  # ## Asi reseteo el Path input con el nuevo documento para lanzarlo todo de nuevo. El path input antiguo ya no existe porque ha sido sobre escrito (aunque se ha guardado en RUNS)
-    os.remove(global_filters_main_output)  # ##Eliminamos el Mixer, para que luego se cree de nuevo
+
+    backup_counter = 0
+    if backup_counter == 0:
+        first_backup = Path(path_input)
+        first_backup2 = str(first_backup.parents[0]) + "/" + first_backup.with_suffix("").name + "_backup.csv"
+        shutil.copyfile(path_input, first_backup2)  # Here we save the first file just in case
+        backup_counter += 1
+
+    shutil.copyfile(global_filters_main_output, path_input)  # This way I restart the first "path_input" with the new "mixed input".
+    os.remove(global_filters_main_output)  # Removes "mixer"
 
     # -----------------------------------------------------------------------------
     if numbering == maximun_runs:

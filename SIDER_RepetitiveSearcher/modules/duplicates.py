@@ -30,6 +30,8 @@ def genome_pre_duplicate_filter(genome_fasta, naming_short, path_input, DNA_sens
     :return: All the rows from the CSV file without duplications in a Python matrix.
     :rtype: A Python matrix
     """
+    from modules.filters import chromosome_filter  # Delayed import --> to break the ciruclar import. Need to be at the start of function.
+
     matrix_all_genome = []
     chromosome_number = chromosome_filter(genome_fasta, naming_short)  # I obtain a Python list, e.g., ["LinJ.01", "LinJ.02", ...]
 
@@ -117,4 +119,7 @@ def genome_duplicate_filter(genome_fasta, naming_short, path_input, max_diff, wr
     # Then we add one matrix after the other
     matrix_main = matrix_main1 + matrix_main2
 
+    print("\n")
+    print('|', '=' * 50, '|', sep='')
+    print("\nFiltering duplicates proceeding:")
     csv_creator(writing_path_input, matrix_main)
