@@ -133,6 +133,7 @@ def genome_solap_by_pairs(rows_to_filter, genome_fasta):
     :return:
     :rtype:
     """
+    
     rows_final = []
     for first, second in zip(*[iter(rows_to_filter)] * 2):  # This way we take them two by two
         two_sequence_rec = []
@@ -157,11 +158,8 @@ def genome_solap_by_pairs(rows_to_filter, genome_fasta):
         e_value2 = (e_value1[0] + e_value1[1]) / 2
         e_value2 = str("{:.2e}".format(e_value2))
         bit_score2 = str(round((bit_score1[0] + bit_score1[1]) / 2, 1))
-        
-        ################
+
         pdb.set_trace()
-        ################
-        
         if "plus" in first[14] and abs(int(first[10]) - int(second[10])) <= 1000:  # This number is important
             min_start = min(sequence_start)
             max_end = max(sequence_end)
@@ -244,6 +242,7 @@ def genome_solap_main(genome_fasta, naming_short, path_input, max_diff, writing_
         minus_start_matrix = []
         minus_end_matrix = []
 
+        pdb.set_trace()
         # SEQUENCES WITH BOTH
         # Here we'll add all the sequnces with the "minumun" and "maximum" at the same time for one sequence.
         with open(path_input, "r") as main_file:
@@ -261,6 +260,7 @@ def genome_solap_main(genome_fasta, naming_short, path_input, max_diff, writing_
                             minus_start_matrix.append(int(row[10]))
                             minus_end_matrix.append(int(row[11]))
 
+        pdb.set_trace()
         # SEQUENCES WITH ONLY ONE, i.e., WITH OVERLAPS
         # Now if we get for example 2 overlaps, one with the "minimum" and the other with the "maximum" ---> we need both to join them. We then check the past coordinates (to not repeat) and search for overlaps.
         solap_segments = []  # Here are all the small overlaps segments
