@@ -1,6 +1,7 @@
 import pdb
 import csv
 import subprocess
+import re
 
 from modules.files_manager import csv_creator
 
@@ -101,9 +102,11 @@ def specific_sequence_corrected(path_input, nucleotides1000_directory, main_fold
 
     1. First we read the 1000nt CSV file. And we extract from row[0] (i.e., Query row) every *different* query (not repeated.
     2. Then we open the 1000nt_BLASTER file from the 1000nt against each other. To understand it:
+
        - In the 1000nt file there are "x" number of rows. Each row will be given an index like "Seq_z_LinJ.01_plus", were "z" is the index.
        - So the first row (row[0]) in the 1000nt file will be given "Seq_1.." as a name. And every row with the "Seq_1.." subject in the 1000nt_BLASTER file will the result from the first row in the 1000nt file (row[0]).
        - There will be a maximum of "x" "Seq_x.." in the 1000nt_BLASTER file.
+
     3. In the 1000nt_BLASTER we search every result from a specific "Seq_z..". And we get the maximum alignment and it's coordinates.
     4. We'll get the "z" number and search it's corresponding sequence in the 1000nt file. And with that and the coordinates, we use ``blastcmd`` to get the correct coordinates from the 1000nt sequence. We need to be careful if the sequence is "plus" or "minus".
 
@@ -133,7 +136,7 @@ def specific_sequence_corrected(path_input, nucleotides1000_directory, main_fold
 
     # -----------------------------------------------------------------------------
     # Now, we'll get from the BLASTn (one againts each other), the best alignment.
-    # pdb.set_trace()
+    pdb.set_trace()
     chr_x_corrected = []
     for query in names:  # For each chromosome ID row[0] in "names"
         start = []
@@ -164,23 +167,26 @@ def specific_sequence_corrected(path_input, nucleotides1000_directory, main_fold
             min_start = min(start)  # And this
             max_end = max(end)  # And this last one.
 
+            # pdb.set_trace()
             correct_seq = query  # Changed the name to understand it better for the next part.
-            number_for_location = int(correct_seq[4]) - 1  # This way we get the 5th position from "Seq_2_LinJ.01_plus". The 4th position is the "number". For example in "Seq_2..." we'll get the "2". Then we rest 1, because in Python everything starts in 0 and not 1. --> ESTO ESTA MAL, Y SI ES UN  "14" DE DOS CIFRAS
+            number_for_location = re.search("\d+", correct_seq).group()  # Using "regex" to extract the numbers
+            number_for_location = int(number_for_location) - 1  # Because Python starts at 0
 
-            #  Now we filter "correct_seq" to obtain a number to filter a CSV list of 4 x 1000 without doing BLAST
+             #  Now we filter "correct_seq" to obtain a number to filter a CSV list of 4 x 1000 without doing BLAST
             rows_by_number = []  # I need this part to know if it's the correct row while doing comparisons. This way I can compare it with "rows_by_number[0]" or "[4]" or "[3]" without going in order. We do this in the CSV 4 x 1000nt before the blaster to themselves.
             with open(nucleotides1000_directory, "r") as main_file:
                 reader = csv.reader(main_file, delimiter=",")
                 for row in reader:
                     rows_by_number.append(row)  # Here we get all the rows from the CSV
 
-            pdb.set_trace()
+            # pdb.set_trace()
             with open(nucleotides1000_directory, "r") as main_file:
                 reader = csv.reader(main_file, delimiter=",")
                 for row in reader:
                     if row == rows_by_number[number_for_location]:  # Asi me aseguro que estoy en la adecuada. Quizas es rizar el rizo pero no se me ocurre en el momento un paso mejor --> ESTO ESTA MAL
                         if "plus" in row[14]:
 
+                            # Since in that file, they are extended to 1000nt, doing 1000 - max end, gives me how much do I have to rest for the sequence end.
                             x = 1000 - max_end
                             new_start = int(row[10]) + min_start - 1
                             new_end = int(row[11]) - x
@@ -189,14 +195,14 @@ def specific_sequence_corrected(path_input, nucleotides1000_directory, main_fold
                                                           + row[1] + " -range " + str(new_start) + "-" + str(new_end)
                                                           + " -strand plus -outfmt %s",
                                                           shell=True,
-                                                          universal_newlines=True)  # MUY IMPORTANTE EL SUBPROCESS
-                            seq = seq.strip()  # Eliminar EoL caracteres
+                                                          universal_newlines=True)  # Very important subprocess
+                            seq = seq.strip()  # Remove EoL characteres
 
                             new_row = [query, row[1], "", str(len(seq)), row[4], row[5], "", "", "", "", str(new_start), str(new_end), "", "", row[14], seq]
 
                             chr_x_corrected.append(new_row)
 
-                        elif "minus" in row[14]:  # Recordar que por como son las coordenadas de minus, que se definen segun las de la posicion plus en 3' --> 5'
+                        elif "minus" in row[14]:  # Remember by how are the coordinates in the "Minus" strand, which are in the position 3'---> 5'
                             x = 1000 - max_end
                             new_start = int(row[10]) - min_start + 1
                             new_end = int(row[11]) + x
@@ -212,8 +218,8 @@ def specific_sequence_corrected(path_input, nucleotides1000_directory, main_fold
 
                             chr_x_corrected.append(new_row)
 
-        pdb.set_trace()
-        if len(start) == 0 and len(end) == 0:  # para casos en los que solo tenga homologia con el mismo, la secuencia se descarta, pero seria mejor cambiar este codigo para insertarla en los siguientes documentos pero no en la forma de 1000nt
+        # pdb.set_trace()
+        if len(start) == 0 and len(end) == 0:  # For the cases where the homology is with itself, we discard it. I may be better to change the code in the future to inset these sequences.
             print("\nALERT: individual " + query + " has no homology with no other seq, so it will not be added to the corrected seqs")
 
     writing_path_input = main_folder_path + chromosome_ID + "/" + chromosome_ID + "_Corrected.csv"
