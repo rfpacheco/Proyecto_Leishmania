@@ -174,8 +174,8 @@
 <span id="module-seq-modifier-py"></span><h1>Module seq_modifier.py<a class="headerlink" href="#module-modules.seq_modifier" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="modules.seq_modifier.specific_sequence_1000nt">
-<span class="sig-prename descclassname"><span class="pre">modules.seq_modifier.</span></span><span class="sig-name descname"><span class="pre">specific_sequence_1000nt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chromosome_ID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">main_folder_path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.seq_modifier.specific_sequence_1000nt" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function will expand the selected sequences to 1000 nt and will create a CSV file with it. For this, it will use <code class="docutils literal notranslate"><span class="pre">blastdbcmd</span></code> from BLAST <a class="reference external" href="https://www.ncbi.nlm.nih.gov/books/NBK279690">Command Line Application User Manual</a></p>
+<span class="sig-prename descclassname"><span class="pre">modules.seq_modifier.</span></span><span class="sig-name descname"><span class="pre">specific_sequence_1000nt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chromosome_ID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">main_folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">genome_fasta</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.seq_modifier.specific_sequence_1000nt" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function will expand the selected sequences to 1000 nt and will create a CSV file with it. For this, it will use <code class="docutils literal notranslate"><span class="pre">blastdbcmd</span></code> from BLAST <a class="reference external" href="https://www.ncbi.nlm.nih.gov/books/NBK279690">Command Line Application User Manual</a>, which will get the sequences in the <strong>whole fasta genome</strong> file so every sequence returned will be “plus”.</p>
 <p>It uses the function <code class="xref py py-func docutils literal notranslate"><span class="pre">csv_creator()</span></code></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -196,15 +196,24 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="modules.seq_modifier.specific_sequence_corrected">
-<span class="sig-prename descclassname"><span class="pre">modules.seq_modifier.</span></span><span class="sig-name descname"><span class="pre">specific_sequence_corrected</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nucleotides1000_directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">main_folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chromosome_ID</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.seq_modifier.specific_sequence_corrected" title="Permalink to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">modules.seq_modifier.</span></span><span class="sig-name descname"><span class="pre">specific_sequence_corrected</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nucleotides1000_directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">main_folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chromosome_ID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">genome_fasta</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.seq_modifier.specific_sequence_corrected" title="Permalink to this definition">¶</a></dt>
 <dd><div class="admonition danger">
 <p class="admonition-title">Danger</p>
-<p>NEED TO MODIFY IT BECAUSE OF SOME ERRORS</p>
+<p>NEED TO MODIFY IT BECAUSE OF SOME ERRORS in <code class="docutils literal notranslate"><span class="pre">int(correct_seq[4])</span> <span class="pre">-</span> <span class="pre">1</span></code> line</p>
 </div>
 <p>The main use of this function is to get the real “coordinates” of the sequence.</p>
-<p>Remember we’ve got first, after the initial BLASNn, sequence expanded to 1000nt. The next part of the program was launching them one against each other to get a BLASTn which can provide us useful information about the real coordinates:</p>
-<p>Now we’ve got the 1000 nt sequences with an aproximade location of where the SIDER2 are. And then, we’ve got the BLASTn (of them against each other) which can provide us with the real coordinates.</p>
-<p>With this, this function will get the real coordinates.</p>
+<ol class="arabic simple">
+<li><p>First we read the 1000nt CSV file. And we extract from row[0] (i.e., Query row) every <em>different</em> query (not repeated.</p></li>
+<li><p>Then we open the 1000nt_BLASTER file from the 1000nt against each other. To understand it:</p>
+<ul class="simple">
+<li><p>In the 1000nt file there are “x” number of rows. Each row will be given an index like “Seq_z_LinJ.01_plus”, were “z” is the index.</p></li>
+<li><p>So the first row (row[0]) in the 1000nt file will be given “Seq_1..” as a name. And every row with the “Seq_1..” subject in the 1000nt_BLASTER file will the result from the first row in the 1000nt file (row[0]).</p></li>
+<li><p>There will be a maximum of “x” “Seq_x..” in the 1000nt_BLASTER file.</p></li>
+</ul>
+</li>
+<li><p>In the 1000nt_BLASTER we search every result from a specific “Seq_z..”. And we get the maximum alignment and it’s coordinates.</p></li>
+<li><p>We’ll get the “z” number and search it’s corresponding sequence in the 1000nt file. And with that and the coordinates, we use <code class="docutils literal notranslate"><span class="pre">blastcmd</span></code> to get the correct coordinates from the 1000nt sequence. We need to be careful if the sequence is “plus” or “minus”.</p></li>
+</ol>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">

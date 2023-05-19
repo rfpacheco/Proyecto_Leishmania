@@ -1,5 +1,6 @@
 __all__ = [
-    "modules"
+    "modules",
+    "extra"
 ]
 
 from SIDER_RepetitiveSearcher import *

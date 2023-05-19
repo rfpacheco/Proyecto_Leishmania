@@ -10,7 +10,8 @@ from modules.files_manager import csv_creator
 
 def specific_sequence_1000nt(path_input, chromosome_ID, main_folder_path, genome_fasta):
     """
-    This function will expand the selected sequences to 1000 nt and will create a CSV file with it. For this, it will use ``blastdbcmd`` from BLAST `Command Line Application User Manual`_
+    This function will expand the selected sequences to 1000 nt and will create a CSV file with it. For this, it will use ``blastdbcmd`` from BLAST `Command Line Application User Manual`_, which will get the sequences in the **whole fasta genome** file so every sequence returned will be "plus".
+
 
     It uses the function :func:`~modules.file_manager.csv_creator`
 
@@ -93,15 +94,18 @@ def specific_sequence_1000nt(path_input, chromosome_ID, main_folder_path, genome
 def specific_sequence_corrected(path_input, nucleotides1000_directory, main_folder_path, chromosome_ID, genome_fasta):
     """
     .. danger::
-       NEED TO MODIFY IT BECAUSE OF SOME ERRORS
+       NEED TO MODIFY IT BECAUSE OF SOME ERRORS in ``int(correct_seq[4]) - 1`` line
 
     The main use of this function is to get the real "coordinates" of the sequence.
 
-    Remember we've got first, after the initial BLASNn, sequence expanded to 1000nt. The next part of the program was launching them one against each other to get a BLASTn which can provide us useful information about the real coordinates:
 
-    Now we've got the 1000 nt sequences with an aproximade location of where the SIDER2 are. And then, we've got the BLASTn (of them against each other) which can provide us with the real coordinates.
-
-    With this, this function will get the real coordinates.
+    1. First we read the 1000nt CSV file. And we extract from row[0] (i.e., Query row) every *different* query (not repeated.
+    2. Then we open the 1000nt_BLASTER file from the 1000nt against each other. To understand it:
+       - In the 1000nt file there are "x" number of rows. Each row will be given an index like "Seq_z_LinJ.01_plus", were "z" is the index.
+       - So the first row (row[0]) in the 1000nt file will be given "Seq_1.." as a name. And every row with the "Seq_1.." subject in the 1000nt_BLASTER file will the result from the first row in the 1000nt file (row[0]).
+       - There will be a maximum of "x" "Seq_x.." in the 1000nt_BLASTER file.
+    3. In the 1000nt_BLASTER we search every result from a specific "Seq_z..". And we get the maximum alignment and it's coordinates.
+    4. We'll get the "z" number and search it's corresponding sequence in the 1000nt file. And with that and the coordinates, we use ``blastcmd`` to get the correct coordinates from the 1000nt sequence. We need to be careful if the sequence is "plus" or "minus".
 
     :param path_input: Path to the CSV file we'll use to filter data. It's the result from a BLASTn made between the expanded 1000nt sequences.
     :type path_input: string
@@ -129,19 +133,19 @@ def specific_sequence_corrected(path_input, nucleotides1000_directory, main_fold
 
     # -----------------------------------------------------------------------------
     # Now, we'll get from the BLASTn (one againts each other), the best alignment.
-    pdb.set_trace()
+    # pdb.set_trace()
     chr_x_corrected = []
     for query in names:  # For each chromosome ID row[0] in "names"
         start = []
         end = []
         diference_end_minu_start = 0  # Check it out later. It's to compare it with "difference"
 
-        with open(path_input, "r") as main_file:
+        with open(path_input, "r") as main_file:  # Reads the "_1000nt_Blaster.csv"
             reader = csv.reader(main_file, delimiter=",")
             for row in reader:
                 if query in row[1]:  # This is row[1], e.g., "Seq_2_LinJ.01_plus"
-                    if row[0] != query:  # This is to remove the sequence that overlaps with itself. So if "LinJ.01" overlaps with "LinJ.01", we don't analyze it further.
-                        # We don¡t need to difference between "+" and "-" strands, because after BLASTn all the results behave like "+".
+                    if row[0] != query:  # This is to remove the sequence that overlaps with itself. So if "eq_2_LinJ.01_plus" overlaps with "eq_2_LinJ.01_plus", we don't analyze it further.
+                        # We don't need to difference between "+" and "-" strands, because after BLASTn all the results behave like "+".
                         difference = int(row[11]) - int(row[10])  # Due to how the code is made. Now row[11] will always be > row[10]
                         # Here we'll iterate until we get the larger "difference", i.e., larger "alignment length".
                         if difference > diference_end_minu_start:  # If it's greater than 0
@@ -154,7 +158,7 @@ def specific_sequence_corrected(path_input, nucleotides1000_directory, main_fold
         # -----------------------------------------------------------------------------
         # Remember we don't need to difference between "+" and "-".
         # In this part, for a specific "query" we'll have the bigger "alignment length" wit its "start" and "end".
-
+        # pdb.set_trace()
         # With the variable "difference" made, this can be removed
         if len(start) > 0 and len(end) > 0:  # I mean this
             min_start = min(start)  # And this
@@ -170,6 +174,7 @@ def specific_sequence_corrected(path_input, nucleotides1000_directory, main_fold
                 for row in reader:
                     rows_by_number.append(row)  # Here we get all the rows from the CSV
 
+            pdb.set_trace()
             with open(nucleotides1000_directory, "r") as main_file:
                 reader = csv.reader(main_file, delimiter=",")
                 for row in reader:
@@ -207,6 +212,7 @@ def specific_sequence_corrected(path_input, nucleotides1000_directory, main_fold
 
                             chr_x_corrected.append(new_row)
 
+        pdb.set_trace()
         if len(start) == 0 and len(end) == 0:  # para casos en los que solo tenga homologia con el mismo, la secuencia se descarta, pero seria mejor cambiar este codigo para insertarla en los siguientes documentos pero no en la forma de 1000nt
             print("\nALERT: individual " + query + " has no homology with no other seq, so it will not be added to the corrected seqs")
 

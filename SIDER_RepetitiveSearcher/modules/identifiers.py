@@ -137,6 +137,7 @@ def genome_specific_chromosome_main(path_input, chromosome_ID, main_folder_path,
     # -----------------------------------------------------------------------------
     csv_mixer_output = main_folder_path + "MIXER.csv"
 
+    # pdb.set_trace()
     if os.path.isfile(csv_mixer_output) is False:  # When it doesn't exist, we create it
         csv_mixer(path_input, second_blaster_output, csv_mixer_output)  # To mix it
     else:  # If the file already exist (already been created), the path changes to "csv_mixer_outpu"
