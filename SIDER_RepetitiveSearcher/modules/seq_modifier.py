@@ -94,9 +94,6 @@ def specific_sequence_1000nt(path_input, chromosome_ID, main_folder_path, genome
 
 def specific_sequence_corrected(path_input, nucleotides1000_directory, main_folder_path, chromosome_ID, genome_fasta):
     """
-    .. danger::
-       NEED TO MODIFY IT BECAUSE OF SOME ERRORS in ``int(correct_seq[4]) - 1`` line
-
     The main use of this function is to get the real "coordinates" of the sequence.
 
 
