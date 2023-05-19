@@ -133,7 +133,7 @@ def specific_sequence_corrected(path_input, nucleotides1000_directory, main_fold
 
     # -----------------------------------------------------------------------------
     # Now, we'll get from the BLASTn (one againts each other), the best alignment.
-    pdb.set_trace()
+    # pdb.set_trace()
     chr_x_corrected = []
     for query in names:  # For each chromosome ID row[0] in "names"
         start = []
