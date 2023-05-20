@@ -107,6 +107,7 @@ def genome_duplicate_filter(genome_fasta, naming_short, path_input, max_diff, wr
     :return: A CSV file with all the data filtered without duplications.
     :rtype: CSV file
     """
+    print("\n", "=" * 50, "\nFiltering duplicates proceeding:\n", "=" * 50, sep="")
 
     DNA_sense = ["plus", "minus"]  # To differentiate between "+" and "-" strand
 
@@ -119,7 +120,4 @@ def genome_duplicate_filter(genome_fasta, naming_short, path_input, max_diff, wr
     # Then we add one matrix after the other
     matrix_main = matrix_main1 + matrix_main2
 
-    print("\n")
-    print('|', '=' * 50, '|', sep='')
-    print("\nFiltering duplicates proceeding:")
     csv_creator(writing_path_input, matrix_main)

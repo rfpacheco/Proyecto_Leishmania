@@ -77,6 +77,7 @@ def filter_by_column(path_input, column, size_filter, writing_path_input):
     :return: A CSV file with the dalta filtered depending on the ``column`` and ``size_filter`` argumetns.
     :rtype: CSV file
     """
+    print("\n", "=" * 50, "\nFiltering columns proceeding:\n", "=" * 50, sep="")
 
     if column == "length":
         column = 3
@@ -93,10 +94,6 @@ def filter_by_column(path_input, column, size_filter, writing_path_input):
             elif column == 2:
                 if float(row[column]) >= size_filter:  # Needed to go from string to floar
                     matrix_filter_by_column.append(row)
-
-    print("\n")
-    print('|', '=' * 50, '|', sep='')
-    print("\nFiltering columns proceeding:")
 
     csv_creator(writing_path_input, matrix_filter_by_column)
 
@@ -118,6 +115,8 @@ def dash_filter(path_input, writing_path_input):
     :return: A CSV file with all the "-" dashes filtered.
     :rtype: CSV file
     """
+    print("\n", "=" * 50, "\nFiltering dashes proceeding:\n", "=" * 50, sep="")
+
     matrix_dash_filter = []
     with open(path_input, "r") as main_file:
         reader = csv.reader(main_file, delimiter=",")
@@ -125,9 +124,6 @@ def dash_filter(path_input, writing_path_input):
             row[15] = row[15].replace("-", "")
             matrix_dash_filter.append(row)
 
-    print("\n")
-    print('|', '=' * 50, '|', sep='')
-    print("\nFiltering dashes proceeding:")
     csv_creator(writing_path_input, matrix_dash_filter)
 
 

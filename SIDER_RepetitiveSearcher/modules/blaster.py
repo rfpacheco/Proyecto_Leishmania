@@ -259,7 +259,7 @@ def repetitive_blaster(genome_fasta, path_input, folder_path, naming_short, max_
                         naming_short,
                         max_diff)
 
-    pdb.set_trace()
+    # pdb.set_trace()
     folder_output = folder_path + "RUNS"
     folder_creator(folder_output)
 

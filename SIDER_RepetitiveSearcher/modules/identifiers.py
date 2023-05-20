@@ -117,7 +117,7 @@ def genome_specific_chromosome_main(path_input, chromosome_ID, main_folder_path,
     # subfamily_sorter(blaster_output, corrected_sequences, subfamilies_file_path_writing)
 
     # -----------------------------------------------------------------------------
-    pdb.set_trace()
+    # pdb.set_trace()
     second_fasta_creator_output = main_folder_path + chromosome_ID + "/" + chromosome_ID + "_Corrected.fasta"
     fasta_creator(corrected_sequences, second_fasta_creator_output)
 

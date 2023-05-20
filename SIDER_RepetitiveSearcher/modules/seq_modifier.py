@@ -216,7 +216,7 @@ def specific_sequence_corrected(path_input, nucleotides1000_directory, main_fold
                             chr_x_corrected.append(new_row)
 
         # pdb.set_trace()
-        if len(start) == 0 and len(end) == 0:  # For the cases where the homology is with itself, we discard it. I may be better to change the code in the future to inset these sequences.
+        if len(start) == 0 and len(end) == 0:  # For the cases where the homology is with itself, we discard it. I may be better to change the code in the future to insert these sequences.
             print("\nALERT: individual " + query + " has no homology with no other seq, so it will not be added to the corrected seqs")
 
     writing_path_input = main_folder_path + chromosome_ID + "/" + chromosome_ID + "_Corrected.csv"

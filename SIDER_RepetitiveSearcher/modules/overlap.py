@@ -130,10 +130,18 @@ def genome_solap_by_pairs(rows_to_filter, genome_fasta):
     :param rows_to_filter: A Array 3D given by :func:`~modules.overlap.genome_solap_main` with all the supossed rows with overlaps.
     :type rows_to_filter: array 3D
 
-    :return:
-    :rtype:
+    :return: a 3D list with all the real coordinates for overlaps
+    :rtype: a Python 3D list
     """
-    
+    # This part is important because we need to organize the rows by their coordinates, so when they go par by par, they are in the same coordinates more or less.
+    plus_list = [x for x in rows_to_filter if "plus" in x[14]]  # We select the "plus" side of the list
+    plus_list = sorted(plus_list, key=lambda x: x[10], reverse=True)  # We order them. The order is with "strings" not with numbers, so the results is not the same as if it were with numbers. But it will suffice.
+    # We do the same with minus:
+    minus_list = [x for x in rows_to_filter if "minus" in x[14]]
+    minus_list = sorted(minus_list, key=lambda x: x[10], reverse=True)
+
+    rows_to_filter = plus_list + minus_list  # We update "rows_to_filter" with the new ones.
+
     rows_final = []
     for first, second in zip(*[iter(rows_to_filter)] * 2):  # This way we take them two by two
         two_sequence_rec = []
@@ -159,8 +167,7 @@ def genome_solap_by_pairs(rows_to_filter, genome_fasta):
         e_value2 = str("{:.2e}".format(e_value2))
         bit_score2 = str(round((bit_score1[0] + bit_score1[1]) / 2, 1))
 
-        pdb.set_trace()
-        if "plus" in first[14] and abs(int(first[10]) - int(second[10])) <= 1000:  # This number is important
+        if "plus" in first[14] and abs(int(first[10]) - int(second[10])) <= 1000:  # This number is important. It wll only continue if they are near (just in case).
             min_start = min(sequence_start)
             max_end = max(sequence_end)
             seq_length = str(int(max_end) - int(min_start) + 1)
@@ -200,8 +207,18 @@ def genome_solap_by_pairs(rows_to_filter, genome_fasta):
 
 def genome_solap_main(genome_fasta, naming_short, path_input, max_diff, writing_path_input):  # Todo STRING menos max_diff
     """
-    Will call a variety of functions with the purpose of filtering overlaps in the data.
+    Will call a variety of functions with the purpose of filtering overlaps in the data:
 
+    1. First it will get all the coordinates from ``path_input`` with :func:`~modules.overlap.genome_solap_location_filter`.
+    2. The output will be given to :func:`~modules.overlap.genome_solap_location_grouping`, that will group them in a 3D list by nearness.
+    3. The output will be given to :func:`~modules.overlap.genome_solap_minmax` that will get depending on the DNA strand, the maximum or minimum value for each group.
+    4. The ouput will be given to :func:`~modules.overlap.genome_solap_main` that will make two filters:
+    
+       - The first one, will filters all sequences which have the minimum value as well as the maximum (depending again on the DNA strand).
+       - The second one will get all the sequences which have only one minimum or one maximum. In the end, since it will search with the coordinates given by :func:`~modules.overlap.genome_solap_minmax`, the number of results will be even (one with the minimum and one with the maximum).
+       
+    5. The ourput of the second filter of the 4º step will be given to `func:`~modules.overlap.genome_solap_by_pairs` that will first order the inputs, so the when it analyze them by pairs, the pair are in fact, the nearest ones. Then, it will join them to form one sequence which will be added to a final 3D list.
+    6. That 3D list will be used to make a CSV file.
 
     It uses :func:`~modules.filters.chromosome_filter`
 
@@ -211,7 +228,7 @@ def genome_solap_main(genome_fasta, naming_short, path_input, max_diff, writing_
     :param naming_short: Label needed to read the ID of each cromosome in the .csv file. In the case of **L. infantum** for example, would be *LinJ* since the .csv file IDs are *LinJ.XX*.
     :type naming_short: string
 
-    :param path_input: Path to the CSV file we want to filter data. It's the output file created by :func:`~modules.blaster.blastn_blaster` and given here by :func:`modules.filters.global_filters_main`.
+    :param path_input: Path to the CSV file we want to filter data. It's the output file created by :func:`~modules.blaster.blastn_blaster` and given here by :func:`modules.filters.global_filters_main`. It's called "_BLAST_MAIN.csv".
     :type path_input: string
 
     :param max_diff: Maximun proxomity value for the different sequences when they have to be grouped. **Important**.
@@ -221,6 +238,8 @@ def genome_solap_main(genome_fasta, naming_short, path_input, max_diff, writing_
     :type writing_path_input: string
     """
     from modules.filters import chromosome_filter  # Delayed import --> to break the ciruclar import. Need to be at the start of function.
+
+    print("\n", "=" * 50, "\nFiltering overlaps proceeding:\n", "=" * 50, sep="")
 
     genome_solap_main_matrix = []
     # Here we get the names for the sequences, e.g., "LinJ.01" for chromosome 1
@@ -242,7 +261,6 @@ def genome_solap_main(genome_fasta, naming_short, path_input, max_diff, writing_
         minus_start_matrix = []
         minus_end_matrix = []
 
-        pdb.set_trace()
         # SEQUENCES WITH BOTH
         # Here we'll add all the sequnces with the "minumun" and "maximum" at the same time for one sequence.
         with open(path_input, "r") as main_file:
@@ -260,7 +278,6 @@ def genome_solap_main(genome_fasta, naming_short, path_input, max_diff, writing_
                             minus_start_matrix.append(int(row[10]))
                             minus_end_matrix.append(int(row[11]))
 
-        pdb.set_trace()
         # SEQUENCES WITH ONLY ONE, i.e., WITH OVERLAPS
         # Now if we get for example 2 overlaps, one with the "minimum" and the other with the "maximum" ---> we need both to join them. We then check the past coordinates (to not repeat) and search for overlaps.
         solap_segments = []  # Here are all the small overlaps segments
@@ -301,7 +318,4 @@ def genome_solap_main(genome_fasta, naming_short, path_input, max_diff, writing_
 
         genome_solap_main_matrix += solap_main_matrix
 
-    print("\n")
-    print('|', '=' * 50, '|', sep='')
-    print("\nFiltering overlaps proceeding:")
     csv_creator(writing_path_input, genome_solap_main_matrix)
