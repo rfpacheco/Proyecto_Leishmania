@@ -64,7 +64,11 @@ def specific_sequence_1000nt(path_input, chromosome_ID, main_folder_path, genome
 
                 number_add_length = int((1000 - seq_length) / 2)
                 new_start = int(row[10]) + number_add_length  # Upside down because its "minus"
+
                 new_end = int(row[11]) - number_add_length  # Upside down because its "minus"
+                if new_end < 0:
+                    new_end = 1
+                    new_start = new_start + number_add_length
 
                 seq = subprocess.check_output("blastdbcmd -db " + genome_fasta + " -entry "
                                               + row[1] + " -range " + str(new_end) + "-" + str(new_start)
@@ -203,11 +207,12 @@ def specific_sequence_corrected(path_input, nucleotides1000_directory, main_fold
                             x = 1000 - max_end
                             new_start = int(row[10]) - min_start + 1
                             new_end = int(row[11]) + x
+                            if new_end < 0: new_end = 1
 
                             seq = subprocess.check_output("blastdbcmd -db " + genome_fasta + " -entry "
                                                           + row[1] + " -range " + str(new_end) + "-" + str(new_start)
-                                                          + " -strand minus -outfmt %s", 
-                                                          shell=True, 
+                                                          + " -strand minus -outfmt %s",
+                                                          shell=True,
                                                           universal_newlines=True)  # MUY IMPORTANTE EL SUBPROCESS
                             seq = seq.strip()  # Eliminar EoL caracteres
 
