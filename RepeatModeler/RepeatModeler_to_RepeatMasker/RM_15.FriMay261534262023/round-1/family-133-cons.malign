@@ -1,0 +1,177 @@
+bless( {
+         'alignCol' => [
+                         {
+                           'name' => 'gi|4243',
+                           'seqStart' => 1,
+                           'seq' => 'GCCACGGCCTTGGCCAGCAGCGTCTTGCCGGTGCCGGGAGGGCCAT---A---GAGCA',
+                           'lfSeq' => undef,
+                           'rfSeq' => 'G'
+                         },
+                         {
+                           'end' => 57,
+                           'seqEnd' => 52,
+                           'name' => 'gi|804',
+                           'srcDiv' => '5.77',
+                           'orient' => '-',
+                           'rfSeq' => undef,
+                           'seq' => 'GCCATGGCCTTGGCCAGCATCGTCTTGCCGGTGCCGGGAGGGCCAT---G---GAGCA',
+                           'start' => 0,
+                           'seqStart' => '1',
+                           'lfSeq' => undef
+                         },
+                         {
+                           'start' => 0,
+                           'seqStart' => '1',
+                           'seq' => 'GCGATGGCCTTGGCCAGCAGCGTCTTGCCGGTGCCGGGCGGCCCGT---A---CAGCA',
+                           'lfSeq' => undef,
+                           'rfSeq' => 'G',
+                           'orient' => '-',
+                           'srcDiv' => '11.54',
+                           'seqEnd' => 52,
+                           'name' => 'gi|6753',
+                           'end' => 57
+                         },
+                         {
+                           'lfSeq' => 'C',
+                           'seq' => 'GCCACGGCCTTCACCAGCATGGTCTTGCCGGTGCCGGGCGGGCCGT---A---GAGCA',
+                           'start' => 0,
+                           'seqStart' => '1',
+                           'rfSeq' => undef,
+                           'orient' => '-',
+                           'srcDiv' => '11.54',
+                           'name' => 'gi|6714',
+                           'seqEnd' => 52,
+                           'end' => 57
+                         },
+                         {
+                           'srcDiv' => '10.00',
+                           'orient' => '+',
+                           'rfSeq' => undef,
+                           'start' => 0,
+                           'seq' => 'GCGACGGCCTTGGCGAGGAGCGTCTTGCCGGTGCCGGGCGGGCCAA---A---GAG',
+                           'seqStart' => '2',
+                           'lfSeq' => 'C',
+                           'end' => 55,
+                           'seqEnd' => 51,
+                           'name' => 'gi|9189'
+                         },
+                         {
+                           'rfSeq' => undef,
+                           'lfSeq' => undef,
+                           'start' => 0,
+                           'seqStart' => '2',
+                           'seq' => 'GCGACGGCTTTGGCCAGCAGCGTCTTGCCGGTGCCGGGGACACCGT---A---GAG',
+                           'srcDiv' => '14.00',
+                           'orient' => '+',
+                           'end' => 55,
+                           'seqEnd' => 51,
+                           'name' => 'gi|7461'
+                         },
+                         {
+                           'name' => 'gi|8593',
+                           'seqEnd' => 52,
+                           'end' => 57,
+                           'lfSeq' => undef,
+                           'start' => 0,
+                           'seqStart' => '1',
+                           'seq' => 'GCCACCGCCTTGGCCAGTAGCGTCTTGCCGACACCAGGCGGGCCGT---C---GAGCA',
+                           'rfSeq' => undef,
+                           'orient' => '-',
+                           'srcDiv' => '17.31'
+                         },
+                         {
+                           'seqEnd' => 52,
+                           'name' => 'gi|3839',
+                           'end' => 57,
+                           'orient' => '-',
+                           'srcDiv' => '17.31',
+                           'lfSeq' => undef,
+                           'start' => 0,
+                           'seq' => 'GCAACAGCCTTGGCAAGACTCGTTTTGCCGGTGCCGGGAGGCCCGT---A---GAGCA',
+                           'seqStart' => '1',
+                           'rfSeq' => undef
+                         },
+                         {
+                           'seqEnd' => 49,
+                           'name' => 'gi|2231',
+                           'end' => 57,
+                           'orient' => '+',
+                           'srcDiv' => '13.46',
+                           'lfSeq' => 'G',
+                           'seq' => 'GCCACAGCTTTCGCGAGCAGCGTCTTGCCAGTACCGGGGGGGCC---------GAGCA',
+                           'start' => 0,
+                           'seqStart' => '1',
+                           'rfSeq' => undef
+                         },
+                         {
+                           'srcDiv' => '7.89',
+                           'orient' => '-',
+                           'rfSeq' => undef,
+                           'lfSeq' => 'G',
+                           'seqStart' => '2',
+                           'seq' => 'GCGACGGCCTTGGCCAGCAGTGTCTTGCCTGTGCCGGG',
+                           'start' => 0,
+                           'end' => 37,
+                           'seqEnd' => 39,
+                           'name' => 'gi|3445'
+                         },
+                         {
+                           'seqEnd' => 39,
+                           'name' => 'gi|4737',
+                           'end' => 37,
+                           'orient' => '-',
+                           'srcDiv' => '7.89',
+                           'lfSeq' => undef,
+                           'start' => 0,
+                           'seq' => 'GCCACCGCCTTTGCGAGCAGCGTCTTGCCGGTGCCGGG',
+                           'seqStart' => '2',
+                           'rfSeq' => undef
+                         },
+                         {
+                           'end' => 57,
+                           'seqEnd' => 55,
+                           'name' => 'gi|8672',
+                           'rfSeq' => undef,
+                           'seq' => 'GCGACCGCCTTGGCAAGCATTGTCTTGCCGGTGCCCGGCGGACCGT---ACATGAGCA',
+                           'seqStart' => '1',
+                           'start' => 0,
+                           'lfSeq' => 'C',
+                           'srcDiv' => '17.31',
+                           'orient' => '+'
+                         },
+                         {
+                           'srcDiv' => '17.31',
+                           'orient' => '+',
+                           'rfSeq' => undef,
+                           'seq' => 'GCGACGGCGTTGGCGAGCATCGTCTTGCCGGTGCCACTCGGGCCGTGGAA---GAGCA',
+                           'seqStart' => '2',
+                           'start' => 0,
+                           'lfSeq' => 'C',
+                           'end' => 57,
+                           'seqEnd' => 56,
+                           'name' => 'gi|312'
+                         },
+                         {
+                           'seqEnd' => 51,
+                           'name' => 'gi|700',
+                           'end' => 55,
+                           'lfSeq' => 'CGCAATC',
+                           'seqStart' => '2',
+                           'seq' => 'GCCAGCGCCTTGGCTAGCATCGTCTTGCTGCAGCCCGGCGGGCCGT---A---GAG',
+                           'start' => 0,
+                           'rfSeq' => undef,
+                           'orient' => '+',
+                           'srcDiv' => '20.00'
+                         },
+                         {
+                           'seqEnd' => 50,
+                           'name' => 'gi|3556',
+                           'end' => 54,
+                           'orient' => '+',
+                           'srcDiv' => '13.95',
+                           'seq' => 'GCCTTGGCCAGCAGCGTCTTACCGCAACCGGGTGGGCCGT---A---GA',
+                           'seqStart' => '8',
+                           'start' => 6
+                         }
+                       ]
+       }, 'MultAln' )

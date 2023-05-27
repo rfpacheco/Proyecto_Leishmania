@@ -1,0 +1,11 @@
+RepeatModeler Version 2.0.4
+===========================
+Using output directory = /work/RM_17.SatMay271231162023
+Search Engine = rmblast 2.14.0+
+Dependencies: TRF 4.09, RECON 1.08, RepeatScout 1.0.6, RepeatMasker 4.1.5
+LTR Structural Analysis: Enabled ( GenomeTools 1.6.0, LTR_Retriever v2.9.0,
+                                   Ninja 0.97-cluster_only, MAFFT 7.471,
+                                   CD-HIT 4.8.1 )
+Random Number Seed: 1685190673
+Database = /work/SIDER2   - Sequences = 7
+  - Bases = 3530

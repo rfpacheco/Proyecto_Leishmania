@@ -1,0 +1,209 @@
+
+
+Building a new DB, current time: 05/26/2023 15:53:53
+New DB name:   /work/RM_15.FriMay261534262023/round-2/sampleDB-2.fa.masked
+New DB title:  /work/RM_15.FriMay261534262023/round-2/sampleDB-2.fa.masked
+Sequence type: Nucleotide
+Keep MBits: T
+Maximum file size: 3000000000B
+Adding sequences from FASTA; added 253 sequences in 0.0477951 seconds.
+
+
+
+
+Building a new DB, current time: 05/26/2023 16:10:30
+New DB name:   /work/RM_15.FriMay261534262023/round-2/family-75.fa
+New DB title:  /work/RM_15.FriMay261534262023/round-2/family-75.fa
+Sequence type: Nucleotide
+Keep MBits: T
+Maximum file size: 3000000000B
+Adding sequences from FASTA; added 16 sequences in 0.000261068 seconds.
+
+
+
+
+Building a new DB, current time: 05/26/2023 16:10:30
+New DB name:   /work/RM_15.FriMay261534262023/round-2/family-262.fa
+New DB title:  /work/RM_15.FriMay261534262023/round-2/family-262.fa
+Sequence type: Nucleotide
+Keep MBits: T
+Maximum file size: 3000000000B
+Adding sequences from FASTA; added 43 sequences in 0.000413179 seconds.
+
+
+
+
+Building a new DB, current time: 05/26/2023 16:10:30
+New DB name:   /work/RM_15.FriMay261534262023/round-2/family-51.fa
+New DB title:  /work/RM_15.FriMay261534262023/round-2/family-51.fa
+Sequence type: Nucleotide
+Keep MBits: T
+Maximum file size: 3000000000B
+Adding sequences from FASTA; added 19 sequences in 0.000285149 seconds.
+
+
+
+
+Building a new DB, current time: 05/26/2023 16:10:30
+New DB name:   /work/RM_15.FriMay261534262023/round-2/family-44.fa
+New DB title:  /work/RM_15.FriMay261534262023/round-2/family-44.fa
+Sequence type: Nucleotide
+Keep MBits: T
+Maximum file size: 3000000000B
+Adding sequences from FASTA; added 20 sequences in 0.000263929 seconds.
+
+
+
+
+Building a new DB, current time: 05/26/2023 16:10:31
+New DB name:   /work/RM_15.FriMay261534262023/round-2/family-51-cons-2.fa
+New DB title:  /work/RM_15.FriMay261534262023/round-2/family-51-cons-2.fa
+Sequence type: Nucleotide
+Keep MBits: T
+Maximum file size: 3000000000B
+Adding sequences from FASTA; added 1 sequences in 9.67979e-05 seconds.
+
+
+
+
+Building a new DB, current time: 05/26/2023 16:10:31
+New DB name:   /work/RM_15.FriMay261534262023/round-2/family-44-cons-2.fa
+New DB title:  /work/RM_15.FriMay261534262023/round-2/family-44-cons-2.fa
+Sequence type: Nucleotide
+Keep MBits: T
+Maximum file size: 3000000000B
+Adding sequences from FASTA; added 1 sequences in 8.91685e-05 seconds.
+
+
+
+
+Building a new DB, current time: 05/26/2023 16:10:32
+New DB name:   /work/RM_15.FriMay261534262023/round-2/family-75-cons-2.fa
+New DB title:  /work/RM_15.FriMay261534262023/round-2/family-75-cons-2.fa
+Sequence type: Nucleotide
+Keep MBits: T
+Maximum file size: 3000000000B
+Adding sequences from FASTA; added 1 sequences in 9.10759e-05 seconds.
+
+
+
+
+Building a new DB, current time: 05/26/2023 16:10:32
+New DB name:   /work/RM_15.FriMay261534262023/round-2/family-262-cons-2.fa
+New DB title:  /work/RM_15.FriMay261534262023/round-2/family-262-cons-2.fa
+Sequence type: Nucleotide
+Keep MBits: T
+Maximum file size: 3000000000B
+Adding sequences from FASTA; added 1 sequences in 8.89301e-05 seconds.
+
+
+
+
+Building a new DB, current time: 05/26/2023 16:10:33
+New DB name:   /work/RM_15.FriMay261534262023/round-2/family-44-cons-3.fa
+New DB title:  /work/RM_15.FriMay261534262023/round-2/family-44-cons-3.fa
+Sequence type: Nucleotide
+Keep MBits: T
+Maximum file size: 3000000000B
+Adding sequences from FASTA; added 1 sequences in 9.48906e-05 seconds.
+
+
+
+
+Building a new DB, current time: 05/26/2023 16:10:33
+New DB name:   /work/RM_15.FriMay261534262023/round-2/family-51-cons-3.fa
+New DB title:  /work/RM_15.FriMay261534262023/round-2/family-51-cons-3.fa
+Sequence type: Nucleotide
+Keep MBits: T
+Maximum file size: 3000000000B
+Adding sequences from FASTA; added 1 sequences in 8.79765e-05 seconds.
+
+
+
+
+Building a new DB, current time: 05/26/2023 16:10:34
+New DB name:   /work/RM_15.FriMay261534262023/round-2/family-75-cons-3.fa
+New DB title:  /work/RM_15.FriMay261534262023/round-2/family-75-cons-3.fa
+Sequence type: Nucleotide
+Keep MBits: T
+Maximum file size: 3000000000B
+Adding sequences from FASTA; added 1 sequences in 0.000143051 seconds.
+
+
+
+
+Building a new DB, current time: 05/26/2023 16:10:34
+New DB name:   /work/RM_15.FriMay261534262023/round-2/family-262-cons-3.fa
+New DB title:  /work/RM_15.FriMay261534262023/round-2/family-262-cons-3.fa
+Sequence type: Nucleotide
+Keep MBits: T
+Maximum file size: 3000000000B
+Adding sequences from FASTA; added 1 sequences in 9.20296e-05 seconds.
+
+
+
+
+Building a new DB, current time: 05/26/2023 16:10:35
+New DB name:   /work/RM_15.FriMay261534262023/round-2/family-44-cons-4.fa
+New DB title:  /work/RM_15.FriMay261534262023/round-2/family-44-cons-4.fa
+Sequence type: Nucleotide
+Keep MBits: T
+Maximum file size: 3000000000B
+Adding sequences from FASTA; added 1 sequences in 0.000132084 seconds.
+
+
+
+
+Building a new DB, current time: 05/26/2023 16:10:35
+New DB name:   /work/RM_15.FriMay261534262023/round-2/family-51-cons-4.fa
+New DB title:  /work/RM_15.FriMay261534262023/round-2/family-51-cons-4.fa
+Sequence type: Nucleotide
+Keep MBits: T
+Maximum file size: 3000000000B
+Adding sequences from FASTA; added 1 sequences in 8.79765e-05 seconds.
+
+
+
+
+Building a new DB, current time: 05/26/2023 16:10:35
+New DB name:   /work/RM_15.FriMay261534262023/round-2/family-75-cons-4.fa
+New DB title:  /work/RM_15.FriMay261534262023/round-2/family-75-cons-4.fa
+Sequence type: Nucleotide
+Keep MBits: T
+Maximum file size: 3000000000B
+Adding sequences from FASTA; added 1 sequences in 8.89301e-05 seconds.
+
+
+
+
+Building a new DB, current time: 05/26/2023 16:10:36
+New DB name:   /work/RM_15.FriMay261534262023/round-2/family-262-cons-4.fa
+New DB title:  /work/RM_15.FriMay261534262023/round-2/family-262-cons-4.fa
+Sequence type: Nucleotide
+Keep MBits: T
+Maximum file size: 3000000000B
+Adding sequences from FASTA; added 1 sequences in 8.89301e-05 seconds.
+
+
+
+
+Building a new DB, current time: 05/26/2023 16:10:37
+New DB name:   /work/RM_15.FriMay261534262023/round-2/family-51-cons-5.fa
+New DB title:  /work/RM_15.FriMay261534262023/round-2/family-51-cons-5.fa
+Sequence type: Nucleotide
+Keep MBits: T
+Maximum file size: 3000000000B
+Adding sequences from FASTA; added 1 sequences in 9.20296e-05 seconds.
+
+
+
+
+Building a new DB, current time: 05/26/2023 16:10:37
+New DB name:   /work/RM_15.FriMay261534262023/round-2/family-75-cons-5.fa
+New DB title:  /work/RM_15.FriMay261534262023/round-2/family-75-cons-5.fa
+Sequence type: Nucleotide
+Keep MBits: T
+Maximum file size: 3000000000B
+Adding sequences from FASTA; added 1 sequences in 7.70092e-05 seconds.
+
+

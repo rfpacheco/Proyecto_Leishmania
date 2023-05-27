@@ -1,0 +1,1 @@
+I tried to make first a RepeatModeler with the SIDER2 from the cromosome 1 to launch it to RepeatMasker, but it failes as the minimum dataset to work with in RepeatModerker is 40000mb

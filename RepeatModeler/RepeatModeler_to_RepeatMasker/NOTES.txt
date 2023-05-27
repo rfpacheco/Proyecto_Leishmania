@@ -1,0 +1,52 @@
+L_infantum_ALL_36Chr.fasta.out
+=============================================================
+grep Unknown L_infantum_ALL_36Chr.fasta.out
+grep Unknown L_infantum_ALL_36Chr.fasta.out | wc -l
+
+Me da bien los resultados, unos 4845 líneas.
+
+=============================================================
+grep -E 'Unknown|LINE' L_infantum_ALL_36Chr.fasta.out | wc -l
+
+Con esto activo el regex
+
+=============================================================
+gawk '{if ($13 > 450) print $0;}' L_infantum_ALL_36Chr.fasta.out > PRUEBA1.txt
+
+gawk '{if (NR>3 && $13 > 450) {print $}}' L_infantum_ALL_36Chr.fasta.out > PRUEBA1.txt
+
+
+=============================================================
+gawk 'BEGIN {RS="\n"}{print $0;}' L_infantum_ALL_36Chr.fasta.out | gawk '{if ($7 - $6 > 449) print $0;}'
+gawk 'BEGIN {RS="\n"}{print $0;}' L_infantum_ALL_36Chr.fasta.out | gawk '{if ($7 - $6 > 449) print $5,$6,$7,$9,$11;}' > PRUEBA1.txt
+
+Con esto he conseguido lo que quería, filtrar por tamaño
+
+=============================================================
+gawk 'BEGIN {RS="\n"}{print $5;}' PRUEBA1.txt | sort | uniq
+
+    DNA/CMC-EnSpm
+    DNA/Dada
+    LINE/I
+    LINE/L1
+    LTR/ERVK
+    LTR/Gypsy
+    PLE/Chlamys
+    rRNA
+    Simple_repeat
+    Unknown
+
+gawk 'BEGIN {RS="\n"}{print $5;}' PRUEBA1.txt | sort | uniq -c
+      3 DNA/CMC-EnSpm
+      3 DNA/Dada
+    218 LINE/I
+     10 LINE/L1
+      2 LTR/ERVK
+     25 LTR/Gypsy
+     13 PLE/Chlamys
+      3 rRNA
+      9 Simple_repeat
+   1545 Unknown
+
+
+grep Unknown PRUEBA1.txt > PRUEBA2.txt

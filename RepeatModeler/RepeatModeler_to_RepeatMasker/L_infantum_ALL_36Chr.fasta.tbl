@@ -1,0 +1,59 @@
+==================================================
+file name: L_infantum_ALL_36Chr.fasta
+sequences:            36
+total length:   32802969 bp  (32802969 bp excl N/X-runs)
+GC level:         59.74 %
+bases masked:    2887010 bp ( 8.80 %)
+==================================================
+               number of      length   percentage
+               elements*    occupied  of sequence
+--------------------------------------------------
+Retroelements          850       290232 bp    0.88 %
+   SINEs:                0            0 bp    0.00 %
+   Penelope:            37        27351 bp    0.08 %
+   LINEs:              754       239869 bp    0.73 %
+    CRE/SLACS            0            0 bp    0.00 %
+     L2/CR1/Rex          0            0 bp    0.00 %
+     R1/LOA/Jockey     733       230739 bp    0.70 %
+     R2/R4/NeSL          0            0 bp    0.00 %
+     RTE/Bov-B           0            0 bp    0.00 %
+     L1/CIN4            21         9130 bp    0.03 %
+   LTR elements:        96        50363 bp    0.15 %
+     BEL/Pao            43         5891 bp    0.02 %
+     Ty1/Copia           0            0 bp    0.00 %
+     Gypsy/DIRS1        20        37005 bp    0.11 %
+       Retroviral       33         7467 bp    0.02 %
+
+DNA transposons        161        15510 bp    0.05 %
+   hobo-Activator        0            0 bp    0.00 %
+   Tc1-IS630-Pogo        0            0 bp    0.00 %
+   En-Spm                0            0 bp    0.00 %
+   MULE-MuDR             0            0 bp    0.00 %
+   PiggyBac              0            0 bp    0.00 %
+   Tourist/Harbinger     0            0 bp    0.00 %
+   Other (Mirage,        0            0 bp    0.00 %
+    P-element, Transib)
+
+Rolling-circles          0            0 bp    0.00 %
+
+Unclassified:         4481      1692063 bp    5.16 %
+
+Total interspersed repeats:     2025156 bp    6.17 %
+
+
+Small RNA:             243        42376 bp    0.13 %
+
+Satellites:              0            0 bp    0.00 %
+Simple repeats:      19591       728798 bp    2.22 %
+Low complexity:       2019        90680 bp    0.28 %
+==================================================
+
+* most repeats fragmented by insertions or deletions
+  have been counted as one element
+                                                      
+
+RepeatMasker version 4.1.5 , default mode
+                                        
+run with rmblastn version 2.14.0+
+The query was compared to classified sequences in "L_infantum-families.fa"
+FamDB: 
