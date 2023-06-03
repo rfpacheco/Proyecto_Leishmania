@@ -95,9 +95,6 @@ def fasta_creator(path_input, fasta_output_path):
 
     :return: All the data from the CSV in a FASTA format.
     :rtype: FASTA File
-
-    .. warning::
-       MUST MODIFY IT, I NEED THE NUMBERING TO BE 01, 02, 03, 04...09, 10, 11. And not how I have it now, which is 1, 2, 3, 4, 5...10, 11, 12.
     """
     matrix_fasta_creator = []
     numbering = 0

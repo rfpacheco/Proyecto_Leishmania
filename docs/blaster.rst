@@ -5,10 +5,8 @@ Let's see it this gets through
 
 .. automodule:: modules.blaster
    :members:
-   :undoc-members:
-   :show-inheritance:
-   
-
+ 
+ 
 .. References
 
 .. _Command Line Application User Manual: https://www.ncbi.nlm.nih.gov/books/NBK279690

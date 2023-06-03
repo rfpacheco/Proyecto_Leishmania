@@ -5,14 +5,21 @@
 Installation
 ============
 
-At the command line:
+To use the program you will need the next packages:
 
+- `Blast program`_ from the NCBI, which can be installed with in the Linux terminal by:
 
-.. easy_install crawler
-.. in my case it would be something like "easy_install LeishmaniaBlaster"
+   .. code-block:: bash
 
-Or, if you have pip installed:
+      sudo apt install ncbi-blast+ 
 
-.. pip install crawler
-.. in my case it would be something like "pip install LeishmaniaBlaster"
+- `BioPython`_, which can be installed by:
 
+   .. code-block:: bash
+      
+      pip install biopython
+
+.. References
+
+.. _Blast program: https://blast.ncbi.nlm.nih.gov/doc/blast-help/downloadblastdata.html#downloadblastdata
+.. _BioPython: https://biopython.org/

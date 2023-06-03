@@ -4,7 +4,8 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" />
-  
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <title>Module overlap.py &mdash; Leishmania_Project 0.1 documentation</title>
@@ -169,7 +170,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-modules.overlap">
+  <section id="module-modules.overlap">
 <span id="module-overlap-py"></span><h1>Module overlap.py<a class="headerlink" href="#module-modules.overlap" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="modules.overlap.genome_solap_by_pairs">
@@ -180,10 +181,10 @@
 <dd class="field-odd"><p><strong>rows_to_filter</strong> (<em>array 3D</em>) – A Array 3D given by <a class="reference internal" href="#modules.overlap.genome_solap_main" title="modules.overlap.genome_solap_main"><code class="xref py py-func docutils literal notranslate"><span class="pre">genome_solap_main()</span></code></a> with all the supossed rows with overlaps.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
+<dd class="field-even"><p>a 3D list with all the real coordinates for overlaps</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p></p>
+<dd class="field-odd"><p>a Python 3D list</p>
 </dd>
 </dl>
 </dd></dl>
@@ -229,14 +230,27 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="modules.overlap.genome_solap_main">
 <span class="sig-prename descclassname"><span class="pre">modules.overlap.</span></span><span class="sig-name descname"><span class="pre">genome_solap_main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">genome_fasta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">naming_short</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_diff</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">writing_path_input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#modules.overlap.genome_solap_main" title="Permalink to this definition">¶</a></dt>
-<dd><p>Will call a variety of functions with the purpose of filtering overlaps in the data.</p>
+<dd><p>Will call a variety of functions with the purpose of filtering overlaps in the data:</p>
+<ol class="arabic simple">
+<li><p>First it will get all the coordinates from <code class="docutils literal notranslate"><span class="pre">path_input</span></code> with <a class="reference internal" href="#modules.overlap.genome_solap_location_filter" title="modules.overlap.genome_solap_location_filter"><code class="xref py py-func docutils literal notranslate"><span class="pre">genome_solap_location_filter()</span></code></a>.</p></li>
+<li><p>The output will be given to <a class="reference internal" href="#modules.overlap.genome_solap_location_grouping" title="modules.overlap.genome_solap_location_grouping"><code class="xref py py-func docutils literal notranslate"><span class="pre">genome_solap_location_grouping()</span></code></a>, that will group them in a 3D list by nearness.</p></li>
+<li><p>The output will be given to <a class="reference internal" href="#modules.overlap.genome_solap_minmax" title="modules.overlap.genome_solap_minmax"><code class="xref py py-func docutils literal notranslate"><span class="pre">genome_solap_minmax()</span></code></a> that will get depending on the DNA strand, the maximum or minimum value for each group.</p></li>
+<li><p>The ouput will be given to <a class="reference internal" href="#modules.overlap.genome_solap_main" title="modules.overlap.genome_solap_main"><code class="xref py py-func docutils literal notranslate"><span class="pre">genome_solap_main()</span></code></a> that will make two filters:</p>
+<ul class="simple">
+<li><p>The first one, will filters all sequences which have the minimum value as well as the maximum (depending again on the DNA strand).</p></li>
+<li><p>The second one will get all the sequences which have only one minimum or one maximum. In the end, since it will search with the coordinates given by <a class="reference internal" href="#modules.overlap.genome_solap_minmax" title="modules.overlap.genome_solap_minmax"><code class="xref py py-func docutils literal notranslate"><span class="pre">genome_solap_minmax()</span></code></a>, the number of results will be even (one with the minimum and one with the maximum).</p></li>
+</ul>
+</li>
+<li><p>The ourput of the second filter of the 4º step will be given to <cite>func:`~modules.overlap.genome_solap_by_pairs</cite> that will first order the inputs, so the when it analyze them by pairs, the pair are in fact, the nearest ones. Then, it will join them to form one sequence which will be added to a final 3D list.</p></li>
+<li><p>That 3D list will be used to make a CSV file.</p></li>
+</ol>
 <p>It uses <a class="reference internal" href="filters.html#modules.filters.chromosome_filter" title="modules.filters.chromosome_filter"><code class="xref py py-func docutils literal notranslate"><span class="pre">chromosome_filter()</span></code></a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>genome_fasta</strong> (<em>string</em>) – Path to our whole genome sequence in FASTA format.</p></li>
 <li><p><strong>naming_short</strong> (<em>string</em>) – Label needed to read the ID of each cromosome in the .csv file. In the case of <strong>L. infantum</strong> for example, would be <em>LinJ</em> since the .csv file IDs are <em>LinJ.XX</em>.</p></li>
-<li><p><strong>path_input</strong> (<em>string</em>) – Path to the CSV file we want to filter data. It’s the output file created by <a class="reference internal" href="blaster.html#modules.blaster.blastn_blaster" title="modules.blaster.blastn_blaster"><code class="xref py py-func docutils literal notranslate"><span class="pre">blastn_blaster()</span></code></a> and given here by <a class="reference internal" href="filters.html#modules.filters.global_filters_main" title="modules.filters.global_filters_main"><code class="xref py py-func docutils literal notranslate"><span class="pre">modules.filters.global_filters_main()</span></code></a>.</p></li>
+<li><p><strong>path_input</strong> (<em>string</em>) – Path to the CSV file we want to filter data. It’s the output file created by <a class="reference internal" href="blaster.html#modules.blaster.blastn_blaster" title="modules.blaster.blastn_blaster"><code class="xref py py-func docutils literal notranslate"><span class="pre">blastn_blaster()</span></code></a> and given here by <a class="reference internal" href="filters.html#modules.filters.global_filters_main" title="modules.filters.global_filters_main"><code class="xref py py-func docutils literal notranslate"><span class="pre">modules.filters.global_filters_main()</span></code></a>. It’s called “_BLAST_MAIN.csv”.</p></li>
 <li><p><strong>max_diff</strong> (<em>intenger</em>) – Maximun proxomity value for the different sequences when they have to be grouped. <strong>Important</strong>.</p></li>
 <li><p><strong>writing_path_input</strong> (<em>string</em>) – Path where the CSV file will be saved.</p></li>
 </ul>
@@ -264,7 +278,7 @@
 </dl>
 </dd></dl>
 
-</div>
+</section>
 
 
            </div>
