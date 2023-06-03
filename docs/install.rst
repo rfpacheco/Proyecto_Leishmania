@@ -7,16 +7,16 @@ Installation
 
 To use the program you will need the next packages:
 
-- `Blast program`_ from the NCBI, which can be installed with in the Linux terminal by:
+1. `Blast program`_ from the NCBI, which can be installed with in the Linux terminal by:
 
    .. code-block:: bash
 
       sudo apt install ncbi-blast+ 
 
-- `BioPython`_, which can be installed by:
+2. `BioPython`_, which can be installed by:
 
    .. code-block:: bash
-      
+
       pip install biopython
 
 .. References

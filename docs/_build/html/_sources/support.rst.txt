@@ -4,13 +4,8 @@
 Support
 =======
 
-The easiest way to get help with the project is to join the #crawler
-channel on Freenode.
-We hang out there and you can get real-time help with your projects.
-The other good way is to open an issue on Github.
+This program it's in its first instances, i.e., *alpha* state. So the Support part is still in development.
 
-The mailing list at https://groups.google.com/forum/#!forum/crawler 
-is also available for support.
-
-Freenode: irc://freenode.net
-Github: http://github.com/example/crawler/issues
+Meanwhile you can contact for more information:
+   1. rfpacheco@uoc.edu
+   2. https://github.com/Viskuit/Proyecto_Leishmania
