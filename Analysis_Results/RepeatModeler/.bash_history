@@ -27,3 +27,5 @@ tail -h
 tail --h
 RepeatMasker -h
 exit
+RepeatMasker -h
+RepeatModeler -h

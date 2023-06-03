@@ -15,4 +15,4 @@ Let's see it this gets through
 
 .. _world_size info: https://www.metagenomics.wiki/tools/blast/default-word-size
 
-.. _Metagenomics BLASTn manual: https://www.metagenomics.wiki/tools/blast/blastn-output-format-6s
+.. _Metagenomics BLASTn manual: https://www.metagenomics.wiki/tools/blast/blastn-output-format-6
