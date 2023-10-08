@@ -5,7 +5,6 @@ __all__ = [
     "files_manager",
     "seq_modifier",
     "filters",
-    "subfamilies_finder",
     "duplicates",
     "overlap"
 ]

@@ -48,7 +48,7 @@ def chromosome_filter(path_input, name):
     for number in main_list:
         number = str(number)
         if len(number) == 1:
-            chromosome_number.append(name + ".0" + number)  # Para que coincida con los CSV
+            chromosome_number.append(name + ".0" + number)  # For it to be the same as the CSV
         else:
             chromosome_number.append(name + "." + number)
 
