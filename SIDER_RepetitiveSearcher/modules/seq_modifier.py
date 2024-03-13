@@ -41,7 +41,13 @@ def specific_sequence_1000nt(path_input, chromosome_ID, main_folder_path, genome
                 # That's why we use row[10] "Start of alignment in subject" and row[11] "End of alignment in subject".
                 number_add_length = int((1000 - seq_length) / 2)  # Now we need the coordinates to expand till 1000 nt.
                 new_start = int(row[10]) - number_add_length  # New coordinates for Start
-                new_end = int(row[11]) + number_add_length  # New coordinates for End
+                new_end = int(row[11]) + number_add_length 
+                
+                if new_start < 0:
+                    new_start = 1
+                    new_end = new_end + number_add_length # Since new_start is 1, the "sum" destined to "new start" now is for "new end" so it reaches 1000.
+                    
+                 # New coordinates for End
 
                 # Now we select the sequence with new coordinates with "blastdbcmd"
                 seq = subprocess.check_output("blastdbcmd -db " + genome_fasta + " -entry "
