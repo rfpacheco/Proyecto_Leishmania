@@ -33,32 +33,33 @@ def genome_pre_duplicate_filter(genome_fasta, naming_short, path_input, DNA_sens
     from modules.filters import chromosome_filter  # Delayed import --> to break the ciruclar import. Need to be at the start of function.
 
     matrix_all_genome = []
-    chromosome_number = chromosome_filter(genome_fasta, naming_short)  # I obtain a Python list, e.g., ["LinJ.01", "LinJ.02", ...]
+    chromosome_number = chromosome_filter(genome_fasta, naming_short)  # It obtains a list with the chromosomes IDs, e.g., ["LinJ.01", "LinJ.02", ...]
 
-    for chromosome in chromosome_number:  # For each chromosome
-        location_start = []  # It saves the "Start of alignment"
-        with open(path_input, "r") as main_file:  # Opens CSV file "BLAST_MAIN.csv"
-            reader = csv.reader(main_file, delimiter=",")  # Reads CSV file "BLAST_MAIN.csv"
+    for chromosome in chromosome_number:  # For each chromosome, e.g., it will start only with "LinJ.01"
+        location_start = []  # It will save ALL "start" (row[10]) coordinates for a chromosome ID (e.g., "LinJ.01") and a DNA sense (e.g., "plus").
+        with open(path_input, "r") as main_file:  # Opens CSV file "BLAST_MAIN.csv" --> after getting the correct coordinates, it has the results from BLASTN of the correct coordinates agains the whole genome.
+            reader = csv.reader(main_file, delimiter=",")
             for row in reader:
-                if chromosome in row[1]:  # Chromosome filter
+                if chromosome in row[1]:  # Chromosome filter, e.g., it checks if "LinJ.01" is in row[1].
                     if DNA_sense in row[14]:  # Filter correct DNA sense ("plus" or "minus")
-                        location_start.append(int(row[10]))  # We save the "Start of alignment in query" from the CSV file to "location_start" Python list.
+                        location_start.append(int(row[10]))  # It saves the "Start of alignment in query" from the CSV file to "location_start" list.
 
             # -----------------------------------------------------------------------------
             matrix_filter = []
-            position_global = []  # VERY IMPORTANT! With this we prevent repeated locations. This one will reset for each chromosome in "chromosome_number"
+            position_global = []  # VERY IMPORTANT! With this we prevent repeated locations. This one will reset for each chromosome ID in "chromosome_number".
             with open(path_input, "r") as main_file:  # we read the CSV "BLAST_MAIN.csv" again
                 reader = csv.reader(main_file, delimiter=",")
                 for row in reader:
                     if chromosome in row[1]:  # Chromosome filter
-                        if DNA_sense in row[14] and int(row[10]) not in position_global:  # Here it will check "position_global" for repeated locations.
-                            position_rec = []  # This one will reset to [] for row of "BLAST_MAIN.csv"
+                        if DNA_sense in row[14] and int(row[10]) not in position_global:  # 1) Checks for DNA sense. 2) Checks if "start" is in "position_global" to avoid repeated locations.
+                            position_rec = []  # With a specific chromosome ID (e.g., "LinJ.01"), DNA sense, and not in "position_global" --> Saves "positions" from "location_start".
 
-                            for position in location_start:
-                                if abs(int(row[10]) - position) < max_diff:  # We compare this row[10] with each "position" in "location_start"
-                                    # In this part we make sure we are NEAR our position in the genome. If the "position" is 35000 and row[10] is 35400 and max_diff = 600, then abs(35400-35000)=400 < 600, so we are near.
-                                    # If position is 35000 and row[10] is 10000, then abs(10000-35000)=25000 > 600, so we are FAR AWAY.
-                                    if position not in position_rec:  # Here we check for repeated locations inside "position_rec", which resets for each chromosome.
+                            for position in location_start:  # "location_start" --> ALL "start" coordinates for a chromosome ID (e.g., "LinJ.01") and a DNA sense (e.g., "plus") are saved here.
+                                if abs(int(row[10]) - position) < max_diff:  # Compare row[10] from "BLAST_MAIN.csv" with each "position" in "location_start"
+                                    # In this part we make sure we are NEAR our position in the genome (e.g. with max_diff = 600): 
+                                        # If position is 35000 and row[10] is 10000, then abs(10000-35000)=25000 > 600, so we are FAR AWAY.
+                                        # If the "position" is 35000 and row[10] is 35400, then abs(35400-35000)=400 < 600, so we are near --> It'll try to save the "position".
+                                    if position not in position_rec:  # Checks for repeated locations inside "position_rec", which resets for each chromosome.
                                         # We add all non-repeated positions near this row[10]
                                         position_rec.append(position)
                                         position_global.append(position)
