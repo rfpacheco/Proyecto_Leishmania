@@ -32,12 +32,16 @@ def genome_pre_duplicate_filter(genome_fasta, naming_short, path_input, DNA_sens
     """
     from modules.filters import chromosome_filter  # Delayed import --> to break the ciruclar import. Need to be at the start of function.
 
-    matrix_all_genome = []
+    matrix_all_genome = [] # This will be the final matrix with all the data without duplications for every chromosome and DNA sense.
     chromosome_number = chromosome_filter(genome_fasta, naming_short)  # It obtains a list with the chromosomes IDs, e.g., ["LinJ.01", "LinJ.02", ...]
 
     for chromosome in chromosome_number:  # For each chromosome, e.g., it will start only with "LinJ.01"
+
+        # -----------------------------------------------------------------------------
+        # This part will save ALL "start" coordinates given a chromosome ID (e.g., "LinJ.01") and a DNA sense (e.g., "plus").
+        # -----------------------------------------------------------------------------
         location_start = []  # It will save ALL "start" (row[10]) coordinates for a chromosome ID (e.g., "LinJ.01") and a DNA sense (e.g., "plus").
-        with open(path_input, "r") as main_file:  # Opens CSV file "BLAST_MAIN.csv" --> after getting the correct coordinates, it has the results from BLASTN of the correct coordinates agains the whole genome.
+        with open(path_input, "r") as main_file:  # Opens CSV file "BLAST_MAIN.csv" --> it has the results from BLASTN of the correct coordinates agains the whole genome.
             reader = csv.reader(main_file, delimiter=",")
             for row in reader:
                 if chromosome in row[1]:  # Chromosome filter, e.g., it checks if "LinJ.01" is in row[1].
@@ -45,15 +49,19 @@ def genome_pre_duplicate_filter(genome_fasta, naming_short, path_input, DNA_sens
                         location_start.append(int(row[10]))  # It saves the "Start of alignment in query" from the CSV file to "location_start" list.
 
             # -----------------------------------------------------------------------------
-            matrix_filter = []
-            position_global = []  # VERY IMPORTANT! With this we prevent repeated locations. This one will reset for each chromosome ID in "chromosome_number".
+            matrix_filter = []  # It will save all filtered duplicates data for a chromosome ID (e.g., "LinJ.01") and a DNA sense (e.g., "plus").
+            position_global = []  # VERY IMPORTANT! With this we prevent repeated locations. This one will reset for each chromosome ID (e.g., "LinJ.01") and a DNA sense (e.g., "plus") in "chromosome_number".
             with open(path_input, "r") as main_file:  # we read the CSV "BLAST_MAIN.csv" again
                 reader = csv.reader(main_file, delimiter=",")
                 for row in reader:
-                    if chromosome in row[1]:  # Chromosome filter
+                    if chromosome in row[1]:  # Chromosome ID filter
                         if DNA_sense in row[14] and int(row[10]) not in position_global:  # 1) Checks for DNA sense. 2) Checks if "start" is in "position_global" to avoid repeated locations.
-                            position_rec = []  # With a specific chromosome ID (e.g., "LinJ.01"), DNA sense, and not in "position_global" --> Saves "positions" from "location_start".
 
+                            # -----------------------------------------------------------------------------
+                            # Here it'll compare each row[10] from the CSV against the "location_start" list.
+                            # If the difference between row[10] and each "position" in "location_start" is less than "max_diff", then it'll save the "position" in "position_rec".
+                            # -----------------------------------------------------------------------------
+                            position_rec = []  # With a specific chromosome ID (e.g., "LinJ.01"), DNA sense, and not in "position_global" --> Saves "positions" from "location_start". Restarts for each row in the CSV file.
                             for position in location_start:  # "location_start" --> ALL "start" coordinates for a chromosome ID (e.g., "LinJ.01") and a DNA sense (e.g., "plus") are saved here.
                                 if abs(int(row[10]) - position) < max_diff:  # Compare row[10] from "BLAST_MAIN.csv" with each "position" in "location_start"
                                     # In this part we make sure we are NEAR our position in the genome (e.g. with max_diff = 600): 
@@ -63,13 +71,14 @@ def genome_pre_duplicate_filter(genome_fasta, naming_short, path_input, DNA_sens
                                         # We add all non-repeated positions near this row[10]
                                         position_rec.append(position)
                                         position_global.append(position)
-
-                            # For a chromosome we've got "position_rec" and "position_global".
-                            DNAseq_filter = []
+                            # -----------------------------------------------------------------------------
+                            # For a chromosome we've got "position_rec" (restarts for each csv row) and "position_global" (restars for chromosome ID and sense).
+                            # Now, with groupings of nearness of "position_rec", we can compare the DNA seq from those sequences, to see if they are similar.
+                            DNAseq_filter = []  # it will save the DNA seq (row[15]) for a chromosome ID (e.g., "LinJ.01") and a DNA sense (e.g., "plus").
                             with open(path_input, "r") as main_file:  # Need to open it again to start reading from the first row
                                 reader = csv.reader(main_file, delimiter=",")
                                 for row in reader:
-                                    if chromosome in row[1]:  # Chromosome filter
+                                    if chromosome in row[1]:  # Chromosome ID filter
                                         if int(row[10]) in position_rec:  # if it's in "position_rec", then we check for duplications, since they are more or less near each other.
 
                                             if row[15] in DNAseq_filter:
