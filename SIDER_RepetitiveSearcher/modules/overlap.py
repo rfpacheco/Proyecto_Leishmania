@@ -57,6 +57,9 @@ def genome_solap_location_grouping(chromosome_rows, DNA_sense, max_diff):
     :rtype: Array 3D
     """
     # Numbers: 0 for Plus:Start, 1 for Plus:End, 2 for Minus:Start, 3 for Minus:End
+    # -----------------------------------------------------------------------------
+    # Here it will adjust the matrix depending on the DNA strand.
+    # -----------------------------------------------------------------------------
     position_list = genome_solap_location_filter(chromosome_rows)
     if DNA_sense == "plus":
         position_list_main = [position_list[0], position_list[1]]
@@ -66,14 +69,18 @@ def genome_solap_location_grouping(chromosome_rows, DNA_sense, max_diff):
     matrix1 = []
     matrix2 = []
 
-    for main_list in position_list_main:  # position_list_main = [[Starts][Ends]]
+    for main_list in position_list_main:  # position_list_main = [[Starts][Ends]]. First it will chose [Starts] and then [Ends].
         if main_list == position_list_main[0]:  # If the list == Start, it goes to matrix1
             matrix = matrix1
         elif main_list == position_list_main[1]:  # If the list == End, it goes to matrix2
             matrix = matrix2
 
-        for position in main_list:  # "position" is one specific coordinate
-            main_statement = False
+        # -----------------------------------------------------------------------------
+        # This code is hard to understand. It will group the coordinates depending on nearness.
+        # For example, the list [10, 12, 30, 34, 60, 62] will be grouped in [[12, 12] [30, 34] [60, 62]]
+        # -----------------------------------------------------------------------------
+        for position in main_list:  # "position" is an INT. A specific coordinate.
+            main_statement = False  # If it stays "False", it will create a new group with `matrix.append([position])`
             for group in matrix:  # In the first iteration, matrix is empty
                 for member in group:  # "member" is inside "group" which is inside "matrix" python list.
                     if abs(member - position) <= max_diff:
@@ -133,17 +140,19 @@ def genome_solap_by_pairs(rows_to_filter, genome_fasta):
     :return: a 3D list with all the real coordinates for overlaps
     :rtype: a Python 3D list
     """
-    # This part is important because we need to organize the rows by their coordinates, so when they go par by par, they are in the same coordinates more or less.
+    # -----------------------------------------------------------------------------
+    # IMPORTANT. It organize the rows by their coordinates by the DNA strand. So the row <i> coordinate is the nearest to the row <i+1> coordinate.
+    # -----------------------------------------------------------------------------
     plus_list = [x for x in rows_to_filter if "plus" in x[14]]  # We select the "plus" side of the list
-    plus_list = sorted(plus_list, key=lambda x: x[10], reverse=True)  # We order them. The order is with "strings" not with numbers, so the results is not the same as if it were with numbers. But it will suffice.
-    # We do the same with minus:
-    minus_list = [x for x in rows_to_filter if "minus" in x[14]]
+    plus_list = sorted(plus_list, key=lambda x: x[10], reverse=True)  # We order them. The order is with "strings" not with numbers. The result is the same.
+    minus_list = [x for x in rows_to_filter if "minus" in x[14]]  # We do the same with minus strand
     minus_list = sorted(minus_list, key=lambda x: x[10], reverse=True)
 
     rows_to_filter = plus_list + minus_list  # We update "rows_to_filter" with the new ones.
+    # -----------------------------------------------------------------------------
 
     rows_final = []
-    for first, second in zip(*[iter(rows_to_filter)] * 2):  # This way we take them two by two
+    for first, second in zip(*[iter(rows_to_filter)] * 2):  # IMPORTANT. It uses iter to select the rows by pairs. So it selects at the same time row <i> and row <i+1>, which coordinates are the nearest.
         two_sequence_rec = []
         two_sequence_rec.append(first)
         two_sequence_rec.append(second)
@@ -242,9 +251,11 @@ def genome_solap_main(genome_fasta, naming_short, path_input, max_diff, writing_
     print("\n", "=" * 50, "\nFiltering overlaps proceeding:\n", "=" * 50, sep="")
 
     genome_solap_main_matrix = []
-    # Here we get the names for the sequences, e.g., "LinJ.01" for chromosome 1
-    chromosome_number = chromosome_filter(genome_fasta, naming_short)
+    chromosome_number = chromosome_filter(genome_fasta, naming_short)  # It gets the names for the all the chromosome's IDs in the fasta file, e.g., "LinJ.01", "LinJ.02", etc.
 
+    # -----------------------------------------------------------------------------
+    # 1) It'll extract all the rows from the CSV file that has the same chromosome number, e.g., "LinJ.01".
+    # -----------------------------------------------------------------------------
     for chromosome in chromosome_number:
         solap_main_matrix = []
         chromosome_rows = []  # We get the rows from the CSV from a "chromosome"
@@ -254,6 +265,11 @@ def genome_solap_main(genome_fasta, naming_short, path_input, max_diff, writing_
                 if chromosome in row[1]:  # chromosome filter
                     chromosome_rows.append(row)
 
+    # -----------------------------------------------------------------------------
+    # 2.1) For each DNA strand and start or end position --> it will group them by nearness.
+    # 2.2) From those groups --> it will get ONLY the minimum and maximum values depending on DNA strand.
+    # 2.3) It will save them in an 3D Array, called `minmax`.
+    # -----------------------------------------------------------------------------
         minmax = genome_solap_minmax(chromosome_rows, max_diff)  # Here we get minimun and maximums in an 3D Array.
         # [0] --> plus_min | [1] --> plus_max | [2] --> pinus_max | [3] --> pinus_min
         plus_start_matrix = []
@@ -261,25 +277,32 @@ def genome_solap_main(genome_fasta, naming_short, path_input, max_diff, writing_
         minus_start_matrix = []
         minus_end_matrix = []
 
-        # SEQUENCES WITH BOTH
-        # Here we'll add all the sequnces with the "minumun" and "maximum" at the same time for one sequence.
+        # -----------------------------------------------------------------------------
+        # 3) For the cases where there are OVERLAPS, but one seq's got the MAX and MIN values. Both of them.
+        # -----------------------------------------------------------------------------
         with open(path_input, "r") as main_file:
             reader = csv.reader(main_file, delimiter=",")
             for row in reader:
-                if chromosome in row[1]:  # chromosome filter
+                if chromosome in row[1]:  # chromosome ID filter
                     if "plus" in row[14]:
-                        if int(row[10]) in minmax[0] and int(row[11]) in minmax[1]:
-                            solap_main_matrix.append(row)
-                            plus_start_matrix.append(int(row[10]))
-                            plus_end_matrix.append(int(row[11]))
+                        if int(row[10]) in minmax[0] and int(row[11]) in minmax[1]:  # It makes sure the seq's got the MIN and MAX values.
+                            solap_main_matrix.append(row)  # It saves the whole row.
+                            plus_start_matrix.append(int(row[10]))  # It saves the start coordinate, to not repeat in the next iterations.
+                            plus_end_matrix.append(int(row[11]))  # It saves the end coordinate, to not repeat in the next iterations.
                     elif "minus" in row[14]:
                         if int(row[10]) in minmax[2] and int(row[11]) in minmax[3]:
                             solap_main_matrix.append(row)
                             minus_start_matrix.append(int(row[10]))
                             minus_end_matrix.append(int(row[11]))
-
-        # SEQUENCES WITH ONLY ONE, i.e., WITH OVERLAPS
-        # Now if we get for example 2 overlaps, one with the "minimum" and the other with the "maximum" ---> we need both to join them. We then check the past coordinates (to not repeat) and search for overlaps.
+        # -----------------------------------------------------------------------------
+        # 4.1) For the cases where there are OVERLAPS, but one seq's got the MAX or MIN values. Only one of them.
+        # 4.2) Probably another seq will have the other value. It needs to find it and join them.
+        # 4.3) It will get 4 ARRAYS (2 for plus strand and 2 for minus strand):
+                    # 4.3.1) Seqs plus with only Start coordinate found.
+                    # 4.3.2) Seqs plus with only End coordinate found.
+                    # 4.3.3) Seqs minus with only Start coordinate found.
+                    # 4.3.4) Seqs minus with only End coordinate found.
+        # -----------------------------------------------------------------------------
         solap_segments = []  # Here are all the small overlaps segments
         solap_segments_plus_start = []
         solap_segments_plus_end = []
@@ -311,8 +334,9 @@ def genome_solap_main(genome_fasta, naming_short, path_input, max_diff, writing_
                                 solap_segments.append(row)
                                 solap_segments_minus_end.append(int(row[11]))
 
-        # Here 4 list of overlaps for each posible strand and "stars" or "end"
-        # And one list with all the rows representing those 4 lists.
+        # -----------------------------------------------------------------------------
+        # 5) Here, `genome_solap_by_pairs` it will join the small segments of overlaps.
+        # -----------------------------------------------------------------------------
         solap_by_pairs_definitive = genome_solap_by_pairs(solap_segments, genome_fasta)  # Very IMPORTANT.
         solap_main_matrix += solap_by_pairs_definitive
 
