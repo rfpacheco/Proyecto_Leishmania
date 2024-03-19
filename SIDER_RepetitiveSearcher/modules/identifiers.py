@@ -6,6 +6,7 @@ from modules.files_manager import folder_creator, csv_creator, fasta_creator, cs
 # from modules.blaster import blastn_dic  # IMPORTANT -> Since "blaster.py" is importing "identifiers.py" I can't make "identifiers.py" import "blaster.py" --> ERROR: CIRCULAR IMPORT
 from modules.seq_modifier import specific_sequence_1000nt, specific_sequence_corrected
 from modules.filters import filter_by_column, global_filters_main
+from modules.bedops import bedops_main  # New module 19/04/2024
 # from modules.subfamilies_finder import subfamily_sorter  # Needs to be modified
 
 
@@ -128,11 +129,16 @@ def genome_specific_chromosome_main(path_input, chromosome_ID, main_folder_path,
                    60)
 
     # -----------------------------------------------------------------------------
-    global_filters_main(second_blaster_output,
-                        second_blaster_output,
-                        genome_fasta,
-                        naming_short,
-                        max_diff)
+    bedops_main(second_blaster_output,  # input CSV file
+                genome_fasta,  # Path to the whole genome sequence in FASTA format
+                second_blaster_output)  # Output to CSV file
+
+
+    # global_filters_main(second_blaster_output,
+    #                     second_blaster_output,
+    #                     genome_fasta,
+    #                     naming_short,
+    #                     max_diff)
 
     # -----------------------------------------------------------------------------
     csv_mixer_output = main_folder_path + "MIXER.csv"

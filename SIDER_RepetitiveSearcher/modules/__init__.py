@@ -6,7 +6,8 @@ __all__ = [
     "seq_modifier",
     "filters",
     "duplicates",
-    "overlap"
+    "overlap",
+    "bedops"
 ]
 
 from modules import *

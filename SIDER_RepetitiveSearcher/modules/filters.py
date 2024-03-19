@@ -5,6 +5,7 @@ from Bio import SeqIO
 from modules.files_manager import csv_creator
 from modules.duplicates import genome_duplicate_filter
 from modules.overlap import genome_solap_main
+from modules.bedops import bedops_main
 
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
@@ -165,8 +166,7 @@ def global_filters_main(path_input, writing_path_input, genome_fasta, naming_sho
     # This will take name "X" CSV file "_BLAST_MAIN.csv" and it will overwrite it with the same name "X". So path_input is the same as writing_path_input
     dash_filter(path_input, writing_path_input)
 
-    # Remember "path_input" is the same as "writing_path_input"
-    genome_duplicate_filter(genome_fasta, naming_short, path_input, max_diff, writing_path_input)
-
-    # Now let's work with the overlaps
-    genome_solap_main(genome_fasta, naming_short, path_input, max_diff, writing_path_input)
+    # Using bedops
+    bedops_main(path_input,  # This will take name "X" CSV file "_BLAST_MAIN.csv" and it will overwrite it with the same name "X". So path_input is the same as writing_path_input
+                genome_fasta,  # Path to our whole genome sequence in FASTA format.
+                writing_path_input)
