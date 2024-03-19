@@ -45,7 +45,7 @@ def get_data_sequence(data, strand, genome_fasta):
 
     return list_split_df  # Returns the data frame
 
-def bedops_call(path_input, genome_fasta, writing_path_input):
+def bedops_main(path_input, genome_fasta, writing_path_input):
     """
     This function will implement BEDOPS to filter duplicates and overlaps in a CSV file.
 
@@ -97,13 +97,13 @@ def bedops_call(path_input, genome_fasta, writing_path_input):
     # 5) Call `blastdbcmd` to get the sequences with the function get_data_sequence()
     # -----------------------------------------------------------------------------
     df_plus_bedops_wseq = get_data_sequence(df_plus_bedops, "plus", genome_fasta)
-    df_minus_bedops_wseq = get_data_sequence(df_plus_bedops, "minus", genome_fasta)
+    df_minus_bedops_wseq = get_data_sequence(df_minus_bedops, "minus", genome_fasta)
 
     # -----------------------------------------------------------------------------
     # 6) Processing data
     # -----------------------------------------------------------------------------
     # Join both data frames
-    all_data = pd. ocncat([df_plus_bedops_wseq, df_minus_bedops_wseq], ignore_index=True)  # joins both Data Frames
+    all_data = pd.concat([df_plus_bedops_wseq, df_minus_bedops_wseq], ignore_index=True)  # joins both Data Frames
 
     # Adding sequence length to the DataFrame:
     new_column = [len(x) for x in all_data[4]]  # creates a list with the length of each sequence
@@ -115,7 +115,7 @@ def bedops_call(path_input, genome_fasta, writing_path_input):
     # -----------------------------------------------------------------------------
     # 7) Correctly modeling the output Data Frame to 15 columns and output as CSV file.
     # -----------------------------------------------------------------------------
-    data_to_csv = pd.DataFrame(index=range(all_data.shape[0]), columns=range(15))  # creates a new Data Frame with 15 columns. The rows depends on the .shape[0]
+    data_to_csv = pd.DataFrame(index=range(all_data.shape[0]), columns=range(16))  # creates a new Data Frame with 15 columns. The rows depends on the .shape[0]
     data_to_csv.iloc[:, [1, 3, 10, 11, 14, 15]] = all_data.iloc[:, [0, 1, 2, 3, 4, 5]]
     data_to_csv.to_csv(writing_path_input, index=False, header=None)  # Saves the Data Frame as a CSV file
 
