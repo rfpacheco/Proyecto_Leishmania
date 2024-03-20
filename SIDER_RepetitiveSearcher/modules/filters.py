@@ -168,7 +168,7 @@ def global_filters_main(path_input, writing_path_input, genome_fasta, naming_sho
     dash_filter(path_input, writing_path_input)
 
     # Using bedops
-    if os.stat(path_input).st_size == 0:
+    if os.stat(path_input).st_size == 0:  # Checks the size of the file. If it's empty, it will skip the next part of the code
         return  # Skip the next part of the code
 
     # Continue with the rest of the code
