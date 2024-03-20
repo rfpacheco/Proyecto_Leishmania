@@ -1,4 +1,5 @@
 import csv
+import os
 
 from Bio import SeqIO
 
@@ -167,6 +168,10 @@ def global_filters_main(path_input, writing_path_input, genome_fasta, naming_sho
     dash_filter(path_input, writing_path_input)
 
     # Using bedops
+    if os.stat(path_input).st_size == 0:
+        return  # Skip the next part of the code
+
+    # Continue with the rest of the code
     bedops_main(path_input,  # This will take name "X" CSV file "_BLAST_MAIN.csv" and it will overwrite it with the same name "X". So path_input is the same as writing_path_input
                 genome_fasta,  # Path to our whole genome sequence in FASTA format.
                 writing_path_input)
