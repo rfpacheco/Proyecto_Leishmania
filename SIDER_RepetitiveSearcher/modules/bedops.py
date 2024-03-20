@@ -74,8 +74,9 @@ def bedops_main(path_input, genome_fasta, writing_path_input):
     # 3) BEDOPS files creation:
     # -----------------------------------------------------------------------------
     #  row[1] == Chromosome ID, row[10] == Start coordinate, row[11] == End coordinate
-    df_plus[[1, 10, 11]].to_csv("plus.bed", sep="\t", header=False, index=False)  # creates a BED file for the "+" strand
-    df_minus[[1, 10, 11]].to_csv("minus.bed", sep="\t", header=False, index=False)  # creates a BED file for the "-" strand
+    
+    df_plus[[1, 10, 11]].to_csv(writing_path_input + "_plus.bed", sep="\t", header=False, index=False)  # creates a BED file for the "+" strand
+    df_minus[[1, 10, 11]].to_csv(writing_path_input + "_minus.bed", sep="\t", header=False, index=False)  # creates a BED file for the "-" strand
 
     # -----------------------------------------------------------------------------
     # 4) BEDOPS function call with subprocess.
@@ -86,8 +87,8 @@ def bedops_main(path_input, genome_fasta, writing_path_input):
     # shell=True to have the input of .check_output() as a string.
     # universal_newlines=True to have the EoL character as "\n" (Unix-like systems).
     # The output will be a variable of strings.
-    df_plus_bedops = subprocess.check_output("bedops --merge plus.bed", shell=True, universal_newlines=True)  # merges the "+" strand BED file
-    df_minus_bedops = subprocess.check_output("bedops --merge minus.bed", shell=True, universal_newlines=True)  # merges the "-" strand BED file
+    df_plus_bedops = subprocess.check_output("bedops --merge " + writing_path_input + "_plus.bed", shell=True, universal_newlines=True)  # merges the "+" strand BED file
+    df_minus_bedops = subprocess.check_output("bedops --merge " + writing_path_input + "_minus.bed", shell=True, universal_newlines=True)  # merges the "-" strand BED file
 
      # Now let's transform then into Data Frames
     df_plus_bedops = pd.DataFrame([x.split("\t") for x in df_plus_bedops.split("\n") if x])  # transforms the "+" strand BEDOPS output into a Data Frame
@@ -96,8 +97,16 @@ def bedops_main(path_input, genome_fasta, writing_path_input):
     # -----------------------------------------------------------------------------
     # 5) Call `blastdbcmd` to get the sequences with the function get_data_sequence()
     # -----------------------------------------------------------------------------
-    df_plus_bedops_wseq = get_data_sequence(df_plus_bedops, "plus", genome_fasta)
-    df_minus_bedops_wseq = get_data_sequence(df_minus_bedops, "minus", genome_fasta)
+    if df_plus_bedops.empty:  # In case the original data is empty, the code needs to keep going
+        df_plus_bedops_wseq = pd.DataFrame(columns=range(5))  # creates an empty Data Frame with 5 columns
+    else:  # If the original data is not empty, tit uses get_data_sequence
+        df_plus_bedops_wseq = get_data_sequence(df_plus_bedops, "plus", genome_fasta)
+
+    # The same for the minus strand:
+    if df_minus_bedops.empty:
+        df_minus_bedops_wseq = pd.DataFrame(columns=range(5))
+    else:   
+        df_minus_bedops_wseq = get_data_sequence(df_minus_bedops, "minus", genome_fasta)
 
     # -----------------------------------------------------------------------------
     # 6) Processing data

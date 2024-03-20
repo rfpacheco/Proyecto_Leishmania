@@ -129,17 +129,17 @@ def genome_specific_chromosome_main(path_input, chromosome_ID, main_folder_path,
                    60)
 
     # -----------------------------------------------------------------------------
-    # SHOULD NOT BE HERE. IS INSIDE global_filters_main(). NEED TO BE REMOVED
-    bedops_main(second_blaster_output,  # input CSV file
-                genome_fasta,  # Path to the whole genome sequence in FASTA format
-                second_blaster_output)  # Output to CSV file
+    # # SHOULD NOT BE HERE. IS INSIDE global_filters_main(). NEED TO BE REMOVED
+    # bedops_main(second_blaster_output,  # input CSV file
+    #             genome_fasta,  # Path to the whole genome sequence in FASTA format
+    #             second_blaster_output)  # Output to CSV file
 
 
-    # global_filters_main(second_blaster_output,
-    #                     second_blaster_output,
-    #                     genome_fasta,
-    #                     naming_short,
-    #                     max_diff)
+    global_filters_main(second_blaster_output,
+                        second_blaster_output,
+                        genome_fasta,
+                        naming_short,
+                        max_diff)
 
     # -----------------------------------------------------------------------------
     csv_mixer_output = main_folder_path + "MIXER.csv"
