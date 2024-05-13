@@ -4,8 +4,6 @@ import os
 from Bio import SeqIO
 
 from modules.files_manager import csv_creator
-from modules.duplicates import genome_duplicate_filter
-from modules.overlap import genome_solap_main
 from modules.bedops import bedops_main
 
 # -----------------------------------------------------------------------------
