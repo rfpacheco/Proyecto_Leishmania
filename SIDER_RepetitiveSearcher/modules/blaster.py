@@ -184,82 +184,48 @@ def blastn_blaster(query_path, dict_path, perc_identity):
 # -----------------------------------------------------------------------------
 
 
-def repetitive_blaster(genome_fasta, path_input, folder_path, numbering, maximun_runs):
+def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, maximun_runs):
     """
     This function will iterate till a number of ``maximun_runs`` defined.
 
     :param genome_fasta: Path to our whole genome sequence in .fasta. It should already be a BLASTn dictionary.
     :type genome_fasta: string
 
-    :param path_input: Path to the main CSV file where data will be filtered. Initially is a CSV file wich was output from :func:`~blastn_blaster` alone to obtain the initial data.
-    :type path_input: string
+    :param path_input: pandas DataFrame containing data from the first BLASTn. It's the output from :func:`~blastn_blaster`.
+    :type path_input: pandas Data Frame
 
     :param folder_path: Path to a folder where the results will be placed. Subfolder will be created with the cromosome names.
     :type folder_path: string
-
-    :param naming_short: Label needed to read the ID of each cromosome in the .csv file. In the case of **L. infantum** for example, would be *LinJ* since the .csv file IDs are *LinJ.XX*
-    :type naming_short: string
-
-    :param max_diff: Maximun proxomity value for the different sequences when they have to be grouped. **Important**
-    :type max_diff: integer
 
     :param numbering: Indicates the number showed for the first program run. If it's 0, then, the first run will be name 0.
     :type numbering: integer
 
     :param maximun_runs: Indicates the last iterative execution of function.
     :type maximun_runs: integer
-
-    .. warning::
-        Pay special attention to the ``max_diff`` argument.
     """
 
+    # Call the aesthetics function RUN identifier.
     boxymcboxface("RUN " + str(numbering))
 
     # -----------------------------------------------------------------------------
-    # Searching all "Linj.XX" in the .fasta file
-    chr_IDs = []
-    with open(genome_fasta, "r") as main_file:
-        for line in main_file:
-            if ">" in line:
-                chr_IDs.append(line[1:8])  # We this we get "LinjJ.XX", being X a number.
+    # Getting all chromosome IDs from the data_input like "LinJ.01", "LinJ.02", etc. in order.
+    chromosome_IDs = sorted(list(data_input.loc[:,"sseqid"].unique()))
+    # SHOULD A MAKE A PANDAS GROUPY OBJECT?
 
     # -----------------------------------------------------------------------------
-    # Searching all "Linj.XX" in the .csv file
-    csv_IDs_all = []
-    with open(path_input, "r") as main_file:
-        reader = csv.reader(main_file, delimiter=",")
-        for row in reader:
-            csv_IDs_all.append(row[1])  # This way we get all "LinJ.XX" in the second column of the .csv. There will be a lot of repeated ones, but with "chr_IDs" we'll know which ones.
-
-    # -----------------------------------------------------------------------------
-    # With "chr_in_objetive" I'll get all chr with more than 1 repeated IDs. i.e., at least 2 with the same name.
-    chr_in_objetive = []
-    for chromosome in chr_IDs:
-        counter = 0
-        for objetive in csv_IDs_all:
-            if chromosome in objetive:
-                counter += 1
-        if counter > 1:  # Here we'll add all chrs with more than 1 representative, i.e., repeated
-            chr_in_objetive.append(chromosome)
-
-    # -----------------------------------------------------------------------------
-    for chromosome_ID in chr_in_objetive:
+    for chromosome_ID in chromosome_IDs:
         # if chromosome_ID != "LinJ.01":  # In case we'll need to delete searches of a special chromosome
         genome_specific_chromosome_main(path_input,
                                         chromosome_ID,
                                         folder_path,
-                                        genome_fasta,
-                                        naming_short,
-                                        max_diff)
+                                        genome_fasta)
 
     # -----------------------------------------------------------------------------
     # Y cuando termine creando el archivo MIXER, lo que hago es purificarlo completamente
     global_filters_main_output = folder_path + "MIXER.csv"  # This one's got the call to "blastn_blaster"
     global_filters_main(global_filters_main_output,
                         global_filters_main_output,
-                        genome_fasta,
-                        naming_short,
-                        max_diff)
+                        genome_fasta)
 
     # pdb.set_trace()
     folder_output = folder_path + "RUNS"
@@ -283,4 +249,4 @@ def repetitive_blaster(genome_fasta, path_input, folder_path, numbering, maximun
         print("\n\n\nEND of PROGRAM")
     if numbering < maximun_runs:
         numbering += 1
-        repetitive_blaster(genome_fasta, path_input, folder_path, naming_short, max_diff, numbering, maximun_runs)
+        repetitive_blaster(path_input, genome_fasta, folder_path, numbering, maximun_runs)

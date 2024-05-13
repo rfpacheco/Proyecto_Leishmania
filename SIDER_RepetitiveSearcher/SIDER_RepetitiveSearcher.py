@@ -2,6 +2,7 @@ import argparse
 import os
 import shutil
 import time  # to measure the time of the program
+import subprocess  # to call the command line
 
 from modules.blaster import blastn_dic, blastn_blaster, repetitive_blaster
 from modules.aesthetics import boxymcboxface
@@ -84,8 +85,8 @@ fasta_creator(data_input = first_blaster,
 toc = time.perf_counter()  # Stop the timer
 print(f"==>Fasta file creation took {toc - tic:0.2f} seconds")
 
-repetitive_blaster(genome_fasta = blastn_dict_path_out,  # path to the genome dict
-                   path_input = first_blaster,
+repetitive_blaster(data_input = first_blaster,
+                   genome_fasta = blastn_dict_path_out,  # path to the genome dict
                    folder_path = folder_location,
                    numbering = 1,
                    maximun_runs = 2)
