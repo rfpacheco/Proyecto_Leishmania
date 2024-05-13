@@ -1,5 +1,6 @@
-import pdb  # In case of debbuging
 import os
+import pandas as pd
+import subprocess
 import csv
 import shutil
 from pathlib import Path
@@ -13,9 +14,9 @@ from modules.files_manager import folder_creator
 # -----------------------------------------------------------------------------
 
 
-def blastn_dic(path_input):
+def blastn_dic(path_input, path_output):
     """
-    Creation af a BLAST database of our whole genome. It uses the BLAST\ :sup:`R` \command line, see BLAST
+    Creation af a BLAST database of our whole genome. It uses the BLAST :sup:`R` command line, see BLAST
     `Command Line Application User Manual`_ for more information.
 
 
@@ -25,16 +26,18 @@ def blastn_dic(path_input):
     :param path_input: path to a FASTA file.
     :type path_input: string
 
+    :param path_output: path to the output folder where the BLAST database will be created.
+    :type path_output: string
+
     :return: a BLAST database.
     :rtype: Muitiples files (**.nhr**, **.nin**, **.nog**, **.nsd**, **.nsi** and **.nsq** extensions)
     """
 
     # Remember is "path.input.dic_path" for "argparse".
     try:
-        boxymcboxface("BLASTn Database creator started")
-        # pdb.set_trace()
-        os.system("makeblastdb -in " + path_input + " -dbtype nucl -parse_seqids")
-        print("\nBlast Dictionary created in", path_input)
+        # boxymcboxface("BLASTn Database creator started")
+        cmd = f"makeblastdb -in {path_input} -dbtype nucl -out {path_output}"
+        subprocess.run(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)        # print("\nBlast Dictionary created in", path_input)
     except Exception:
         print("\nError: Blast Dictionary couldn't be created")
 
@@ -42,9 +45,9 @@ def blastn_dic(path_input):
 # -----------------------------------------------------------------------------
 
 
-def blastn_blaster(query_path, dict_path, outfile_path, perc_identity):
+def blastn_blaster(query_path, dict_path, perc_identity):
     """
-    This module calls for `blastn` in the BLAST\ :sup:`R` \command line.
+    This module calls for `blastn` in the BLAST :sup:`R` command line.
     See `Command Line Application User Manual`_ for more information.
 
     :param query_path: Path to our FASTA query used in BLASTn against our database.
@@ -167,14 +170,16 @@ def blastn_blaster(query_path, dict_path, outfile_path, perc_identity):
     """
 
     try:
-        boxymcboxface("BLASTn searcher initiated")
-        # pdb.set_trace()
-        os.system("blastn -word_size 15 -query "
-                  + query_path + " -db "
-                  + dict_path + " -out "
-                  + outfile_path + " -perc_identity "
-                  + str(perc_identity) + " -outfmt '10 qseqid sseqid pident length qlen slen mismatch gapopen qstart qend sstart send evalue bitscore sstrand sseq'")
-        print("\nBlaster succesful", outfile_path, "created.")
+      cmd = "blastn -word_size 11 -query " \
+          + query_path + " -db " \
+          + dict_path \
+          + " -perc_identity " + str(perc_identity) \
+          + " -outfmt '10 qseqid sseqid pident length qstart qend sstart send evalue bitscore qlen slen'"
+      data = subprocess.check_output(cmd, shell=True, universal_newlines=True)  # Important the E value
+      data = pd.DataFrame([x.split(",") for x in data.split("\n") if x])
+      data.columns = ["qseqid", "sseqid", "pident", "length", "qstart", "qend", "sstart", "send", "evalue", "bitscore", "qlen", "slen", "strand", "sseq"]
+      return data
+    
     except Exception:
         print("\nError: Blaster couldn't be loaded, somthing happened")
 
@@ -182,11 +187,11 @@ def blastn_blaster(query_path, dict_path, outfile_path, perc_identity):
 # -----------------------------------------------------------------------------
 
 
-def repetitive_blaster(genome_fasta, path_input, folder_path, naming_short, max_diff, numbering, maximun_runs):
+def repetitive_blaster(genome_fasta, path_input, folder_path, numbering, maximun_runs):
     """
     This function will iterate till a number of ``maximun_runs`` defined.
 
-    :param genome_fasta: Path to our whole genome sequence in .fasta.
+    :param genome_fasta: Path to our whole genome sequence in .fasta. It should already be a BLASTn dictionary.
     :type genome_fasta: string
 
     :param path_input: Path to the main CSV file where data will be filtered. Initially is a CSV file wich was output from :func:`~blastn_blaster` alone to obtain the initial data.

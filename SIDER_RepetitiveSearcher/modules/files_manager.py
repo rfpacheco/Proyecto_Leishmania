@@ -1,6 +1,6 @@
 import os
 import csv
-import pdb  # For debugging
+import pandas as pd
 
 from Bio import SeqIO
 from Bio.Seq import Seq
@@ -83,12 +83,12 @@ def csv_mixer(path_input1, path_input2, writing_path_input):
 # -----------------------------------------------------------------------------
 
 
-def fasta_creator(path_input, fasta_output_path):
+def fasta_creator(data_input, fasta_output_path):
     """
     This function will create a FASTA file from the input CSV file. For this it will use the **Biopyton** module.
 
-    :param path_input: Path of the CSV file we want to read to transform it to a FASTA file.
-    :type path_input: string
+    :param path_input: pandas data frame
+    :type path_input: pandas data frame
 
     :param fasta_output_path: Path to where we want to save the FASTA file.
     :type fasta_output_path: string
@@ -96,18 +96,12 @@ def fasta_creator(path_input, fasta_output_path):
     :return: All the data from the CSV in a FASTA format.
     :rtype: FASTA File
     """
-    matrix_fasta_creator = []
-    numbering = 0
-    with open(path_input, "r") as main_file:
-        reader = csv.reader(main_file, delimiter=",")
-        for row in reader:
-            numbering += 1
-            rec = SeqRecord(
-                Seq(row[15]),
-                id="Seq_" + str(numbering) + "_" + row[1] + "_" + row[14],  # Que tenga aqui el sentido es esencial para luego filtrarlos
-                description="Leishmania infantum " + row[14]
-            )
-            matrix_fasta_creator.append(rec)
-
-    SeqIO.write(matrix_fasta_creator, fasta_output_path, "fasta")
-    print("\nFasta created at:", fasta_output_path)
+    matrix = []
+    for index, sequence in data_input.iterrows():
+        # index += 1 # To start the index in 1
+        rec = SeqRecord(Seq(sequence.loc["sseq"]),  # In the 5 position is the seq
+                        id="Seq_" + str(index),
+                        description="Leishmania infantum"  # argument maybe?
+                        )
+        matrix.append(rec)
+    SeqIO.write(matrix, fasta_output_path, "fasta")
