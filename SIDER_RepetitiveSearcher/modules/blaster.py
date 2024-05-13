@@ -169,19 +169,16 @@ def blastn_blaster(query_path, dict_path, perc_identity):
          - Aligned part of subject sequence.
     """
 
-    try:
-      cmd = "blastn -word_size 11 -query " \
-          + query_path + " -db " \
-          + dict_path \
-          + " -perc_identity " + str(perc_identity) \
-          + " -outfmt '10 qseqid sseqid pident length qstart qend sstart send evalue bitscore qlen slen'"
-      data = subprocess.check_output(cmd, shell=True, universal_newlines=True)  # Important the E value
-      data = pd.DataFrame([x.split(",") for x in data.split("\n") if x])
-      data.columns = ["qseqid", "sseqid", "pident", "length", "qstart", "qend", "sstart", "send", "evalue", "bitscore", "qlen", "slen", "strand", "sseq"]
-      return data
+    cmd = "blastn -word_size 11 -query " \
+        + query_path + " -db " \
+        + dict_path \
+        + " -perc_identity " + str(perc_identity) \
+        + " -outfmt '10 qseqid sseqid pident length qstart qend sstart send evalue bitscore qlen slen sstrand sseq'"
+    data = subprocess.check_output(cmd, shell=True, universal_newlines=True)  # Important the E value
+    data = pd.DataFrame([x.split(",") for x in data.split("\n") if x])
+    data.columns = ["qseqid", "sseqid", "pident", "length", "qstart", "qend", "sstart", "send", "evalue", "bitscore", "qlen", "slen", "sstrand", "sseq"]
+    return data
     
-    except Exception:
-        print("\nError: Blaster couldn't be loaded, somthing happened")
 
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------

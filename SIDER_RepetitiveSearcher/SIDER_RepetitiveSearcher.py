@@ -68,7 +68,7 @@ first_blaster = blastn_blaster(args.data, blastn_dict_path_out, identity_1)  # I
 toc = time.perf_counter()  # Stop the timer
 
 print(f"==>First BLASTn step took {toc - tic:0.2f} seconds")
-print(f"==>First BLASTn row length: {len(first_blaster)}")
+print(f"==>First BLASTn row length: {first_blaster.shape[0]}")
 
 
 # =============================================================================
@@ -78,8 +78,11 @@ print(f"==>First BLASTn row length: {len(first_blaster)}")
 fasta_file_path = os.path.join(folder_location, "First_Blaster.fasta")  # Path to the fasta file to create
 
 # Now let's create the fasta file
+tic = time.perf_counter()  # Start the timer
 fasta_creator(data_input = first_blaster,
               fasta_output_path = fasta_file_path)
+toc = time.perf_counter()  # Stop the timer
+print(f"==>Fasta file creation took {toc - tic:0.2f} seconds")
 
 repetitive_blaster(genome_fasta = blastn_dict_path_out,  # path to the genome dict
                    path_input = first_blaster,
