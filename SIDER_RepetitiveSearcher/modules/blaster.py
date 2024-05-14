@@ -35,9 +35,9 @@ def blastn_dic(path_input, path_output):
 
     # Remember is "path.input.dic_path" for "argparse".
     try:
-        # boxymcboxface("BLASTn Database creator started")
-        cmd = f"makeblastdb -in {path_input} -dbtype nucl -out {path_output}"
-        subprocess.run(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)        # print("\nBlast Dictionary created in", path_input)
+        # "parse_seqids" is used to keep the sequence ID in the output.
+        cmd = f"makeblastdb -in {path_input} -dbtype nucl -parse_seqids -out {path_output}"
+        subprocess.run(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     except Exception:
         print("\nError: Blast Dictionary couldn't be created")
 
@@ -208,11 +208,22 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, maximun
     boxymcboxface("RUN " + str(numbering))
 
     # -----------------------------------------------------------------------------
-    # Getting all chromosome IDs from the data_input like "LinJ.01", "LinJ.02", etc. in order.
-    chromosome_IDs = sorted(list(data_input.loc[:,"sseqid"].unique()))
-    # SHOULD A MAKE A PANDAS GROUPY OBJECT?
+    # First let's order the data by "sseqid", "sstrand", "sstart".
+    data_ordered = data_input.sort_values(by=["sseqid", "sstrand", "sstart"])
+
+    # Now let's group the data by "sseqid". We'll have a pandas groupby object.
+    data_grouped = data_ordered.groupby(by=["sseqid"])
 
     # -----------------------------------------------------------------------------
+    # Now let's call  `genome_specific_chromosome_main` for each chromosome_ID in the data using the groupby object.
+
+    for _, (chromosome, group) in enumerate(data_grouped):
+        genome_specific_chromosome_main(data_input=group,
+                                        chromosome_ID=chromosome,
+                                        main_folder_path=folder_path,
+                                        genome_fasta=genome_fasta)
+
+
     for chromosome_ID in chromosome_IDs:
         # if chromosome_ID != "LinJ.01":  # In case we'll need to delete searches of a special chromosome
         genome_specific_chromosome_main(data_input,

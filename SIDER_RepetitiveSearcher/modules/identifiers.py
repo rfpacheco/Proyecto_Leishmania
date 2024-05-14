@@ -1,5 +1,5 @@
 import os
-import csv
+import time
 
 from modules.files_manager import folder_creator, csv_creator, fasta_creator, csv_mixer
 # from modules.blaster import blastn_dic  # IMPORTANT -> Since "blaster.py" is importing "identifiers.py" I can't make "identifiers.py" import "blaster.py" --> ERROR: CIRCULAR IMPORT
@@ -37,23 +37,20 @@ def genome_specific_chromosome_main(data_input, chromosome_ID, main_folder_path,
     os.makedirs(chromosme_folder_path, exist_ok=True)  # Folder
 
     # -----------------------------------------------------------------------------
-    nucleotides1000_directory = specific_sequence_1000nt(data_input, chromosome_ID, main_folder_path, genome_fasta)  # Extend sequence to 1000 nt.
+    sequences_1000 = specific_sequence_1000nt(data_input, chromosome_ID, main_folder_path, genome_fasta)  # Extend sequence to 1000 nt. Saved into a pandas Data Frame
+    sequences_1000_fasta_path = os.path.join(chromosme_folder_path, chromosome_ID + "_1000nt.fasta")  # Path to the output FASTA file
+    tic = time.perf_counter()
+    fasta_creator(sequences_1000, sequences_1000_fasta_path)
+    toc = time.perf_counter()
+    print(f"==>Fasta 1000nt file creation took {toc - tic:0.2f} seconds")
 
-    fasta_creator_output = main_folder_path + chromosome_ID + "/" + chromosome_ID + "_1000nt.fasta"
-    fasta_creator(nucleotides1000_directory, fasta_creator_output)
+    blastn_dic(sequences_1000_fasta_path, sequences_1000_fasta_path)
+    tic = time.perf_counter()
+    second_blaster = blastn_blaster(sequences_1000_fasta_path, sequences_1000_fasta_path, 100)
+    toc = time.perf_counter()
+    print(f"==>Second BLASTn step took {toc - tic:0.2f} seconds")
 
-    blastn_dic(fasta_creator_output)
-
-    blaster_output = main_folder_path + chromosome_ID + "/" + chromosome_ID + "_1000nt_Blaster.csv"
-    blastn_blaster(fasta_creator_output,  # They are the same
-                   fasta_creator_output,  # Because we are launching one against each other --> this way we'll get the correc coordinates in the future.
-                   blaster_output,
-                   85)
-
-    filter_by_column(blaster_output,
-                     "length",
-                     100,
-                     blaster_output)
+    second_blaster_filtered = second_blaster[second_blaster["length"] > 100]  # Filter by length
 
     # -----------------------------------------------------------------------------
     corrected_sequences = specific_sequence_corrected(blaster_output, nucleotides1000_directory, main_folder_path, chromosome_ID, genome_fasta)
