@@ -215,7 +215,7 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, maximun
     # -----------------------------------------------------------------------------
     for chromosome_ID in chromosome_IDs:
         # if chromosome_ID != "LinJ.01":  # In case we'll need to delete searches of a special chromosome
-        genome_specific_chromosome_main(path_input,
+        genome_specific_chromosome_main(data_input,
                                         chromosome_ID,
                                         folder_path,
                                         genome_fasta)

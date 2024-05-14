@@ -47,6 +47,8 @@ os.makedirs(original_data_folder, exist_ok=True)
 shutil.copy(args.data, original_data_folder)
 shutil.copy(args.genome, original_data_folder)
 # print(f"Files copied to {original_data_folder}")
+args_data_path = os.path.join(original_data_folder, os.path.basename(args.data))  # save the path so we can use this one instead of the original one
+args_genome_path = os.path.join(original_data_folder, os.path.basename(args.genome))  # save the path so we can use this one instead of the original one
 
 # =============================================================================
 # First blaster automatization
@@ -65,7 +67,7 @@ identity_1 = input("Enter the identity for the first BLASTn step: ")  # user inp
 boxymcboxface("First BLASTn step initiated")
 
 tic = time.perf_counter()  # Start the timer
-first_blaster = blastn_blaster(args.data, blastn_dict_path_out, identity_1)  # It has the data frame for the first blaster
+first_blaster = blastn_blaster(args_data_path, blastn_dict_path_out, identity_1)  # It has the data frame for the first blaster
 toc = time.perf_counter()  # Stop the timer
 
 print(f"==>First BLASTn step took {toc - tic:0.2f} seconds")
