@@ -212,7 +212,7 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, maximun
     data_ordered = data_input.sort_values(by=["sseqid", "sstrand", "sstart"])
 
     # Now let's group the data by "sseqid". We'll have a pandas groupby object.
-    data_grouped = data_ordered.groupby(by=["sseqid"])
+    data_grouped = data_ordered.groupby("sseqid")
 
     # -----------------------------------------------------------------------------
     # Now let's call  `genome_specific_chromosome_main` for each chromosome_ID in the data using the groupby object.

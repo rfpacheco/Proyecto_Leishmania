@@ -50,10 +50,10 @@ def genome_specific_chromosome_main(data_input, chromosome_ID, main_folder_path,
     toc = time.perf_counter()
     print(f"==>Second BLASTn step took {toc - tic:0.2f} seconds")
 
-    second_blaster_filtered = second_blaster[second_blaster["length"] > 100]  # Filter by length
+    second_blaster_filtered = second_blaster[second_blaster["length"].astype(int) > 100]  # Filter by length
 
     # -----------------------------------------------------------------------------
-    corrected_sequences = specific_sequence_corrected(blaster_output, nucleotides1000_directory, main_folder_path, chromosome_ID, genome_fasta)
+    corrected_sequences = specific_sequence_corrected(second_blaster_filtered, sequences_1000, chromosme_folder_path, chromosome_ID, genome_fasta)
 
     # -----------------------------------------------------------------------------
     # This module doesn't work --> need to be redone

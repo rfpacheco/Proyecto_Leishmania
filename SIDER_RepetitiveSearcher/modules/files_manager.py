@@ -97,7 +97,7 @@ def fasta_creator(data_input, fasta_output_path):
     :rtype: FASTA File
     """
     matrix = []
-    for index, sequence in data_input.iterrows():
+    for index, (_, sequence) in enumerate(data_input.iterrows()):
         # index += 1 # To start the index in 1
         rec = SeqRecord(Seq(sequence.loc["sseq"]),  # In the 5 position is the seq
                         id="Seq_" + str(index),
