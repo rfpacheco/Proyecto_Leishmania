@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 import subprocess
-import csv
+import time
 import shutil
 from pathlib import Path
 
@@ -208,11 +208,15 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, maximun
     boxymcboxface("RUN " + str(numbering))
 
     # -----------------------------------------------------------------------------
+    tic = time.perf_counter()
     # First let's order the data by "sseqid", "sstrand", "sstart".
     data_ordered = data_input.sort_values(by=["sseqid", "sstrand", "sstart"])
 
     # Now let's group the data by "sseqid". We'll have a pandas groupby object.
     data_grouped = data_ordered.groupby("sseqid")
+    toc = time.perf_counter()
+    print(f"==>Data row length: {data_ordered.shape[0]}")
+    print(f"==>Data ordering and grouping took {toc - tic:0.2f} seconds")
 
     # -----------------------------------------------------------------------------
     # Now let's call  `genome_specific_chromosome_main` for each chromosome_ID in the data using the groupby object.

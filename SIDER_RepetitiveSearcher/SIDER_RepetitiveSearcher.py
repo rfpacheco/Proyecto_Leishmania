@@ -71,6 +71,7 @@ first_blaster = blastn_blaster(args_data_path, blastn_dict_path_out, identity_1)
 toc = time.perf_counter()  # Stop the timer
 
 print(f"==>First BLASTn row length: {first_blaster.shape[0]}")
+print(f"==>First BLASTn step took {toc - tic:0.2f} seconds")
 
 
 # =============================================================================

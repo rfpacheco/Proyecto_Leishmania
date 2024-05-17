@@ -11,9 +11,8 @@
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal",
-            "python.pythonPath": "/home/rfpacheco/micromamba/envs/SIDER_RepetitiveSearcher/bin/python3",
-            "args": ["-d", "/home/rfpacheco/Documents/CBM_Work/Testing_Leishmania_project/0.Data/SIDERS2_True_positives/All_Positives/SIDER2_Chr32_L_infantum.fasta",
-            "-g", "/home/rfpacheco/Documents/CBM_Work/Testing_Leishmania_project/0.Data/genome/L_infantum/TriTrypDB-67_LinfantumJPCM5_Genome.fasta"
+            "args": ["-d", "/home/viskuit/Documents/Work_CBMSO/Testing_Proyecto_Leishmania/SIDER2_Chr32_L_infantum.fasta",
+            "-g", "/home/viskuit/Documents/Work_CBMSO/Testing_Proyecto_Leishmania/TriTrypDB-67_LinfantumJPCM5_Genome.fasta"
             ]
         }
     ]

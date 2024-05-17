@@ -1,6 +1,7 @@
 import pandas as pd
 import subprocess
 import re
+import math
 
 from modules.files_manager import csv_creator
 from modules.bedops import bedops_main, bedops_second
@@ -29,7 +30,7 @@ def specific_sequence_1000nt(data_input, chromosome_ID, main_folder_path, genome
     :rtype: CSV file
     """
     # -----------------------------------------------------------------------------
-    for index, element in data_input.iterrows():
+    for index2, (index, element) in enumerate(data_input.iterrows()):
         if "plus" in element["sstrand"]:
             lower_coor = int(element["sstart"])  # We get the start of the sequence
             upper_coor = int(element["send"])  # We get the end of the sequence
@@ -41,6 +42,7 @@ def specific_sequence_1000nt(data_input, chromosome_ID, main_folder_path, genome
         if subject_length < 1000:  # If the sequence is less than 1000nt, we'll expand it.
             leftover_length = 1000 - subject_length  # We get the difference between 1000 and the length of the sequence
             leftover_length_halved = leftover_length / 2  # We divide it by 2 to get the half of the difference
+            # leftover_length_halved = math.ceil(leftover_length_halved)  # We round up the number
             lower_coor = lower_coor - leftover_length_halved  # We subtract the half of the difference to the start
             upper_coor = upper_coor + leftover_length_halved  # We add the half of the difference to the end
 
@@ -60,11 +62,11 @@ def specific_sequence_1000nt(data_input, chromosome_ID, main_folder_path, genome
             data_input.loc[index, "qend"] = ""
 
             if "plus" in element["sstrand"]:
-                data_input.loc[index, "sstart"] = lower_coor
-                data_input.loc[index, "send"] = upper_coor
+                data_input.loc[index, "sstart"] = int(lower_coor)
+                data_input.loc[index, "send"] = int(upper_coor)
             else:
-                data_input.loc[index, "sstart"] = upper_coor
-                data_input.loc[index, "send"] = lower_coor
+                data_input.loc[index, "sstart"] = int(upper_coor)
+                data_input.loc[index, "send"] = int(lower_coor)
 
             data_input.loc[index, "evalue"] = ""
             data_input.loc[index, "bitscore"] = ""
@@ -83,7 +85,7 @@ def specific_sequence_1000nt(data_input, chromosome_ID, main_folder_path, genome
 # 3) Corrector se secuencias, obtendra las secuencias originales.
 
 
-def specific_sequence_corrected(data_input, nucleotides1000_directory, main_folder_path, chromosome_ID, genome_fasta):
+def specific_sequence_corrected(data_input, nucleotides1000_df, first_data_input, main_folder_path, chromosome_ID, genome_fasta):
     """
     The main use of this function is to get the real "coordinates" of the sequence.
 
@@ -115,16 +117,81 @@ def specific_sequence_corrected(data_input, nucleotides1000_directory, main_fold
     """
 
     # First from the BLASTn (one againts each other), we get the IDs of the sequences.
-    data_input_selected = data_input[data_input["qseqid"] != data_input["sseqid"]]  # We filter the data to get only the sequences that are different from each other.
-    data_input_rejected = data_input[data_input["qseqid"] == data_input["sseqid"]]  # We filter the data to get only the sequences that are the same.
+    data_input_selected = data_input[data_input["qseqid"] != data_input["sseqid"]].copy()  # We filter the data to get only the sequences that are different from each other.
+
+    selected_data_sseqid = data_input_selected["sseqid"].unique()  # We get the unique qseqid
+    data_input_rejected = data_input[data_input["qseqid"] == data_input["sseqid"]].copy()  # We filter the data to get only the sequences that are the same.   
+    data_input_rejected = data_input_rejected[~data_input_rejected["sseqid"].isin(selected_data_sseqid)]  # Now get the rows in "data_input_rejected" that are not in "data_input_selected"
 
     selected_grouped = data_input_selected.groupby("sseqid")  # We group the data by the subject ID
-    new_df = pd.DataFrame()  # We create an empty data frame to store the data
+    coor_dic = {} # We create an empty data frame to store the data
     for name, group in selected_grouped:
-        filtered_df = bedops_second(data_input=group,
-                                  writing_path_input=main_folder_path)
-        new_df = pd.concat([new_df, filtered_df], ignore_index=True)
+        group["difference"] = abs(group["send"].astype(int) - group["sstart"].astype(int))  # We get the difference between the start and end coordinates. Important the "abs" since the coordinates are differente depending if it's the "+" or "-" strand
+        max_index = group["difference"].idxmax()  # We get the index of the maximum difference
+
+        # Now, we need to differentiate between the "+" and "-" strand coordinates. But not in the data yet.
+        if int(group.loc[max_index, "sstart"]) < int(group.loc[max_index, "send"]):  # like in "plus" strand
+            lower_coor = group.loc[max_index, "sstart"]
+            upper_coor = group.loc[max_index, "send"]
+        else:  # If it's the "-" strand
+            lower_coor = group.loc[max_index, "send"]
+            upper_coor = group.loc[max_index, "sstart"]
+
+        index = int(re.search(r'\d+', name).group())
+        # Now we add all the data to the dictionary
+        coor_dic[name] = [index, lower_coor, upper_coor]
     
-    print("hello")
+    # Loop through "coor_dic" to get the sequences in the 1000nt data frame
+    tmp_list = []
+    for _, value in coor_dic.items():
+        index = value[0]
+        lower_coor = int(value[1])
+        upper_coor = int(value[2])
+        len_real_coor = abs(first_data_input.iloc[index,:]["sstart"] - first_data_input.iloc[index,:]["send"]) + 1
+        strand = first_data_input.iloc[index,:]["sstrand"]
+        qseqid = first_data_input.iloc[index,:]["qseqid"]
+
+        # We get the sequence from the whole genome, But first, we need to adjust the coordinates.
+        if strand == "plus":
+            new_lower_coor = first_data_input.iloc[index,:]["sstart"] + lower_coor - 1  # -1 because if lower_coor == 1, then we need to get the first nucleotide
+            upper_coor_diff = len_real_coor - upper_coor
+            new_upper_coor = first_data_input.iloc[index,:]["send"] - upper_coor_diff # We subtract the difference between the length of the sequence and the upper coordinate
+        else:  # If it's the "-" strand
+            new_lower_coor = first_data_input.iloc[index,:]["send"] + lower_coor - 1  # -1 because if lower_coor == 1, then we need to get the first nucleotide
+            upper_coor_diff = len_real_coor - upper_coor
+            new_upper_coor = first_data_input.iloc[index,:]["sstart"] - upper_coor_diff
+        
+        cmd = f"blastdbcmd -db {genome_fasta} -entry {chromosome_ID} -range {new_lower_coor}-{new_upper_coor} -strand {strand} -outfmt %s"
+        seq = subprocess.check_output(cmd, shell=True, universal_newlines=True).strip()
+        # Now we add the data to the data frame
+        tmp_list.append([qseqid,  # qseqid
+                         chromosome_ID,  # sseqid
+                         "",  # pident
+                         "",  # length
+                         "",  # qstart 
+                         "",  # qend
+                         new_lower_coor,  # sstart
+                         new_upper_coor,  # send
+                         "",  # evalue
+                         "",  # bitscore
+                         "",  # qlen,
+                         len(seq),  # slen
+                         strand,  # sstrand
+                         seq])  # sseq
+    
+    data_new_coordinates = pd.DataFrame(tmp_list, columns=["qseqid", "sseqid", "pident", "length", "qstart", "qend", "sstart", "send", "evalue", "bitscore", "qlen", "slen", "sstrand", "sseq"])
+
+    # Now for the rejected data. This one only hits with themselves
+    tmp_list2 = []
+    for _, row in data_input_rejected.iterrows():  # We iterate through the rejected data
+        index = int(re.search(r'\d+', row["sseqid"]).group())  # We get the index of the sequence
+        recatched_row = first_data_input.iloc[index]  # We get the original data from the first data input
+        tmp_list2.append(recatched_row)
+    
+    data_rejected = pd.DataFrame(tmp_list2)
+
+    all_data = pd.concat([data_new_coordinates, data_rejected], ignore_index=True)  # We concatenate the data
+
+    return all_data
     
     

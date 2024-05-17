@@ -175,7 +175,7 @@ def specific_sequence_corrected(path_input, nucleotides1000_directory, main_fold
 
             # pdb.set_trace()
             correct_seq = query  # Changed the name to understand it better for the next part.
-            number_for_location = re.search("\d+", correct_seq).group()  # Using "regex" to extract the numbers
+            number_for_location = re.search(r"\d+", correct_seq).group()  # Using "regex" to extract the numbers
             number_for_location = int(number_for_location) - 1  # Because Python starts at 0
 
              #  Now we filter "correct_seq" to obtain a number to filter a CSV list of 4 x 1000 without doing BLAST
@@ -189,7 +189,7 @@ def specific_sequence_corrected(path_input, nucleotides1000_directory, main_fold
             with open(nucleotides1000_directory, "r") as main_file:
                 reader = csv.reader(main_file, delimiter=",")
                 for row in reader:
-                    if row == rows_by_number[number_for_location]:  # Asi me aseguro que estoy en la adecuada. Quizas es rizar el rizo pero no se me ocurre en el momento un paso mejor --> ESTO ESTA MAL
+                    if row == rows_by_number[number_for_location]:  # Asi me aseguro que estoy en la adecuada. Quizas es rizar el rizo pero no se me ocurre en el momento un paso mejor 
                         if "plus" in row[14]:
 
                             # Since in that file, they are extended to 1000nt, doing 1000 - max end, gives me how much do I have to rest for the sequence end.
