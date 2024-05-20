@@ -75,6 +75,7 @@ boxymcboxface("First BLASTn step initiated")
 
 tic = time.perf_counter()  # Start the timer
 first_blaster = blastn_blaster(args_data_path, blastn_dict_path_out, identity_1)  # It has the data frame for the first blaster
+first_blaster.to_csv(os.path.join(folder_location, "First_Blaster.csv"), index=False, header=0, sep=",")  # Save the data frame to a CSV file
 toc = time.perf_counter()  # Stop the timer
 print(f"1. Initial data:\n",
       f"\t- Data row length: {first_blaster.shape[0]}\n",
