@@ -18,7 +18,7 @@ def get_data_sequence(data, strand, genome_fasta):
     :type genome_fasta: string
     """
     list = []  # It'll save the rows here.
-    for index, row in data.iterrows():  # iteration through data frame
+    for _, row in data.iterrows():  # iteration through data frame
         if strand == "plus":  # If strand is "plus", then `blastdbcmd` will take start as row[1] and end as row[2]
             start = row[1]
             end = row[2]
@@ -26,12 +26,9 @@ def get_data_sequence(data, strand, genome_fasta):
             start = row[2] 
             end = row[1] 
         # `blastdbcmd` call with subprocess.check_output().
-        sequence = subprocess.check_output("blastdbcmd -db " + genome_fasta + 
-                                           " -entry " + row[0] + 
-                                           " -range " + str(start) + "-" + str(end) + 
-                                           " -strand " + strand + 
-                                           " -outfmt %s", 
-                                           shell=True, universal_newlines=True)
+        cmd = f"blastdbcmd -db {genome_fasta} -entry {row[0]} -range {start}-{end} -strand {strand} -outfmt %s"
+        sequence = subprocess.check_output(cmd, shell=True, universal_newlines=True)
+        
         # Appending subprocess the data to the list
         list.append(row[0] + "," + 
                     str(row[1]) + "," + 
@@ -132,36 +129,7 @@ def bedops_main(data_input, genome_fasta, writing_path_input):
     # 6) Correctly modeling the output Data Frame to 15 columns and output as CSV file.
     # -----------------------------------------------------------------------------
     new_data = pd.DataFrame(index=range(all_data.shape[0]), columns=range(column_length))  # creates a new Data Frame with 15 columns. The rows depends on the .shape[0]
-    new_data.iloc[:, [1, 3, 10, 11, 14, 15]] = all_data.iloc[:, [0, 1, 2, 3, 4, 5]]
+    new_data.iloc[:, [1, 3, 10, 11, 12, 13]] = all_data.iloc[:, [0, 1, 2, 3, 4, 5]]
+    new_data.columns = columns_ids  # repairs the columns names
     
     return new_data  # returns the new Data Frame
-    
-def bedops_second(data_input, writing_path_input):
-    """
-
-    """
-
-    columns_ids = data_input.columns  # gets the columns names
-    column_length = len(columns_ids)  # gets the number of columns
-    df_plus = data_input[data_input["sstrand"] == "plus"]  # filters the "+" strand
-    df_minus = data_input[data_input["sstrand"] == "minus"]  # filters the "-" strand
-
-    # Sort the data by the start coordinate
-    df_plus = df_plus.sort_values(by=["sseqid", "sstart"])  # sorts the "+" strand by the start coordinate
-
-    # Let's correct the "-" strand coordinates. But first we need "sstart" coordinate to be the lower number in the "minus" strand. Because now it's the higher number.
-    minus_start = df_minus["sstart"].copy()  # creates a copy of the "sstart" column
-    minus_end = df_minus["send"].copy()  # creates a copy of the "send" column
-    df_minus.loc[:,"sstart"] = list(minus_end)  # changes the "sstart" column to the "send" column
-    df_minus.loc[:,"send"] = list(minus_start)  # changes the "send" column to the "sstart" column
-    df_minus = df_minus.sort_values(by=["sseqid", "sstart"])  # sorts the "-" strand by the start coordinate
-    
-    all_data = pd.concat([df_plus, df_minus], ignore_index=True)  # joins both Data Frames
-
-    all_path = os.path.join(writing_path_input, os.path.basename(writing_path_input) + "_all.bed")  # Path to the output BED file
-    all_data[["sseqid", "sstart", "send"]].to_csv(all_path, sep="\t", header=False, index=False)  # creates a BED file for the "-" strand
-
-    all_bedops = subprocess.check_output(f"bedops --merge {all_path}", shell=True, universal_newlines=True)  # using BEDOPS to merge the coordinates.
-    all_bedops = pd.DataFrame([x.split("\t") for x in all_bedops.split("\n") if x])  # BEDOPS output into a Data Frame
-
-    return all_bedops  # returns the BEDOPS output Data Frame

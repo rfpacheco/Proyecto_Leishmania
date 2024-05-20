@@ -206,6 +206,7 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, maximun
 
     # Call the aesthetics function RUN identifier.
     boxymcboxface("RUN " + str(numbering))
+    tic_main = time.perf_counter()  # Start the timer
 
     # -----------------------------------------------------------------------------
     tic = time.perf_counter()
@@ -221,47 +222,34 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, maximun
     # -----------------------------------------------------------------------------
     # Now let's call  `genome_specific_chromosome_main` for each chromosome_ID in the data using the groupby object.
 
+    whole_group = pd.DataFrame()  # This will be the final data frame for each chromosome
     for _, (chromosome, group) in enumerate(data_grouped):
-        genome_specific_chromosome_main(data_input=group,
-                                        chromosome_ID=chromosome,
-                                        main_folder_path=folder_path,
-                                        genome_fasta=genome_fasta)
-
-
-    for chromosome_ID in chromosome_IDs:
-        # if chromosome_ID != "LinJ.01":  # In case we'll need to delete searches of a special chromosome
-        genome_specific_chromosome_main(data_input,
-                                        chromosome_ID,
-                                        folder_path,
-                                        genome_fasta)
+        data = genome_specific_chromosome_main(data_input=group,
+                                               chromosome_ID=chromosome,
+                                               main_folder_path=folder_path,
+                                               genome_fasta=genome_fasta)
+        whole_group = pd.concat([whole_group, data])
 
     # -----------------------------------------------------------------------------
-    # Y cuando termine creando el archivo MIXER, lo que hago es purificarlo completamente
-    global_filters_main_output = folder_path + "MIXER.csv"  # This one's got the call to "blastn_blaster"
-    global_filters_main(global_filters_main_output,
-                        global_filters_main_output,
-                        genome_fasta)
+    whole_group_filtered = global_filters_main(data_input=whole_group,
+                                               genome_fasta=genome_fasta,
+                                               writing_path=folder_path)
 
-    # pdb.set_trace()
-    folder_output = folder_path + "RUNS"
-    folder_creator(folder_output)
+    RUNS_folder = os.path.join(folder_path, "RUNS")  # Creates the folder for the RUNS
+    os.makedirs(RUNS_folder, exist_ok=True)  # Creates the folder for the RUNS
 
-    RUN_SAVER_Output = folder_output + "/run_" + str(numbering) + ".csv"
-    shutil.copyfile(global_filters_main_output, RUN_SAVER_Output)
-
-    backup_counter = 0
-    if backup_counter == 0:
-        first_backup = Path(path_input)
-        first_backup2 = str(first_backup.parents[0]) + "/" + first_backup.with_suffix("").name + "_backup.csv"
-        shutil.copyfile(path_input, first_backup2)  # Here we save the first file just in case
-        backup_counter += 1
-
-    shutil.copyfile(global_filters_main_output, path_input)  # This way I restart the first "path_input" with the new "mixed input".
-    os.remove(global_filters_main_output)  # Removes "mixer"
-
+    RUN_saver_path = os.path.join(RUNS_folder, "run_" + str(numbering) + ".csv")  # Path to save the RUN
+    whole_group_filtered.to_csv(RUN_saver_path, sep=",", header=0, index=False)  # Saves the RUN
     # -----------------------------------------------------------------------------
     if numbering == maximun_runs:
         print("\n\n\nEND of PROGRAM")
+        toc_main = time.perf_counter()
+        print(f"\n\t==>Whole program took {toc_main - tic_main:0.2f} seconds")
     if numbering < maximun_runs:
         numbering += 1
-        repetitive_blaster(path_input, genome_fasta, folder_path, numbering, maximun_runs)
+        repetitive_blaster(data_input=whole_group_filtered,
+                            genome_fasta=genome_fasta,
+                            folder_path=folder_path,
+                            numbering=numbering,
+                            maximun_runs=maximun_runs)
+                           

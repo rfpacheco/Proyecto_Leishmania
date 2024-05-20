@@ -4,7 +4,7 @@ import time
 from modules.files_manager import folder_creator, csv_creator, fasta_creator, csv_mixer
 # from modules.blaster import blastn_dic  # IMPORTANT -> Since "blaster.py" is importing "identifiers.py" I can't make "identifiers.py" import "blaster.py" --> ERROR: CIRCULAR IMPORT
 from modules.seq_modifier import specific_sequence_1000nt, specific_sequence_corrected
-from modules.filters import filter_by_column, global_filters_main
+from modules.filters import global_filters_main
 from modules.bedops import bedops_main  # New module 19/04/2024
 # from modules.subfamilies_finder import subfamily_sorter  # Needs to be modified
 
@@ -58,42 +58,45 @@ def genome_specific_chromosome_main(data_input, chromosome_ID, main_folder_path,
     print(f"==>Second BLASTn row length: {second_blaster.shape[0]}")
     print(f"==>Second BLASTn step took {toc - tic:0.2f} seconds")
     # -----------------------------------------------------------------------------
+    tic = time.perf_counter()
     corrected_sequences = specific_sequence_corrected(data_input=second_blaster_filtered,
                                                       nucleotides1000_df=sequences_1000,
                                                       first_data_input = data_input,  # this list is modified by `specific_sequence_1000nt`, so most of the data has 1000nt long
                                                       main_folder_path=main_folder_path,
                                                       genome_fasta=genome_fasta,
                                                       chromosome_ID=chromosome_ID)
-    # corrected_sequences = specific_sequence_corrected(second_blaster_filtered, sequences_1000, chromosme_folder_path, chromosome_ID, genome_fasta)
-
+    toc = time.perf_counter()
+    print(f"==>Corrected sequences row length: {corrected_sequences.shape[0]}")
+    print(f"==>Corrected sequences step took {toc - tic:0.2f} seconds")
     # -----------------------------------------------------------------------------
-    second_fasta_creator_output = main_folder_path + chromosome_ID + "/" + chromosome_ID + "_Corrected.fasta"
-    fasta_creator(corrected_sequences, second_fasta_creator_output)
+    second_fasta_creator_path = os.path.join(chromosme_folder_path, chromosome_ID + "_Corrected.fasta")
+    tic = time.perf_counter()
+    fasta_creator(corrected_sequences, second_fasta_creator_path)
+    toc = time.perf_counter()
+    print(f"==>Corrected sequences FASTA file creation took {toc - tic:0.2f} seconds")
 
-    second_blaster_output = main_folder_path + chromosome_ID + "/" + chromosome_ID + "_BLAST_MAIN.csv"
-    blastn_blaster(second_fasta_creator_output,
-                   genome_fasta,
-                   second_blaster_output,
-                   60)
-
+    tic = time.perf_counter()
+    second_blaster = blastn_blaster(query_path=second_fasta_creator_path,
+                                    dict_path=genome_fasta,
+                                    perc_identity=60)
+    toc = time.perf_counter()
+    print(f"==>Second BLASTn row length: {second_blaster.shape[0]}")
+    print(f"==>Second BLASTn step took {toc - tic:0.2f} seconds")
     # -----------------------------------------------------------------------------
-    # # SHOULD NOT BE HERE. IS INSIDE global_filters_main(). NEED TO BE REMOVED
-    # bedops_main(second_blaster_output,  # input CSV file
-    #             genome_fasta,  # Path to the whole genome sequence in FASTA format
-    #             second_blaster_output)  # Output to CSV file
-
-
-    global_filters_main(second_blaster_output,
-                        second_blaster_output,
-                        genome_fasta,
-                        naming_short,
-                        max_diff)
+    tic = time.perf_counter()
+    filtered_data = global_filters_main(data_input=second_blaster,
+                                        genome_fasta=genome_fasta,
+                                        writing_path=chromosme_folder_path)
+    toc = time.perf_counter()
+    print(f"==>Global filters row length: {filtered_data.shape[0]}")
+    print(f"==>Global filters step took {toc - tic:0.2f} seconds")
 
     # -----------------------------------------------------------------------------
     csv_mixer_output = main_folder_path + "MIXER.csv"
 
-    # pdb.set_trace()
-    if os.path.isfile(csv_mixer_output) is False:  # When it doesn't exist, we create it
-        csv_mixer(path_input, second_blaster_output, csv_mixer_output)  # To mix it
-    else:  # If the file already exist (already been created), the path changes to "csv_mixer_outpu"
-        csv_mixer(csv_mixer_output, second_blaster_output, csv_mixer_output)
+    # if os.path.isfile(csv_mixer_output) is False:  # When it doesn't exist, we create it
+    #     csv_mixer(path_input, second_blaster_output, csv_mixer_output)  # To mix it
+    # else:  # If the file already exist (already been created), the path changes to "csv_mixer_outpu"
+    #     csv_mixer(csv_mixer_output, second_blaster_output, csv_mixer_output)
+
+    return filtered_data  # Returns the data frame
