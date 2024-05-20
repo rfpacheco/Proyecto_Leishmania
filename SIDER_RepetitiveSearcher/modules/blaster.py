@@ -4,6 +4,7 @@ import subprocess
 import time
 import shutil
 from pathlib import Path
+from datetime import datetime
 
 from modules.aesthetics import boxymcboxface  # Some aesthetics function
 from modules.identifiers import genome_specific_chromosome_main
@@ -169,7 +170,7 @@ def blastn_blaster(query_path, dict_path, perc_identity):
          - Aligned part of subject sequence.
     """
 
-    cmd = "blastn -word_size 11 -query " \
+    cmd = "blastn -word_size 15 -query " \
         + query_path + " -db " \
         + dict_path \
         + " -perc_identity " + str(perc_identity) \
@@ -184,7 +185,7 @@ def blastn_blaster(query_path, dict_path, perc_identity):
 # -----------------------------------------------------------------------------
 
 
-def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, maximun_runs):
+def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, maximun_runs, start_time):
     """
     This function will iterate till a number of ``maximun_runs`` defined.
 
@@ -216,24 +217,52 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, maximun
     # Now let's group the data by "sseqid". We'll have a pandas groupby object.
     data_grouped = data_ordered.groupby("sseqid")
     toc = time.perf_counter()
-    print(f"==>Data row length: {data_ordered.shape[0]}")
-    print(f"==>Data ordering and grouping took {toc - tic:0.2f} seconds")
-
+    print("")
+    print(f"1. Initial data:\n",
+          f"\t- Data row length: {data_input.shape[0]}\n",
+          f"\t- Execution time: {toc - tic:0.2f} seconds")
     # -----------------------------------------------------------------------------
     # Now let's call  `genome_specific_chromosome_main` for each chromosome_ID in the data using the groupby object.
-
+    terminal_width = shutil.get_terminal_size().columns  # Get the terminal width
+    
+    print("")
+    print(f"2. Individual searching and cleaning:")
     whole_group = pd.DataFrame()  # This will be the final data frame for each chromosome
     for _, (chromosome, group) in enumerate(data_grouped):
+        tic = time.perf_counter()
+        now_time = datetime.now()
+        formatted_now_time = now_time.strftime("%d/%m/%Y %H:%M")
+        print("")
+        print(f"{" "*7}{"-"*74}")
+        print(f"\t- {chromosome}:")
+        start_time_text = f"Program started: {formatted_now_time}"
+        end_time_text = f"Program time now: {formatted_now_time}"
+        print(f"{start_time_text:>{terminal_width}}")
+        print(f"{end_time_text:>{terminal_width}}")
+        
         data = genome_specific_chromosome_main(data_input=group,
                                                chromosome_ID=chromosome,
                                                main_folder_path=folder_path,
                                                genome_fasta=genome_fasta)
+        toc = time.perf_counter()
+        print("")
+        print(f"\t\t- Data row length: {data.shape[0]}\n",
+              f"\t\t- Execution time: {toc - tic:0.2f} seconds")
         whole_group = pd.concat([whole_group, data])
+    print("")
+    print(f"\t- Data row length: {whole_group.shape[0]}",
+          f"\n\t- Execution time: {toc - tic:0.2f} seconds")
 
     # -----------------------------------------------------------------------------
+    tic = time.perf_counter()
     whole_group_filtered = global_filters_main(data_input=whole_group,
                                                genome_fasta=genome_fasta,
                                                writing_path=folder_path)
+    toc = time.perf_counter()
+    print("")
+    print(f"3. Global filtering:\n",
+          f"\t- Data row length: {whole_group_filtered.shape[0]}\n",
+          f"\t- Execution time: {toc - tic:0.2f} seconds")
 
     RUNS_folder = os.path.join(folder_path, "RUNS")  # Creates the folder for the RUNS
     os.makedirs(RUNS_folder, exist_ok=True)  # Creates the folder for the RUNS
@@ -241,11 +270,13 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, maximun
     RUN_saver_path = os.path.join(RUNS_folder, "run_" + str(numbering) + ".csv")  # Path to save the RUN
     whole_group_filtered.to_csv(RUN_saver_path, sep=",", header=0, index=False)  # Saves the RUN
     # -----------------------------------------------------------------------------
+    toc_main = time.perf_counter()
+    print("")
+    print(f"RUN {numbering} finished:\n",
+          f"\t- Execution time: {toc_main - tic_main:0.2f} seconds")
     if numbering == maximun_runs:
-        print("\n\n\nEND of PROGRAM")
-        toc_main = time.perf_counter()
-        print(f"\n\t==>Whole program took {toc_main - tic_main:0.2f} seconds")
-    if numbering < maximun_runs:
+        return  # If it's the last run, then it will return nothing. Just skip the next part of the code.
+    else:  # If it's not the last run, then it will call itself again.
         numbering += 1
         repetitive_blaster(data_input=whole_group_filtered,
                             genome_fasta=genome_fasta,

@@ -35,28 +35,32 @@ def genome_specific_chromosome_main(data_input, chromosome_ID, main_folder_path,
 
     chromosme_folder_path = os.path.join(main_folder_path, chromosome_ID)  # For "chromosome_ID" it creates a folder in the main folder.
     os.makedirs(chromosme_folder_path, exist_ok=True)  # Folder
-    data_input_backup = data_input.copy()  # Backup of the original data frame
-
     # -----------------------------------------------------------------------------
     tic = time.perf_counter()
     sequences_1000 = specific_sequence_1000nt(data_input, chromosome_ID, main_folder_path, genome_fasta)  # Extend sequence to 1000 nt. Saved into a pandas Data Frame. It modifies the original data_input
     sequences_1000_fasta_path = os.path.join(chromosme_folder_path, chromosome_ID + "_1000nt.fasta")  # Path to the output FASTA file
     toc = time.perf_counter()
-    print(f"==>1000nt data frame row length: {sequences_1000.shape[0]}")
-    print(f"==>1000nt data frame sequence creation took {toc - tic:0.2f} seconds")
-    
+    print("")
+    print("\t\t2.1. Sequence extension to 1000nt:\n",
+          f"\t\t\t- Data row length: {sequences_1000.shape[0]}\n",
+          f"\t\t\t- Execution time: {toc - tic:0.2f} seconds")
+    # -----------------------------------------------------------------------------
     tic = time.perf_counter()
     fasta_creator(sequences_1000, sequences_1000_fasta_path)
     toc = time.perf_counter()
-    print(f"==>Fasta 1000nt file creation took {toc - tic:0.2f} seconds")
-
+    print("")
+    print(f"\t\t2.2. Fasta 1000nt file creation:\n",
+          f"\t\t\t- Execution time: {toc - tic:0.2f} seconds")
+    # -----------------------------------------------------------------------------
     blastn_dic(sequences_1000_fasta_path, sequences_1000_fasta_path)
     tic = time.perf_counter()
     second_blaster = blastn_blaster(sequences_1000_fasta_path, sequences_1000_fasta_path, 100)
     second_blaster_filtered = second_blaster[second_blaster["length"].astype(int) > 100]  # Filter by length
     toc = time.perf_counter()
-    print(f"==>Second BLASTn row length: {second_blaster.shape[0]}")
-    print(f"==>Second BLASTn step took {toc - tic:0.2f} seconds")
+    print("")
+    print(f"\t\t2.3. Second BLASTn 1000vs1000:\n",
+          f"\t\t\t- Data row length: {second_blaster.shape[0]}\n",
+          f"\t\t\t- Execution time: {toc - tic:0.2f} seconds")
     # -----------------------------------------------------------------------------
     tic = time.perf_counter()
     corrected_sequences = specific_sequence_corrected(data_input=second_blaster_filtered,
@@ -66,37 +70,37 @@ def genome_specific_chromosome_main(data_input, chromosome_ID, main_folder_path,
                                                       genome_fasta=genome_fasta,
                                                       chromosome_ID=chromosome_ID)
     toc = time.perf_counter()
-    print(f"==>Corrected sequences row length: {corrected_sequences.shape[0]}")
-    print(f"==>Corrected sequences step took {toc - tic:0.2f} seconds")
+    print("")
+    print(f"\t\t2.4. Corrected sequences:\n",
+            f"\t\t\t- Data row length: {corrected_sequences.shape[0]}\n",
+            f"\t\t\t- Execution time: {toc - tic:0.2f} seconds")
     # -----------------------------------------------------------------------------
     second_fasta_creator_path = os.path.join(chromosme_folder_path, chromosome_ID + "_Corrected.fasta")
     tic = time.perf_counter()
     fasta_creator(corrected_sequences, second_fasta_creator_path)
     toc = time.perf_counter()
-    print(f"==>Corrected sequences FASTA file creation took {toc - tic:0.2f} seconds")
-
+    print("")
+    print(f"\t\t2.5. Corrected sequences fasta file creation:\n",
+          f"\t\t\t- Execution time: {toc - tic:0.2f} seconds")
+    # -----------------------------------------------------------------------------
     tic = time.perf_counter()
     second_blaster = blastn_blaster(query_path=second_fasta_creator_path,
                                     dict_path=genome_fasta,
                                     perc_identity=60)
     toc = time.perf_counter()
-    print(f"==>Second BLASTn row length: {second_blaster.shape[0]}")
-    print(f"==>Second BLASTn step took {toc - tic:0.2f} seconds")
+    print("")
+    print(f"\t\t2.6. BLASTn against genome:\n",
+          f"\t\t\t- Data row length: {second_blaster.shape[0]}\n",
+          f"\t\t\t- Execution time: {toc - tic:0.2f} seconds")
     # -----------------------------------------------------------------------------
     tic = time.perf_counter()
     filtered_data = global_filters_main(data_input=second_blaster,
                                         genome_fasta=genome_fasta,
                                         writing_path=chromosme_folder_path)
     toc = time.perf_counter()
-    print(f"==>Global filters row length: {filtered_data.shape[0]}")
-    print(f"==>Global filters step took {toc - tic:0.2f} seconds")
-
-    # -----------------------------------------------------------------------------
-    csv_mixer_output = main_folder_path + "MIXER.csv"
-
-    # if os.path.isfile(csv_mixer_output) is False:  # When it doesn't exist, we create it
-    #     csv_mixer(path_input, second_blaster_output, csv_mixer_output)  # To mix it
-    # else:  # If the file already exist (already been created), the path changes to "csv_mixer_outpu"
-    #     csv_mixer(csv_mixer_output, second_blaster_output, csv_mixer_output)
+    print("")
+    print("\t\t2.7. Filtering BLASTn against genome:\n",
+          f"\t\t\t- Data row length: {filtered_data.shape[0]}\n",
+          f"\t\t\t- Execution time: {toc - tic:0.2f} seconds")
 
     return filtered_data  # Returns the data frame

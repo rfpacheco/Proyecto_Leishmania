@@ -4,7 +4,7 @@ import re
 import math
 
 from modules.files_manager import csv_creator
-from modules.bedops import bedops_main, bedops_second
+from modules.bedops import bedops_main
 
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------

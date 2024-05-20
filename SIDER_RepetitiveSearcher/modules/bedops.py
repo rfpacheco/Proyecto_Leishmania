@@ -17,31 +17,32 @@ def get_data_sequence(data, strand, genome_fasta):
     :param genome_fasta: Path to the whole genome sequence in FASTA format.
     :type genome_fasta: string
     """
-    list = []  # It'll save the rows here.
-    for _, row in data.iterrows():  # iteration through data frame
-        if strand == "plus":  # If strand is "plus", then `blastdbcmd` will take start as row[1] and end as row[2]
-            start = row[1]
-            end = row[2]
-        else: # If the strand is "minus", then `blastdbcmd` will take start as row[2] and end as row[1]
-            start = row[2] 
-            end = row[1] 
-        # `blastdbcmd` call with subprocess.check_output().
-        cmd = f"blastdbcmd -db {genome_fasta} -entry {row[0]} -range {start}-{end} -strand {strand} -outfmt %s"
-        sequence = subprocess.check_output(cmd, shell=True, universal_newlines=True)
-        
-        # Appending subprocess the data to the list
-        list.append(row[0] + "," + 
-                    str(row[1]) + "," + 
-                    str(row[2]) + "," + 
-                    strand + "," + 
-                    sequence)
+    sequences = []
+    for _, row in data.iterrows():
+        sseqid = row["sseqid"]
+        start = row["sstart"]
+        end = row["send"]
+        cmd = [
+            "blastdbcmd",
+            "-db", genome_fasta,
+            "-entry", sseqid,
+            "-range", f"{start}-{end}",
+            "-strand", strand,
+            "-outfmt", "%s"
+        ]
 
-    # list values are separated by commas, so we split them and create a data frame
-    list_split = [row.split(",") for row in list]  # Splitting the list by commas
-    list_split_df = pd.DataFrame(list_split)  # Creating a data frame from the list
-    list_split_df[4] = list_split_df[4].str.replace('\n', '')  # Important. It removes the new line character from the sequence.
+        sequence = subprocess.check_output(cmd, universal_newlines=True).replace('\n', '')
 
-    return list_split_df  # Returns the data frame
+        sequences.append({
+            "sseqid": sseqid,
+            "sstart": start,
+            "send": end,
+            "sstrand": strand,
+            "sseq": sequence
+        })
+
+    sequences_df = pd.DataFrame(sequences)
+    return sequences_df
 
 def bedops_main(data_input, genome_fasta, writing_path_input):
     """
@@ -90,28 +91,27 @@ def bedops_main(data_input, genome_fasta, writing_path_input):
     df_minus_bedops = subprocess.check_output(f"bedops --merge {minus_path}", shell=True, universal_newlines=True)  # merges the "-" strand BED file
 
      # Now let's transform then into Data Frames
-    df_plus_bedops = pd.DataFrame([x.split("\t") for x in df_plus_bedops.split("\n") if x])  # transforms the "+" strand BEDOPS output into a Data Frame
-    df_minus_bedops = pd.DataFrame([x.split("\t") for x in df_minus_bedops.split("\n") if x])  # transforms the "-" strand BEDOPS output into a Data Frame  
-
-    # Not, let's reorder the minus strand Data Frame
-    if not df_minus_bedops.empty:  # If the "-" strand Data Frame is not empty
-        df_minus_bedops = df_minus_bedops[[0, 2, 1]]  # reorders the "-" strand Data Frame
-        df_minus_bedops.columns = range(df_minus_bedops.columns.size)  # repairs the column index
-
+    df_plus_bedops = pd.DataFrame([x.split("\t") for x in df_plus_bedops.split("\n") if x],
+                                    columns=["sseqid", "sstart", "send"])  # transforms the "+" strand BEDOPS output into a Data Frame
+    df_minus_bedops = pd.DataFrame([x.split("\t") for x in df_minus_bedops.split("\n") if x],
+                                    columns=["sseqid", "sstart", "send"])  # transforms the "-" strand BEDOPS output into a Data Frame
     # -----------------------------------------------------------------------------
     # 4) Call `blastdbcmd` to get the sequences with the function get_data_sequence()
     # -----------------------------------------------------------------------------
     if df_plus_bedops.empty:  # In case the original data is empty, the code needs to keep going
-        df_plus_bedops_wseq = pd.DataFrame(columns=range(5))  # creates an empty Data Frame with 5 columns
+        df_plus_bedops_wseq = pd.DataFrame(columns=columns_ids)  # creates an empty Data Frame with 5 columns
     else:  # If the original data is not empty, tit uses get_data_sequence
         df_plus_bedops_wseq = get_data_sequence(df_plus_bedops, "plus", genome_fasta)
 
     # The same for the minus strand:
     if df_minus_bedops.empty:
-        df_minus_bedops_wseq = pd.DataFrame(columns=range(5))
+        df_minus_bedops_wseq = pd.DataFrame(columns=columns_ids)
     else:   
         df_minus_bedops_wseq = get_data_sequence(df_minus_bedops, "minus", genome_fasta)
 
+ 
+    # Let's reorderthe `df_minus_bedps_wseq` data frame:
+    df_minus_bedops_wseq[["sstart", "send"]] = df_minus_bedops_wseq[["send", "sstart"]].copy()  # swap only values
     # -----------------------------------------------------------------------------
     # 5) Processing data
     # -----------------------------------------------------------------------------
@@ -119,17 +119,15 @@ def bedops_main(data_input, genome_fasta, writing_path_input):
     all_data = pd.concat([df_plus_bedops_wseq, df_minus_bedops_wseq], ignore_index=True)  # joins both Data Frames
 
     # Adding sequence length to the DataFrame:
-    new_column = [len(x) for x in all_data[4]]  # creates a list with the length of each sequence
-    all_data.insert(1, "New", new_column)  # inserts the new column with the sequence length. Column index are shifted.
+    new_column = [len(x) for x in all_data.loc[:,"sseq"]]  # creates a list with the length of each sequence
+    all_data.insert(1, "length", new_column)  # inserts the new column with the sequence length. Column index are shifted.
 
-    # Repair column index
-    all_data.columns =range(all_data.columns.size)  # repairs the column index
 
     # -----------------------------------------------------------------------------
     # 6) Correctly modeling the output Data Frame to 15 columns and output as CSV file.
     # -----------------------------------------------------------------------------
-    new_data = pd.DataFrame(index=range(all_data.shape[0]), columns=range(column_length))  # creates a new Data Frame with 15 columns. The rows depends on the .shape[0]
-    new_data.iloc[:, [1, 3, 10, 11, 12, 13]] = all_data.iloc[:, [0, 1, 2, 3, 4, 5]]
-    new_data.columns = columns_ids  # repairs the columns names
+    new_data = pd.DataFrame(index=range(all_data.shape[0]), columns=columns_ids)  # creates a new Data Frame with 15 columns. The rows depends on the .shape[0]
+
+    new_data.loc[:,["sseqid", "length", "sstart", "send", "sstrand", "sseq"]] = all_data.loc[:,["sseqid", "length", "sstart", "send", "sstrand", "sseq"]].copy()
     
     return new_data  # returns the new Data Frame
