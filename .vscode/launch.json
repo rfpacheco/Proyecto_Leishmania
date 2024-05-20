@@ -12,7 +12,7 @@
             "program": "${file}",
             "console": "integratedTerminal",
             "args": ["-d", "/home/viskuit/Documents/Work_CBMSO/Testing_Proyecto_Leishmania/SIDER2_Chr32_L_infantum.fasta",
-            "-g", "/home/viskuit/Documents/Work_CBMSO/Testing_Proyecto_Leishmania/TriTrypDB-67_LinfantumJPCM5_Genome.fasta"
+            "-g", "/home/viskuit/Documents/Work_CBMSO/Testing_Proyecto_Leishmania/1-5_chr.fasta"
             ]
         }
     ]

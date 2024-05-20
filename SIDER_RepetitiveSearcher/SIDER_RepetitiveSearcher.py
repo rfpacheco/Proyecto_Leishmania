@@ -102,7 +102,7 @@ repetitive_blaster(data_input = first_blaster,
                    folder_path = folder_location,
                    numbering = 1,
                    maximun_runs = 2,
-                   start_time = start_time)
+                   start_time = formatted_start_time)
 toc = time.perf_counter()  # Stop the timer
 
 # =============================================================================

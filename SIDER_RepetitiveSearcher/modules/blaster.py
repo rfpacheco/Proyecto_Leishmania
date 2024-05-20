@@ -231,11 +231,11 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, maximun
     for _, (chromosome, group) in enumerate(data_grouped):
         tic = time.perf_counter()
         now_time = datetime.now()
-        formatted_now_time = now_time.strftime("%d/%m/%Y %H:%M")
+        formatted_now_time = now_time.strftime("%Y %B %d at %H:%M")
         print("")
         print(f"{" "*7}{"-"*74}")
         print(f"\t- {chromosome}:")
-        start_time_text = f"Program started: {formatted_now_time}"
+        start_time_text = f"Program started: {start_time}"
         end_time_text = f"Program time now: {formatted_now_time}"
         print(f"{start_time_text:>{terminal_width}}")
         print(f"{end_time_text:>{terminal_width}}")
@@ -249,10 +249,10 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, maximun
         print(f"\t\t- Data row length: {data.shape[0]}\n",
               f"\t\t- Execution time: {toc - tic:0.2f} seconds")
         whole_group = pd.concat([whole_group, data])
+    print(f"{" "*7}{"-"*74}")
     print("")
     print(f"\t- Data row length: {whole_group.shape[0]}",
           f"\n\t- Execution time: {toc - tic:0.2f} seconds")
-
     # -----------------------------------------------------------------------------
     tic = time.perf_counter()
     whole_group_filtered = global_filters_main(data_input=whole_group,
@@ -282,5 +282,6 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, maximun
                             genome_fasta=genome_fasta,
                             folder_path=folder_path,
                             numbering=numbering,
-                            maximun_runs=maximun_runs)
+                            maximun_runs=maximun_runs,
+                            start_time=start_time)
                            

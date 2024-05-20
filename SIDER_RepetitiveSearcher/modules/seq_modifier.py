@@ -147,19 +147,19 @@ def specific_sequence_corrected(data_input, nucleotides1000_df, first_data_input
         index = value[0]
         lower_coor = int(value[1])
         upper_coor = int(value[2])
-        len_real_coor = abs(first_data_input.iloc[index,:]["sstart"] - first_data_input.iloc[index,:]["send"]) + 1
+        len_real_coor = abs(int(first_data_input.iloc[index,:]["sstart"]) - int(first_data_input.iloc[index,:]["send"])) + 1
         strand = first_data_input.iloc[index,:]["sstrand"]
         qseqid = first_data_input.iloc[index,:]["qseqid"]
 
         # We get the sequence from the whole genome, But first, we need to adjust the coordinates.
         if strand == "plus":
-            new_lower_coor = first_data_input.iloc[index,:]["sstart"] + lower_coor - 1  # -1 because if lower_coor == 1, then we need to get the first nucleotide
+            new_lower_coor = int(first_data_input.iloc[index,:]["sstart"]) + lower_coor - 1  # -1 because if lower_coor == 1, then we need to get the first nucleotide
             upper_coor_diff = len_real_coor - upper_coor
-            new_upper_coor = first_data_input.iloc[index,:]["send"] - upper_coor_diff # We subtract the difference between the length of the sequence and the upper coordinate
+            new_upper_coor = int(first_data_input.iloc[index,:]["send"]) - upper_coor_diff # We subtract the difference between the length of the sequence and the upper coordinate
         else:  # If it's the "-" strand
-            new_lower_coor = first_data_input.iloc[index,:]["send"] + lower_coor - 1  # -1 because if lower_coor == 1, then we need to get the first nucleotide
+            new_lower_coor = int(first_data_input.iloc[index,:]["send"]) + lower_coor - 1  # -1 because if lower_coor == 1, then we need to get the first nucleotide
             upper_coor_diff = len_real_coor - upper_coor
-            new_upper_coor = first_data_input.iloc[index,:]["sstart"] - upper_coor_diff
+            new_upper_coor = int(first_data_input.iloc[index,:]["sstart"]) - upper_coor_diff
         
         cmd = f"blastdbcmd -db {genome_fasta} -entry {chromosome_ID} -range {new_lower_coor}-{new_upper_coor} -strand {strand} -outfmt %s"
         seq = subprocess.check_output(cmd, shell=True, universal_newlines=True).strip()
