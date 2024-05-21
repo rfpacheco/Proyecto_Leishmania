@@ -54,7 +54,7 @@ def genome_specific_chromosome_main(data_input, chromosome_ID, main_folder_path,
     # -----------------------------------------------------------------------------
     blastn_dic(sequences_1000_fasta_path, sequences_1000_fasta_path)
     tic = time.perf_counter()
-    second_blaster = blastn_blaster(sequences_1000_fasta_path, sequences_1000_fasta_path, 100)
+    second_blaster = blastn_blaster(sequences_1000_fasta_path, sequences_1000_fasta_path, 85)
     second_blaster_filtered = second_blaster[second_blaster["length"].astype(int) > 100]  # Filter by length
     toc = time.perf_counter()
     print("")

@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 import subprocess
 import re
@@ -56,10 +57,10 @@ def specific_sequence_1000nt(data_input, chromosome_ID, main_folder_path, genome
             seq = subprocess.check_output(cmd, shell=True, universal_newlines=True).strip()
 
             # Now with the data let's modify the data frame
-            data_input.loc[index, "pident"] = ""
-            data_input.loc[index, "length"] = ""
-            data_input.loc[index, "qstart"] = ""
-            data_input.loc[index, "qend"] = ""
+            data_input.loc[index, "pident"] = np.nan
+            data_input.loc[index, "length"] = np.nan
+            data_input.loc[index, "qstart"] = np.nan
+            data_input.loc[index, "qend"] = np.nan
 
             if "plus" in element["sstrand"]:
                 data_input.loc[index, "sstart"] = int(lower_coor)
@@ -68,9 +69,9 @@ def specific_sequence_1000nt(data_input, chromosome_ID, main_folder_path, genome
                 data_input.loc[index, "sstart"] = int(upper_coor)
                 data_input.loc[index, "send"] = int(lower_coor)
 
-            data_input.loc[index, "evalue"] = ""
-            data_input.loc[index, "bitscore"] = ""
-            data_input.loc[index, "qlen"] = ""
+            data_input.loc[index, "evalue"] = np.nan
+            data_input.loc[index, "bitscore"] = np.nan
+            data_input.loc[index, "qlen"] = np.nan
             data_input.loc[index, "slen"] = len(seq)
             data_input.loc[index, "sseq"] = seq
         else:  # If the sequence is already 1000nt we just pass

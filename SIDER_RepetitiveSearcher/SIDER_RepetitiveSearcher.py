@@ -68,13 +68,16 @@ os.makedirs(blastn_dict_path, exist_ok=True)
 blastn_dict_path_out = os.path.join(blastn_dict_path, os.path.basename(args.genome))
 
 # Create the BLASTn dictionary
-blastn_dic(args.genome, blastn_dict_path_out)
+blastn_dic(path_input=args.genome, 
+           path_output=blastn_dict_path_out)
 
 # Call the first BLASTn
-boxymcboxface("First BLASTn step initiated")
+boxymcboxface(message="First BLASTn step initiated")
 
 tic = time.perf_counter()  # Start the timer
-first_blaster = blastn_blaster(args_data_path, blastn_dict_path_out, identity_1)  # It has the data frame for the first blaster
+first_blaster = blastn_blaster(query_path=args_data_path, 
+                               dict_path=blastn_dict_path_out, 
+                               perc_identity=identity_1)  # It has the data frame for the first blaster
 first_blaster.to_csv(os.path.join(folder_location, "First_Blaster.csv"), index=False, header=0, sep=",")  # Save the data frame to a CSV file
 toc = time.perf_counter()  # Stop the timer
 print(f"1. Initial data:\n",
@@ -92,20 +95,20 @@ fasta_file_path = os.path.join(folder_location, "First_Blaster.fasta")  # Path t
 
 # Now let's create the fasta file
 tic = time.perf_counter()  # Start the timer
-fasta_creator(data_input = first_blaster,
-              fasta_output_path = fasta_file_path)
+fasta_creator(data_input=first_blaster,
+              fasta_output_path=fasta_file_path)
 toc = time.perf_counter()  # Stop the timer
 print("")
 print(f"2. Fasta file creation:\n",
       f"\t- Execution time: {toc - tic:0.2f} seconds")
 
 tic = time.perf_counter()  # Start the timer
-repetitive_blaster(data_input = first_blaster,
-                   genome_fasta = blastn_dict_path_out,  # path to the genome dict
-                   folder_path = folder_location,
-                   numbering = 1,
-                   maximun_runs = 2,
-                   start_time = formatted_start_time)
+repetitive_blaster(data_input=first_blaster,
+                   genome_fasta=blastn_dict_path_out,  # path to the genome dict
+                   folder_path=folder_location,
+                   numbering=1,
+                   maximun_runs=2,
+                   start_time=formatted_start_time)
 toc = time.perf_counter()  # Stop the timer
 
 # =============================================================================
@@ -114,7 +117,7 @@ toc = time.perf_counter()  # Stop the timer
 toc_main = time.perf_counter()  # Stop the timer
 end_time = datetime.now()
 formatted_end_time = end_time.strftime("%Y %B %d at %H:%M")
-boxymcboxface("END OF THE PROGRAM")
+boxymcboxface(message="END OF THE PROGRAM")
 print(f"\t- Execution time: {toc_main - tic_main:0.2f} seconds\n",
       f"\t- Program started: {formatted_start_time}\n",
       f"\t- Program ended: {formatted_end_time}")
