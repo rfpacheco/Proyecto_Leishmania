@@ -105,3 +105,17 @@ def fasta_creator(data_input, fasta_output_path):
                         )
         matrix.append(rec)
     SeqIO.write(matrix, fasta_output_path, "fasta")
+
+def columns_to_numeric(data_input, columns_to_convert):
+    """
+    This function will convert the columns of a pandas DataFrame to numeric values.
+
+    :param data_input: pandas data frame
+    :type data_input: pandas data frame
+
+    :return: pandas data frame with numeric values
+    :rtype: pandas data frame
+    """
+    for column in columns_to_convert:
+        data_input[column] = pd.to_numeric(data_input[column], errors='coerce')
+    return data_input

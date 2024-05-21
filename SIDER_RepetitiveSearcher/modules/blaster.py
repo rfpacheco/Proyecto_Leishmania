@@ -9,7 +9,7 @@ from datetime import datetime
 from modules.aesthetics import boxymcboxface  # Some aesthetics function
 from modules.identifiers import genome_specific_chromosome_main
 from modules.filters import global_filters_main
-from modules.files_manager import folder_creator
+from modules.files_manager import columns_to_numeric
 
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
@@ -212,6 +212,7 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, maximun
     # -----------------------------------------------------------------------------
     tic = time.perf_counter()
     # First let's order the data by "sseqid", "sstrand", "sstart".
+    data_input = columns_to_numeric(data_input, ["pident", "length", "qstart", "qend", "sstart", "send", "evalue", "bitscore", "qlen", "slen"])
     data_ordered = data_input.sort_values(by=["sseqid", "sstrand", "sstart"])
 
     # Now let's group the data by "sseqid". We'll have a pandas groupby object.
