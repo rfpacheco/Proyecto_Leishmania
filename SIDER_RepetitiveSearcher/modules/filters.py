@@ -3,7 +3,6 @@ import os
 
 from Bio import SeqIO
 
-from modules.files_manager import csv_creator
 from modules.bedops import bedops_main
 
 # -----------------------------------------------------------------------------
@@ -80,15 +79,15 @@ def global_filters_main(data_input, genome_fasta, writing_path):
     :rtype: CSV file
     """
 
-    data_filtered = data_input[data_input["length"].astype(int) > 100]  # Filter by length
+    data_filtered = data_input[data_input["length"].astype(int) >= 100]  # Filter by length
 
     data_filtered = data_filtered.apply(lambda x: x.replace("-", ""))  # Filter dashes
 
     if data_filtered.empty:  # Checks if the data is empty. If it is, it will skip the next part of the code
         return  # Skip the next part of the code
 
-    date_bedops = bedops_main(data_input=data_filtered,
+    data_bedops = bedops_main(data_input=data_filtered,
                               genome_fasta=genome_fasta,
                               writing_path_input=writing_path)
-    
-    return date_bedops
+   
+    return data_bedops

@@ -1,7 +1,7 @@
 import os
 import time
 
-from modules.files_manager import folder_creator, csv_creator, fasta_creator, csv_mixer
+from modules.files_manager import fasta_creator, columns_to_numeric
 # from modules.blaster import blastn_dic  # IMPORTANT -> Since "blaster.py" is importing "identifiers.py" I can't make "identifiers.py" import "blaster.py" --> ERROR: CIRCULAR IMPORT
 from modules.seq_modifier import specific_sequence_1000nt, specific_sequence_corrected
 from modules.filters import global_filters_main
@@ -55,6 +55,7 @@ def genome_specific_chromosome_main(data_input, chromosome_ID, main_folder_path,
     blastn_dic(sequences_1000_fasta_path, sequences_1000_fasta_path)
     tic = time.perf_counter()
     second_blaster = blastn_blaster(sequences_1000_fasta_path, sequences_1000_fasta_path, 85)
+    second_blaster = columns_to_numeric(second_blaster, ["pident", "length", "qstart", "qend", "sstart", "send", "evalue", "bitscore", "qlen", "slen"])
     second_blaster_filtered = second_blaster[second_blaster["length"].astype(int) > 100]  # Filter by length
     toc = time.perf_counter()
     print("")
@@ -84,19 +85,21 @@ def genome_specific_chromosome_main(data_input, chromosome_ID, main_folder_path,
           f"\t\t\t- Execution time: {toc - tic:0.2f} seconds")
     # -----------------------------------------------------------------------------
     tic = time.perf_counter()
-    second_blaster = blastn_blaster(query_path=second_fasta_creator_path,
+    third_blaster = blastn_blaster(query_path=second_fasta_creator_path,
                                     dict_path=genome_fasta,
                                     perc_identity=60)
+    third_blaster = columns_to_numeric(third_blaster, ["pident", "length", "qstart", "qend", "sstart", "send", "evalue", "bitscore", "qlen", "slen"])
     toc = time.perf_counter()
     print("")
     print(f"\t\t2.6. BLASTn against genome:\n",
-          f"\t\t\t- Data row length: {second_blaster.shape[0]}\n",
+          f"\t\t\t- Data row length: {third_blaster.shape[0]}\n",
           f"\t\t\t- Execution time: {toc - tic:0.2f} seconds")
     # -----------------------------------------------------------------------------
     tic = time.perf_counter()
-    filtered_data = global_filters_main(data_input=second_blaster,
+    filtered_data = global_filters_main(data_input=third_blaster,
                                         genome_fasta=genome_fasta,
                                         writing_path=chromosme_folder_path)
+#     filtered_data = columns_to_numeric(filtered_data, ["pident", "length", "qstart", "qend", "sstart", "send", "evalue", "bitscore", "qlen", "slen"])
     toc = time.perf_counter()
     print("")
     print("\t\t2.7. Filtering BLASTn against genome:\n",

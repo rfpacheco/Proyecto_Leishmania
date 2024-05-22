@@ -4,6 +4,8 @@ import pandas as pd
 import subprocess
 import os
 
+from modules.files_manager import columns_to_numeric
+
 def get_data_sequence(data, strand, genome_fasta):
     """
     This function gets the sequence of the data from the fasta file. It will keep the Chromosome ID, start coordinate, end coordinate and strand.
@@ -129,5 +131,6 @@ def bedops_main(data_input, genome_fasta, writing_path_input):
     new_data = pd.DataFrame(index=range(all_data.shape[0]), columns=columns_ids)  # creates a new Data Frame with 15 columns. The rows depends on the .shape[0]
 
     new_data.loc[:,["sseqid", "length", "sstart", "send", "sstrand", "sseq"]] = all_data.loc[:,["sseqid", "length", "sstart", "send", "sstrand", "sseq"]].copy()
+    new_data = columns_to_numeric(new_data, ["pident", "length", "qstart", "qend", "sstart", "send", "evalue", "bitscore", "qlen", "slen"])
     
     return new_data  # returns the new Data Frame
