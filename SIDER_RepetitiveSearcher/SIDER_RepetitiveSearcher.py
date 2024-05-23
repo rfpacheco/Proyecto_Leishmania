@@ -3,11 +3,11 @@ import os
 import shutil
 import time  # to measure the time of the program
 from datetime import datetime
-import subprocess  # to call the command line
+import subprocess 
 
 from modules.blaster import blastn_dic, blastn_blaster, repetitive_blaster
 from modules.aesthetics import boxymcboxface
-from modules.files_manager import fasta_creator
+from modules.files_manager import fasta_creator, columns_to_numeric
 
 # Initiate parser
 parser = argparse.ArgumentParser(
@@ -78,14 +78,13 @@ tic = time.perf_counter()  # Start the timer
 first_blaster = blastn_blaster(query_path=args_data_path, 
                                dict_path=blastn_dict_path_out, 
                                perc_identity=identity_1)  # It has the data frame for the first blaster
-first_blaster.to_csv(os.path.join(folder_location, "First_Blaster.csv"), index=False, header=0, sep=",")  # Save the data frame to a CSV file
+first_blaster = columns_to_numeric(first_blaster, ["pident", "length", "qstart", "qend", "sstart", "send", "evalue", "bitscore", "qlen", "slen"])
+
+first_blaster.to_csv(os.path.join(folder_location, "First_Blaster.csv"), index=False, header=True, sep=",")  # Save the data frame to a CSV file
 toc = time.perf_counter()  # Stop the timer
 print(f"1. Initial data:\n",
       f"\t- Data row length: {first_blaster.shape[0]}\n",
       f"\t- Execution time: {toc - tic:0.2f} seconds")
-
-
-
 
 # =============================================================================
 # Call the second and last BLASTn
@@ -107,7 +106,7 @@ repetitive_blaster(data_input=first_blaster,
                    genome_fasta=blastn_dict_path_out,  # path to the genome dict
                    folder_path=folder_location,
                    numbering=1,
-                   maximun_runs=2,
+                    maximun_runs=1,
                    start_time=formatted_start_time)
 toc = time.perf_counter()  # Stop the timer
 

@@ -4,12 +4,10 @@ import subprocess
 import re
 import math
 
-from modules.files_manager import csv_creator
 from modules.bedops import bedops_main
 
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
-
 
 def specific_sequence_1000nt(data_input, chromosome_ID, main_folder_path, genome_fasta):
     """
