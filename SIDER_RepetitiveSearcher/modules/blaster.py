@@ -285,5 +285,7 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, maximun
                             folder_path=folder_path,
                             numbering=numbering,
                             maximun_runs=maximun_runs,
-                            start_time=start_time)
+                            start_time=start_time,
+                            identity_1=identity_1,
+                            identity_2=identity_2)
                            
