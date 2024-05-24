@@ -120,7 +120,7 @@ repetitive_blaster_folder = os.path.join(folder_location, "execution_data")
 os.makedirs(repetitive_blaster_folder, exist_ok=True)
 
 tic = time.perf_counter()  # Start the timer
-repetitive_blaster(data_input=first_blaster,
+repetitive_blaster(data_input=first_blaster_bedops,
                    genome_fasta=blastn_dict_path_out,  # path to the genome dict
                    folder_path=repetitive_blaster_folder,
                    numbering=1,
