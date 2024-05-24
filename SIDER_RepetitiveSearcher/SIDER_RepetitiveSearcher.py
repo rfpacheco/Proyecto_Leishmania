@@ -8,6 +8,7 @@ import subprocess
 from modules.blaster import blastn_dic, blastn_blaster, repetitive_blaster
 from modules.aesthetics import boxymcboxface
 from modules.files_manager import fasta_creator, columns_to_numeric
+from modules.bedops import bedops_main
 
 # Initiate parser
 parser = argparse.ArgumentParser(
@@ -79,12 +80,25 @@ first_blaster = blastn_blaster(query_path=args_data_path,
                                dict_path=blastn_dict_path_out, 
                                perc_identity=identity_1)  # It has the data frame for the first blaster
 first_blaster = columns_to_numeric(first_blaster, ["pident", "length", "qstart", "qend", "sstart", "send", "evalue", "bitscore", "qlen", "slen"])
-
-first_blaster.to_csv(os.path.join(folder_location, "First_Blaster.csv"), index=False, header=True, sep=",")  # Save the data frame to a CSV file
 toc = time.perf_counter()  # Stop the timer
 print(f"1. Initial data:\n",
       f"\t- Data row length: {first_blaster.shape[0]}\n",
       f"\t- Execution time: {toc - tic:0.2f} seconds")
+# first_blaster.to_csv(os.path.join(folder_location, "First_Blaster.csv"), index=False, header=True, sep=",")  # Save the data frame to a CSV file
+
+# =============================================================================
+# Use BEDOPS to merge the first BLASTn data
+# =============================================================================
+print("\t- Filtering data:")
+tic = time.perf_counter()  # Start the timer
+first_blaster_bedops = bedops_main(data_input=first_blaster,
+                                   genome_fasta=blastn_dict_path_out,
+                                   writing_path_input=folder_location)
+toc = time.perf_counter()  # Stop the timers
+print(f"\t\t- Data row length: {first_blaster_bedops.shape[0]}",
+      f"\t\t- Execution time: {toc - tic:0.2f} seconds")
+
+# first_blaster_bedops.to_csv(os.path.join(folder_location, "First_Blaster_BEDOPS.csv"), index=False, header=True, sep=",")  # Save the data frame to a CSV file
 
 # =============================================================================
 # Call the second and last BLASTn
@@ -94,19 +108,23 @@ fasta_file_path = os.path.join(folder_location, "First_Blaster.fasta")  # Path t
 
 # Now let's create the fasta file
 tic = time.perf_counter()  # Start the timer
-fasta_creator(data_input=first_blaster,
+fasta_creator(data_input=first_blaster_bedops,
               fasta_output_path=fasta_file_path)
 toc = time.perf_counter()  # Stop the timer
 print("")
 print(f"2. Fasta file creation:\n",
       f"\t- Execution time: {toc - tic:0.2f} seconds")
 
+# Create new folder for all the data
+repetitive_blaster_folder = os.path.join(folder_location, "execution_data")
+os.makedirs(repetitive_blaster_folder, exist_ok=True)
+
 tic = time.perf_counter()  # Start the timer
 repetitive_blaster(data_input=first_blaster,
                    genome_fasta=blastn_dict_path_out,  # path to the genome dict
-                   folder_path=folder_location,
+                   folder_path=repetitive_blaster_folder,
                    numbering=1,
-                    maximun_runs=1,
+                   maximun_runs=1,
                    start_time=formatted_start_time)
 toc = time.perf_counter()  # Stop the timer
 
