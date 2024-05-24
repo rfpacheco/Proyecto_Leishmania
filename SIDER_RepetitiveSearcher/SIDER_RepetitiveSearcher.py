@@ -95,7 +95,7 @@ first_blaster_bedops = bedops_main(data_input=first_blaster,
                                    genome_fasta=blastn_dict_path_out,
                                    writing_path_input=folder_location)
 toc = time.perf_counter()  # Stop the timers
-print(f"\t\t- Data row length: {first_blaster_bedops.shape[0]}",
+print(f"\t\t- Data row length: {first_blaster_bedops.shape[0]}\n",
       f"\t\t- Execution time: {toc - tic:0.2f} seconds")
 
 # first_blaster_bedops.to_csv(os.path.join(folder_location, "First_Blaster_BEDOPS.csv"), index=False, header=True, sep=",")  # Save the data frame to a CSV file
