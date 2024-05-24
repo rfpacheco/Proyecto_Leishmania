@@ -37,7 +37,10 @@ folder_location = os.path.join(data_location, folder_name)  # Create the folder 
 os.makedirs(folder_location, exist_ok=True)
 print(f"{"."*20} Folder {folder_name} created in {data_location}")
 
-identity_1 = input("Enter the identity for the first BLASTn step: ")  # user input for the identity
+identity_1 = input("Enter the identity for the first BLASTn step: "); identity_1 = int(identity_1)  # user input for the identity
+identity_2 = input("Enter the identity for the second BLASTn step: "); identity_2 = int(identity_2)  # user input for the identity
+stop_run = input("Enter the number of runs for the repetitive BLASTn: ");  stop_run = int(stop_run)  # user input for the number of runs
+
 
 # =============================================================================
 # Start time
@@ -124,8 +127,10 @@ repetitive_blaster(data_input=first_blaster_bedops,
                    genome_fasta=blastn_dict_path_out,  # path to the genome dict
                    folder_path=repetitive_blaster_folder,
                    numbering=1,
-                   maximun_runs=1,
-                   start_time=formatted_start_time)
+                   maximun_runs=stop_run,
+                   start_time=formatted_start_time,
+                   identity_1 = identity_1,
+                   identity_2 = identity_2)
 toc = time.perf_counter()  # Stop the timer
 
 # =============================================================================

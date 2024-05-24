@@ -185,7 +185,7 @@ def blastn_blaster(query_path, dict_path, perc_identity):
 # -----------------------------------------------------------------------------
 
 
-def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, maximun_runs, start_time):
+def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, maximun_runs, start_time, identity_1, identity_2):
     """
     This function will iterate till a number of ``maximun_runs`` defined.
 
@@ -243,7 +243,9 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, maximun
         data = genome_specific_chromosome_main(data_input=group,
                                                chromosome_ID=chromosome,
                                                main_folder_path=folder_path,
-                                               genome_fasta=genome_fasta)
+                                               genome_fasta=genome_fasta,
+                                               identity_1=identity_1,
+                                               identity_2=identity_2)
         toc = time.perf_counter()
         print("")
         print(f"\t\t- Data row length: {data.shape[0]}\n",

@@ -12,7 +12,7 @@ from modules.bedops import bedops_main  # New module 19/04/2024
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
 
-def genome_specific_chromosome_main(data_input, chromosome_ID, main_folder_path, genome_fasta):
+def genome_specific_chromosome_main(data_input, chromosome_ID, main_folder_path, genome_fasta, identity_1, identity_2):
     """
     Main program, which calls the iterative blaster and all the filters needed.
 
@@ -54,7 +54,7 @@ def genome_specific_chromosome_main(data_input, chromosome_ID, main_folder_path,
     # -----------------------------------------------------------------------------
     blastn_dic(sequences_1000_fasta_path, sequences_1000_fasta_path)
     tic = time.perf_counter()
-    second_blaster = blastn_blaster(sequences_1000_fasta_path, sequences_1000_fasta_path, 85)
+    second_blaster = blastn_blaster(sequences_1000_fasta_path, sequences_1000_fasta_path, identity_2)
     second_blaster = columns_to_numeric(second_blaster, ["pident", "length", "qstart", "qend", "sstart", "send", "evalue", "bitscore", "qlen", "slen"])
     second_blaster_filtered = second_blaster[second_blaster["length"].astype(int) > 100]  # Filter by length
     toc = time.perf_counter()
@@ -87,7 +87,7 @@ def genome_specific_chromosome_main(data_input, chromosome_ID, main_folder_path,
     tic = time.perf_counter()
     third_blaster = blastn_blaster(query_path=second_fasta_creator_path,
                                     dict_path=genome_fasta,
-                                    perc_identity=60)
+                                    perc_identity=identity_1)
     third_blaster = columns_to_numeric(third_blaster, ["pident", "length", "qstart", "qend", "sstart", "send", "evalue", "bitscore", "qlen", "slen"])
     toc = time.perf_counter()
     print("")
