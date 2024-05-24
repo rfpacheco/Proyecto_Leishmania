@@ -75,6 +75,7 @@ def genome_specific_chromosome_main(data_input, chromosome_ID, main_folder_path,
     print(f"\t\t2.4. Corrected sequences:\n",
             f"\t\t\t- Data row length: {corrected_sequences.shape[0]}\n",
             f"\t\t\t- Execution time: {toc - tic:0.2f} seconds")
+    corrected_sequences.to_csv(os.path.join(chromosme_folder_path, chromosome_ID + "_Corrected.csv"), index=False, header=True, sep=",")  # Save the data frame to a CSV file
     # -----------------------------------------------------------------------------
     second_fasta_creator_path = os.path.join(chromosme_folder_path, chromosome_ID + "_Corrected.fasta")
     tic = time.perf_counter()
