@@ -5,7 +5,8 @@ __all__ = [
     "files_manager",
     "seq_modifier",
     "filters",
-    "bedops"
+    "bedops",
+    "stopping"
 ]
 
 from modules import *

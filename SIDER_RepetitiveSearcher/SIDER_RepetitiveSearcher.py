@@ -130,16 +130,17 @@ repetitive_blaster(data_input=first_blaster_bedops,
                    maximun_runs=stop_run,
                    start_time=formatted_start_time,
                    identity_1 = identity_1,
-                   identity_2 = identity_2)
+                   identity_2 = identity_2,
+                   tic_start = tic_main)
 toc = time.perf_counter()  # Stop the timer
 
 # =============================================================================
 # End time
 # =============================================================================
-toc_main = time.perf_counter()  # Stop the timer
-end_time = datetime.now()
-formatted_end_time = end_time.strftime("%Y %B %d at %H:%M")
-boxymcboxface(message="END OF THE PROGRAM")
-print(f"\t- Execution time: {toc_main - tic_main:0.2f} seconds\n",
-      f"\t- Program started: {formatted_start_time}\n",
-      f"\t- Program ended: {formatted_end_time}")
+# toc_main = time.perf_counter()  # Stop the timer
+# end_time = datetime.now()
+# formatted_end_time = end_time.strftime("%Y %B %d at %H:%M")
+# boxymcboxface(message="END OF THE PROGRAM")
+# print(f"\t- Execution time: {toc_main - tic_main:0.2f} seconds\n",
+#       f"\t- Program started: {formatted_start_time}\n",
+#       f"\t- Program ended: {formatted_end_time}")

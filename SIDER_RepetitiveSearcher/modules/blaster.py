@@ -185,7 +185,7 @@ def blastn_blaster(query_path, dict_path, perc_identity):
 # -----------------------------------------------------------------------------
 
 
-def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, maximun_runs, start_time, identity_1, identity_2):
+def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, maximun_runs, start_time, identity_1, identity_2, tic_start):
     """
     This function will iterate till a number of ``maximun_runs`` defined.
 
@@ -228,6 +228,7 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, maximun
     print("")
     print(f"2. Individual searching and cleaning:")
     whole_group = pd.DataFrame()  # This will be the final data frame for each chromosome
+    stop_dic = {}  # This will be the stop data for each chromosome 
     for _, (chromosome, group) in enumerate(data_grouped):
         tic = time.perf_counter()
         now_time = datetime.now()
@@ -240,47 +241,65 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, maximun
         print(f"{start_time_text:>{terminal_width}}")
         print(f"{end_time_text:>{terminal_width}}")
         
-        data = genome_specific_chromosome_main(data_input=group,
-                                               chromosome_ID=chromosome,
-                                               main_folder_path=folder_path,
-                                               genome_fasta=genome_fasta,
-                                               identity_1=identity_1,
-                                               identity_2=identity_2,
-                                               run_phase=numbering)
+        data, stop_data = genome_specific_chromosome_main(data_input=group,
+                                                          chromosome_ID=chromosome,
+                                                          main_folder_path=folder_path,
+                                                          genome_fasta=genome_fasta,
+                                                          identity_1=identity_1,
+                                                          identity_2=identity_2,
+                                                          run_phase=numbering)
         toc = time.perf_counter()
         print("")
         print(f"\t\t- Data row length: {data.shape[0]}\n",
               f"\t\t- Execution time: {toc - tic:0.2f} seconds")
         whole_group = pd.concat([whole_group, data])
+        stop_dic[chromosome] = stop_data  # Save the stop data for each chromosome
     print(f"{" "*7}{"-"*74}")
     print("")
     print(f"\t- Data row length: {whole_group.shape[0]}",
           f"\n\t- Execution time: {toc - tic:0.2f} seconds")
     # -----------------------------------------------------------------------------
-    tic = time.perf_counter()
-    whole_group_filtered = global_filters_main(data_input=whole_group,
-                                               genome_fasta=genome_fasta,
-                                               writing_path=folder_path)
-    toc = time.perf_counter()
+    # Decide to stop the process or not
+    stop_len = len(stop_dic)
     print("")
-    print(f"3. Global filtering:\n",
-          f"\t- Data row length: {whole_group_filtered.shape[0]}\n",
-          f"\t- Execution time: {toc - tic:0.2f} seconds")
-
-    RUNS_folder = os.path.join(folder_path, "RUNS")  # Creates the folder for the RUNS
-    os.makedirs(RUNS_folder, exist_ok=True)  # Creates the folder for the RUNS
-
-    RUN_saver_path = os.path.join(RUNS_folder, "run_" + str(numbering) + ".csv")  # Path to save the RUN
-    whole_group_filtered.to_csv(RUN_saver_path, sep=",", header=0, index=False)  # Saves the RUN
+    print(f"3. Checking stop condition:\n",
+          f"\t- Number of chromosomes: {stop_len}")
+    for key, value in stop_dic.items():
+        print(f"\t\t- {key}: {value}")
+    
+    true_count = list(stop_dic.values()).count(True)
+    if true_count == stop_len:
+        toc_main = time.perf_counter()
+        end_time = datetime.now()
+        formatted_end_time = end_time.strftime("%Y %B %d at %H:%M")
+        boxymcboxface(message="END OF THE PROGRAM")
+        print(f"\t- Execution time: {toc_main - tic_main:0.2f} seconds\n",
+              f"\t- Program started: {start_time}\n",
+              f"\t- Program ended: {formatted_end_time}")
+    else:  # If not, then it will call itself again.
     # -----------------------------------------------------------------------------
-    toc_main = time.perf_counter()
-    print("")
-    print(f"RUN {numbering} finished:\n",
-          f"\t- Execution time: {toc_main - tic_main:0.2f} seconds")
-    if numbering == maximun_runs:
-        return  # If it's the last run, then it will return nothing. Just skip the next part of the code.
-    else:  # If it's not the last run, then it will call itself again.
-        numbering += 1
+        tic = time.perf_counter()
+        whole_group_filtered = global_filters_main(data_input=whole_group,
+                                                genome_fasta=genome_fasta,
+                                                writing_path=folder_path)
+        toc = time.perf_counter()
+        print("")
+        print(f"4. Global filtering:\n",
+            f"\t- Data row length: {whole_group_filtered.shape[0]}\n",
+            f"\t- Execution time: {toc - tic:0.2f} seconds")
+
+        RUNS_folder = os.path.join(folder_path, "RUNS")  # Creates the folder for the RUNS
+        os.makedirs(RUNS_folder, exist_ok=True)  # Creates the folder for the RUNS
+
+        RUN_saver_path = os.path.join(RUNS_folder, "run_" + str(numbering) + ".csv")  # Path to save the RUN
+        whole_group_filtered.to_csv(RUN_saver_path, sep=",", header=0, index=False)  # Saves the RUN
+        # -----------------------------------------------------------------------------
+        toc_main = time.perf_counter()
+        print("")
+        print(f"RUN {numbering} finished:\n",
+            f"\t- Execution time: {toc_main - tic_main:0.2f} seconds")
+        # -----------------------------------------------------------------------------
+        numbering += 1  # Increase the numbering
         repetitive_blaster(data_input=whole_group_filtered,
                             genome_fasta=genome_fasta,
                             folder_path=folder_path,
@@ -288,5 +307,6 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, maximun
                             maximun_runs=maximun_runs,
                             start_time=start_time,
                             identity_1=identity_1,
-                            identity_2=identity_2)
-                           
+                            identity_2=identity_2,
+                            tic_start=tic_start)
+                        

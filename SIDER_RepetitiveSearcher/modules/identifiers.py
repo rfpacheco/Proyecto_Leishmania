@@ -1,11 +1,13 @@
 import os
 import time
+import pandas as pd
 
 from modules.files_manager import fasta_creator, columns_to_numeric
 # from modules.blaster import blastn_dic  # IMPORTANT -> Since "blaster.py" is importing "identifiers.py" I can't make "identifiers.py" import "blaster.py" --> ERROR: CIRCULAR IMPORT
 from modules.seq_modifier import specific_sequence_1000nt, specific_sequence_corrected
 from modules.filters import global_filters_main
 from modules.bedops import bedops_main  # New module 19/04/2024
+from modules.stopping import stopping_main  # New module
 # from modules.subfamilies_finder import subfamily_sorter  # Needs to be modified
 
 
@@ -83,6 +85,17 @@ def genome_specific_chromosome_main(data_input, chromosome_ID, main_folder_path,
     corrected_sequences_path = os.path.join(folder_corrected_sequences, f"{run_phase}_corrected.csv")
     corrected_sequences.to_csv(corrected_sequences_path, index=False, header=True, sep=",")  # Save the data frame to a CSV file
     # -----------------------------------------------------------------------------
+    # Make the checks
+    corrected_sequences_df1_path = os.path.join(folder_corrected_sequences, f"{run_phase - 1}_corrected.csv")
+    corrected_sequences_df2_path = corrected_sequences_path
+
+    if run_phase > 1:  # because run 0 doesn't exist
+        corrected_sequences_df1 = pd.read_csv(corrected_sequences_df1_path, sep=",", header=0)
+        corrected_sequences_df2 = pd.read_csv(corrected_sequences_df2_path, sep=",", header=0)
+        stop_data = stopping_main(data_df1=corrected_sequences_df1, data_df2=corrected_sequences_df2)  # Check if the data is the same as the last one. TRUE or FALSE for this chromosome.
+    else:
+        stop_data = False
+    # -----------------------------------------------------------------------------
     second_fasta_creator_path = os.path.join(chromosme_folder_path, chromosome_ID + "_Corrected.fasta")
     tic = time.perf_counter()
     fasta_creator(corrected_sequences, second_fasta_creator_path)
@@ -113,4 +126,4 @@ def genome_specific_chromosome_main(data_input, chromosome_ID, main_folder_path,
           f"\t\t\t- Data row length: {filtered_data.shape[0]}\n",
           f"\t\t\t- Execution time: {toc - tic:0.2f} seconds")
 
-    return filtered_data  # Returns the data frame
+    return filtered_data, stop_data  # Returns the data frame
