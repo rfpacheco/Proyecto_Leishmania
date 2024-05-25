@@ -185,7 +185,7 @@ def blastn_blaster(query_path, dict_path, perc_identity):
 # -----------------------------------------------------------------------------
 
 
-def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, maximun_runs, start_time, identity_1, identity_2, tic_start):
+def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, start_time, identity_1, identity_2, tic_start):
     """
     This function will iterate till a number of ``maximun_runs`` defined.
 
@@ -304,7 +304,7 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, maximun
                             genome_fasta=genome_fasta,
                             folder_path=folder_path,
                             numbering=numbering,
-                            maximun_runs=maximun_runs,
+                            # maximun_runs=maximun_runs,
                             start_time=start_time,
                             identity_1=identity_1,
                             identity_2=identity_2,

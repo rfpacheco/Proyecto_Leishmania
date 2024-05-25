@@ -39,7 +39,8 @@ print(f"{"."*20} Folder {folder_name} created in {data_location}")
 
 identity_1 = input("Enter the identity for the first BLASTn step: "); identity_1 = int(identity_1)  # user input for the identity
 identity_2 = input("Enter the identity for the second BLASTn step: "); identity_2 = int(identity_2)  # user input for the identity
-stop_run = input("Enter the number of runs for the repetitive BLASTn: ");  stop_run = int(stop_run)  # user input for the number of runs
+first_run = input("Enter the number of the first run: "); first_run = int(first_run)  # user input for the number of runs
+# stop_run = input("Enter the number of runs for the repetitive BLASTn: ");  stop_run = int(stop_run)  # user input for the number of runs
 
 
 # =============================================================================
@@ -126,8 +127,8 @@ tic = time.perf_counter()  # Start the timer
 repetitive_blaster(data_input=first_blaster_bedops,
                    genome_fasta=blastn_dict_path_out,  # path to the genome dict
                    folder_path=repetitive_blaster_folder,
-                   numbering=1,
-                   maximun_runs=stop_run,
+                   numbering=first_run,
+                  #  maximun_runs=stop_run,
                    start_time=formatted_start_time,
                    identity_1 = identity_1,
                    identity_2 = identity_2,
