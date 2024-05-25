@@ -100,7 +100,7 @@ def genome_specific_chromosome_main(data_input, chromosome_ID, main_folder_path,
     filtered_data = global_filters_main(data_input=third_blaster,
                                         genome_fasta=genome_fasta,
                                         writing_path=chromosme_folder_path)
-#     filtered_data = columns_to_numeric(filtered_data, ["pident", "length", "qstart", "qend", "sstart", "send", "evalue", "bitscore", "qlen", "slen"])
+    # filtered_data = columns_to_numeric(filtered_data, ["pident", "length", "qstart", "qend", "sstart", "send", "evalue", "bitscore", "qlen", "slen"])
     toc = time.perf_counter()
     print("")
     print("\t\t2.7. Filtering BLASTn against genome:\n",
