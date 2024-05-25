@@ -245,7 +245,8 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, maximun
                                                main_folder_path=folder_path,
                                                genome_fasta=genome_fasta,
                                                identity_1=identity_1,
-                                               identity_2=identity_2)
+                                               identity_2=identity_2,
+                                               run_phase=numbering)
         toc = time.perf_counter()
         print("")
         print(f"\t\t- Data row length: {data.shape[0]}\n",

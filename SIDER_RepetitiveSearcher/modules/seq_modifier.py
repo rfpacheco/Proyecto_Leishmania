@@ -163,6 +163,10 @@ def specific_sequence_corrected(data_input, nucleotides1000_df, first_data_input
         cmd = f"blastdbcmd -db {genome_fasta} -entry {chromosome_ID} -range {new_lower_coor}-{new_upper_coor} -strand {strand} -outfmt %s"
         seq = subprocess.check_output(cmd, shell=True, universal_newlines=True).strip()
         # Now we add the data to the data frame
+        # We reset the sstart and send position for minus strand
+        if strand == "minus":
+            new_lower_coor, new_upper_coor = new_upper_coor, new_lower_coor
+        # And now we add the data to the data frame
         tmp_list.append([qseqid,  # qseqid
                          chromosome_ID,  # sseqid
                          "",  # pident

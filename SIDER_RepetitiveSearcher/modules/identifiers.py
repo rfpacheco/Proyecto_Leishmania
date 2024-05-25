@@ -12,7 +12,7 @@ from modules.bedops import bedops_main  # New module 19/04/2024
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
 
-def genome_specific_chromosome_main(data_input, chromosome_ID, main_folder_path, genome_fasta, identity_1, identity_2):
+def genome_specific_chromosome_main(data_input, chromosome_ID, main_folder_path, genome_fasta, identity_1, identity_2, run_phase):
     """
     Main program, which calls the iterative blaster and all the filters needed.
 
@@ -70,12 +70,18 @@ def genome_specific_chromosome_main(data_input, chromosome_ID, main_folder_path,
                                                       main_folder_path=main_folder_path,
                                                       genome_fasta=genome_fasta,
                                                       chromosome_ID=chromosome_ID)
+    corrected_sequences.sort_values(by=["sstrand", "sstart"], inplace=True)  # Sort the data frame inplace
     toc = time.perf_counter()
     print("")
     print(f"\t\t2.4. Corrected sequences:\n",
             f"\t\t\t- Data row length: {corrected_sequences.shape[0]}\n",
             f"\t\t\t- Execution time: {toc - tic:0.2f} seconds")
-    corrected_sequences.to_csv(os.path.join(chromosme_folder_path, chromosome_ID + "_Corrected.csv"), index=False, header=True, sep=",")  # Save the data frame to a CSV file
+    # -----------------------------------------------------------------------------
+    # Save the corrected sequences to a CSV filecorrected_sequences_path
+    folder_corrected_sequences = os.path.join(chromosme_folder_path, "corrected_sequences")
+    os.makedirs(folder_corrected_sequences, exist_ok=True)
+    corrected_sequences_path = os.path.join(folder_corrected_sequences, f"{run_phase}_corrected.csv")
+    corrected_sequences.to_csv(corrected_sequences_path, index=False, header=True, sep=",")  # Save the data frame to a CSV file
     # -----------------------------------------------------------------------------
     second_fasta_creator_path = os.path.join(chromosme_folder_path, chromosome_ID + "_Corrected.fasta")
     tic = time.perf_counter()
