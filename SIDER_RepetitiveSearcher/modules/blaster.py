@@ -292,7 +292,7 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, maximun
         os.makedirs(RUNS_folder, exist_ok=True)  # Creates the folder for the RUNS
 
         RUN_saver_path = os.path.join(RUNS_folder, "run_" + str(numbering) + ".csv")  # Path to save the RUN
-        whole_group_filtered.to_csv(RUN_saver_path, sep=",", header=0, index=False)  # Saves the RUN
+        whole_group_filtered.to_csv(RUN_saver_path, sep=",", header=True, index=False)  # Saves the RUN
         # -----------------------------------------------------------------------------
         toc_main = time.perf_counter()
         print("")
