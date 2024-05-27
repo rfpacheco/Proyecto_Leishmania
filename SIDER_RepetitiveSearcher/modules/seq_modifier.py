@@ -3,6 +3,7 @@ import pandas as pd
 import subprocess
 import re
 import math
+import os
 
 from modules.bedops import bedops_main
 
@@ -84,7 +85,7 @@ def specific_sequence_1000nt(data_input, chromosome_ID, main_folder_path, genome
 # 3) Corrector se secuencias, obtendra las secuencias originales.
 
 
-def specific_sequence_corrected(data_input, nucleotides1000_df, first_data_input, main_folder_path, chromosome_ID, genome_fasta):
+def specific_sequence_corrected(data_input, nucleotides1000_df, first_data_input, main_folder_path, chromosome_ID, genome_fasta, run_phase):
     """
     The main use of this function is to get the real "coordinates" of the sequence.
 
@@ -116,6 +117,12 @@ def specific_sequence_corrected(data_input, nucleotides1000_df, first_data_input
     """
 
     # First from the BLASTn (one againts each other), we get the IDs of the sequences.
+    folder_corrected_sequences_modified_path = os.path.join(main_folder_path, "modified")
+    folder_corrected_sequences_not_modified_path = os.path.join(main_folder_path, "not_modified")
+    os.makedirs(folder_corrected_sequences_modified_path, exist_ok=True)
+    os.makedirs(folder_corrected_sequences_not_modified_path, exist_ok=True)
+
+
     data_input_selected = data_input[data_input["qseqid"] != data_input["sseqid"]].copy()  # We filter the data to get only the sequences that are different from each other.
 
     selected_data_sseqid = data_input_selected["sseqid"].unique()  # We get the unique qseqid
@@ -183,6 +190,8 @@ def specific_sequence_corrected(data_input, nucleotides1000_df, first_data_input
                          seq])  # sseq
     
     data_new_coordinates = pd.DataFrame(tmp_list, columns=["qseqid", "sseqid", "pident", "length", "qstart", "qend", "sstart", "send", "evalue", "bitscore", "qlen", "slen", "sstrand", "sseq"])
+    data_new_coordinates_path = os.path.join(folder_corrected_sequences_modified_path, f"{run_phase}_modified.csv")
+    data_new_coordinates.to_csv(data_new_coordinates_path, index=False, header=True, sep=",")
 
     # Now for the rejected data. This one only hits with themselves
     tmp_list2 = []
@@ -192,7 +201,10 @@ def specific_sequence_corrected(data_input, nucleotides1000_df, first_data_input
         tmp_list2.append(recatched_row)
     
     data_rejected = pd.DataFrame(tmp_list2)
+    data_rejected_path = os.path.join(folder_corrected_sequences_not_modified_path, f"{run_phase}_not_modified.csv")
+    data_rejected.to_csv(data_rejected, index=False, header=True, sep=",")
 
+    
     all_data = pd.concat([data_new_coordinates, data_rejected], ignore_index=True)  # We concatenate the data
 
     return all_data

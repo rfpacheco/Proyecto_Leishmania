@@ -65,13 +65,18 @@ def genome_specific_chromosome_main(data_input, chromosome_ID, main_folder_path,
           f"\t\t\t- Data row length: {second_blaster.shape[0]}\n",
           f"\t\t\t- Execution time: {toc - tic:0.2f} seconds")
     # -----------------------------------------------------------------------------
+    # Create new folders
+    folder_corrected_sequences_path = os.path.join(chromosme_folder_path, "corrected_sequences")
+    os.makedirs(folder_corrected_sequences_path, exist_ok=True)
+    # -----------------------------------------------------------------------------
     tic = time.perf_counter()
     corrected_sequences = specific_sequence_corrected(data_input=second_blaster_filtered,
                                                       nucleotides1000_df=sequences_1000,
                                                       first_data_input = data_input,  # this list is modified by `specific_sequence_1000nt`, so most of the data has 1000nt long
-                                                      main_folder_path=main_folder_path,
+                                                      main_folder_path=folder_corrected_sequences_path,
                                                       genome_fasta=genome_fasta,
-                                                      chromosome_ID=chromosome_ID)
+                                                      chromosome_ID=chromosome_ID,
+                                                      run_phase=run_phase)
     corrected_sequences.sort_values(by=["sstrand", "sstart"], inplace=True)  # Sort the data frame inplace
     toc = time.perf_counter()
     print("")
@@ -80,13 +85,11 @@ def genome_specific_chromosome_main(data_input, chromosome_ID, main_folder_path,
             f"\t\t\t- Execution time: {toc - tic:0.2f} seconds")
     # -----------------------------------------------------------------------------
     # Save the corrected sequences to a CSV filecorrected_sequences_path
-    folder_corrected_sequences = os.path.join(chromosme_folder_path, "corrected_sequences")
-    os.makedirs(folder_corrected_sequences, exist_ok=True)
-    corrected_sequences_path = os.path.join(folder_corrected_sequences, f"{run_phase}_corrected.csv")
+    corrected_sequences_path = os.path.join(folder_corrected_sequences_path, f"{run_phase}_corrected.csv")
     corrected_sequences.to_csv(corrected_sequences_path, index=False, header=True, sep=",")  # Save the data frame to a CSV file
     # -----------------------------------------------------------------------------
     # Make the checks
-    corrected_sequences_df1_path = os.path.join(folder_corrected_sequences, f"{run_phase - 1}_corrected.csv")
+    corrected_sequences_df1_path = os.path.join(folder_corrected_sequences_path, f"{run_phase - 1}_corrected.csv")
     corrected_sequences_df2_path = corrected_sequences_path
 
     if run_phase > 1:  # because run 0 doesn't exist
