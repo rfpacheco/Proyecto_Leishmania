@@ -100,7 +100,11 @@ def genome_specific_chromosome_main(data_input, chromosome_ID, main_folder_path,
         corrected_sequences_df1 = pd.read_csv(corrected_sequences_df1_path, sep=",", header=0)
         corrected_sequences_df2 = pd.read_csv(corrected_sequences_df2_path, sep=",", header=0)
         stop_data = stopping_main(data_df1=corrected_sequences_df1, data_df2=corrected_sequences_df2)  # Check if the data is the same as the last one. TRUE or FALSE for this chromosome.
-        stop_data_bedops = stopping_bedops(data_df1=corrected_sequences_df1, data_df2=corrected_sequences_df2, folder_path=corrected_sequences_BEDOPS_path)
+        stop_data_bedops, recapture_data = stopping_bedops(data_df1=corrected_sequences_df1, data_df2=corrected_sequences_df2, folder_path=corrected_sequences_BEDOPS_path)
+        if not recapture_data.empty:  # If the data frame is not empty
+            corrected_sequences = pd.concat([corrected_sequences, recapture_data], ignore_index=True)  # joins both Data Frames
+            corrected_sequences = corrected_sequences.sort_values(by=["sstrand", "sseqid", "sstart"])  # Sort the data frame by the start coordinate
+
     else:
         stop_data = False
         stop_data_bedops = False

@@ -42,26 +42,33 @@ def stopping_bedops(data_df1, data_df2, folder_path):
     plus_path = os.path.join(folder_path, "bedops_coincidence_plus")
     minus_path = os.path.join(folder_path, "bedops_coincidence_minus")
 
-    # Call BEDOPS on plus
-    coincidence_plus = bedops_coincidence(data_df1_plus, data_df2_plus, plus_path)
+    # -----------------------------------------------------------------------------
+    ## Call BEDOPS on plus
+    coincidence_plus, data_plus = bedops_coincidence(data_df1_plus, data_df2_plus, plus_path)
 
     # Call BEDOPS on minus. Special case, because BEDOPS reads the coordinates like the "+" strand.
     ## First modify the coordinates.
     data_df1_minus[["sstart", "send"]] = data_df1_minus[["send", "sstart"]]
     data_df2_minus[["sstart", "send"]] = data_df2_minus[["send", "sstart"]]
 
+    # -----------------------------------------------------------------------------
     ## And now call BEDOPS on minus
-    coincidence_minus = bedops_coincidence(data_df1_minus, data_df2_minus, minus_path)
+    coincidence_minus, data_minus = bedops_coincidence(data_df1_minus, data_df2_minus, minus_path)
+    data_minus[["sstart", "send"]] = data_minus[["send", "sstart"]]  # restore "data_minus" coordinates
 
+    recapture_data = pd.concat([data_plus, data_minus], ignore_index=True)  # joins both Data Frames
+    recapture_data = recapture_data.sort_values(by=["sstrand", "sseqid", "sstart"])  # Sort the data frame by the start coordinate
+    # -----------------------------------------------------------------------------
+    ## math part
     total_coincidence = coincidence_plus + coincidence_minus
     perc_coincidence = total_coincidence / data_df2.shape[0] * 100
     print(f"\t\t\t- Coincidence (BEDOPS version):\n",
           f"\t\t\t\t- {total_coincidence}/{data_df2.shape[0]} - {perc_coincidence:.2f}%")
-
+    
     if total_coincidence == data_df2.shape[0]:
         print(f"\t\t\t\t- TRUE")
-        return True
+        return True, recapture_data
     else:  # If the the coincidence is not the 100%
         print(f"\t\t\t\t- FALSE")
-        return False
+        return False, recapture_data
 
