@@ -94,7 +94,6 @@ def genome_specific_chromosome_main(data_input, chromosome_ID, main_folder_path,
     # Make the checks
     corrected_sequences_df1_path = os.path.join(folder_corrected_sequences_path, f"{run_phase - 1}_corrected.csv")
     corrected_sequences_df2_path = corrected_sequences_path
-    corrected_sequences
 
     if run_phase > 1:  # because run 0 doesn't exist
         corrected_sequences_df1 = pd.read_csv(corrected_sequences_df1_path, sep=",", header=0)
@@ -109,7 +108,16 @@ def genome_specific_chromosome_main(data_input, chromosome_ID, main_folder_path,
             perc_coincidence = 100 - perc_recaptured
             print(f"\t\t\t- Recaptured data:\n",
                   f"\t\t\t\t- {recapture_data.shape[0]}/{corrected_sequences_df1.shape[0]} elements from last run\n",
-                  f"\t\t\t\t- Coincidence between two last runs: {perc_coincidence:.2f}%")
+                  f"\t\t\t\t- Coincidence last run vs actual run: {perc_coincidence:.2f}%")
+            
+            recapture_data_folder_path = os.path.join(folder_corrected_sequences_path, "recaptured_data")
+            os.makedirs(recapture_data_folder_path, exist_ok=True)
+            recapture_data.to_csv(os.path.join(recapture_data_folder_path, f"{run_phase}_recaptured.csv"), index=False, header=True, sep=",")  # Save the data frame to a CSV file
+        else:  # If the data frame is empty, that means all the rows from the last run are in the actual run
+            print(f"\t\t\t- Recaptured data:\n",
+                  f"\t\t\t\t- 0 elements from last run\n",
+                  f"\t\t\t\t- Coincidence last run vs actual run: 100.00%")
+      
     else:
         stop_data = False
         stop_data_bedops = False
