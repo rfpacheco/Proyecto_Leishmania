@@ -202,7 +202,7 @@ def specific_sequence_corrected(data_input, nucleotides1000_df, first_data_input
     
     data_rejected = pd.DataFrame(tmp_list2)
     data_rejected_path = os.path.join(folder_corrected_sequences_not_modified_path, f"{run_phase}_not_modified.csv")
-    data_rejected.to_csv(data_rejected, index=False, header=True, sep=",")
+    data_rejected.to_csv(data_rejected_path, index=False, header=True, sep=",")
 
     
     all_data = pd.concat([data_new_coordinates, data_rejected], ignore_index=True)  # We concatenate the data

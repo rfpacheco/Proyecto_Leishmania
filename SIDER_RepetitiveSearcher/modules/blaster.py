@@ -228,7 +228,8 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, start_t
     print("")
     print(f"2. Individual searching and cleaning:")
     whole_group = pd.DataFrame()  # This will be the final data frame for each chromosome
-    stop_dic = {}  # This will be the stop data for each chromosome 
+    stop_dic = {}  # This will be the stop data for each chromosome
+    stop_bedops_dic = {}  # This will be the stop data for each chromosome using BEDOPS
     for _, (chromosome, group) in enumerate(data_grouped):
         tic = time.perf_counter()
         now_time = datetime.now()
@@ -241,33 +242,34 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, start_t
         print(f"{start_time_text:>{terminal_width}}")
         print(f"{end_time_text:>{terminal_width}}")
         
-        data, stop_data = genome_specific_chromosome_main(data_input=group,
-                                                          chromosome_ID=chromosome,
-                                                          main_folder_path=folder_path,
-                                                          genome_fasta=genome_fasta,
-                                                          identity_1=identity_1,
-                                                          identity_2=identity_2,
-                                                          run_phase=numbering)
+        data, stop_data, stop_data_bedops = genome_specific_chromosome_main(data_input=group,
+                                             chromosome_ID=chromosome,
+                                             main_folder_path=folder_path,
+                                             genome_fasta=genome_fasta,
+                                             identity_1=identity_1,
+                                             identity_2=identity_2,
+                                             run_phase=numbering)
         toc = time.perf_counter()
         print("")
         print(f"\t\t- Data row length: {data.shape[0]}\n",
               f"\t\t- Execution time: {toc - tic:0.2f} seconds")
         whole_group = pd.concat([whole_group, data])
         stop_dic[chromosome] = stop_data  # Save the stop data for each chromosome
+        stop_bedops_dic[chromosome] = stop_data_bedops  # Save the stop data for each chromosome using BEDOPS
     print(f"{" "*7}{"-"*74}")
     print("")
     print(f"\t- Data row length: {whole_group.shape[0]}",
           f"\n\t- Execution time: {toc - tic:0.2f} seconds")
     # -----------------------------------------------------------------------------
-    # Decide to stop the process or not
+    # Decide to stop the process or not with normal method
     stop_len = len(stop_dic)
     print("")
-    print(f"3. Checking stop condition:\n",
+    print(f"3.1 Checking stop condition:\n",
           f"\t- Number of chromosomes: {stop_len}")
     for key, value in stop_dic.items():
         print(f"\t\t- {key}: {value}")
-    
     true_count = list(stop_dic.values()).count(True)
+
     if true_count == stop_len:
         toc_main = time.perf_counter()
         end_time = datetime.now()
@@ -275,9 +277,26 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, start_t
         boxymcboxface(message="END OF THE PROGRAM")
         print(f"\t- Execution time: {toc_main - tic_main:0.2f} seconds\n",
               f"\t- Program started: {start_time}\n",
-              f"\t- Program ended: {formatted_end_time}")
+              f"\t- Program ended: {formatted_end_time}")           
     else:  # If not, then it will call itself again.
-    # -----------------------------------------------------------------------------
+        # Decide to stop the process or not with BEDOPS method
+        stop_len_bedops = len(stop_bedops_dic)
+        print("")
+        print(f"3.2 Checking stop condition with BEDOPS:\n",
+              f"\t- Number of   chromosomes: {stop_len_bedops}")
+        for key, value in stop_bedops_dic.items():
+            print(f"\t\t- {key}: {value}")
+        true_count_bedops = list(stop_bedops_dic.values()).count(True)
+
+        if true_count_bedops == stop_len_bedops:
+            toc_main = time.perf_counter()
+            end_time = datetime.now()
+            formatted_end_time = end_time.strftime("%Y %B %d at %H:%M")
+            boxymcboxface(message="END OF THE PROGRAM")
+            print(f"\t- Execution time: {toc_main - tic_main:0.2f} seconds\n",
+                  f"\t- Program started: {start_time}\n",
+                  f"\t- Program ended: {formatted_end_time}")
+
         tic = time.perf_counter()
         whole_group_filtered = global_filters_main(data_input=whole_group,
                                                 genome_fasta=genome_fasta,

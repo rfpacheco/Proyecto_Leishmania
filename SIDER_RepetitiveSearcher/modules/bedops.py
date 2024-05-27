@@ -60,7 +60,6 @@ def bedops_main(data_input, genome_fasta, writing_path_input):
     # 1) Filter and sort data
     # -----------------------------------------------------------------------------
     columns_ids = data_input.columns  # gets the columns names
-    column_length = len(columns_ids)  # gets the number of columns
     df_plus = data_input[data_input["sstrand"] == "plus"]  # filters the "+" strand
     df_minus = data_input[data_input["sstrand"] == "minus"]  # filters the "-" strand
 
@@ -134,3 +133,28 @@ def bedops_main(data_input, genome_fasta, writing_path_input):
     new_data = columns_to_numeric(new_data, ["pident", "length", "qstart", "qend", "sstart", "send", "evalue", "bitscore", "qlen", "slen"])
     
     return new_data  # returns the new Data Frame
+
+
+def bedops_coincidence(data_df1, data_df2, folder_path):
+    """
+    Will tell the elements from data_df2 that are in data_df1.
+    """
+    data_df1 = data_df1.sort_values(by=["sseqid", "sstart"])  # Sort the data frame by the start coordinate
+    data_df2 = data_df2.sort_values(by=["sseqid", "sstart"])  # Sort the data frame by the start coordinate
+
+    data_df1_path = os.path.join(f"{folder_path}_1.bed")
+    data_df2_path = os.path.join(f"{folder_path}_2.bed")
+
+    data_df1[["sseqid", "sstart","send"]].to_csv(data_df1_path, sep="\t", header=False, index=False)
+    data_df2[["sseqid", "sstart","send"]].to_csv(data_df2_path, sep="\t", header=False, index=False)
+
+    # Call BEDOPS
+    cmd = f"bedops --element-of 10 {data_df2_path} {data_df1_path}"
+    df_bedops = subprocess.check_output(cmd, shell=True, universal_newlines=True)
+    df_bedops = pd.DataFrame([x.split("\t") for x in df_bedops.split("\n") if x],
+                             columns=["sseqid", "sstart", "send"])
+    
+    bedops_coincidence_path = os.path.join(f"{folder_path}_final.bed")
+    df_bedops.to_csv(bedops_coincidence_path, sep="\t", header=False, index=False)
+    
+    return df_bedops.shape[0]  # Return the number of elements that are in data_df1
