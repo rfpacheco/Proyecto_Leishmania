@@ -283,48 +283,59 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, start_t
         print(f"\t- Execution time: {toc_main - tic_main:0.2f} seconds\n",
               f"\t- Program started: {start_time}\n",
               f"\t- Program ended: {formatted_end_time}")           
-    else:  # If not, then checks with BEDOPS stop
-        # Decide to stop the process or not with BEDOPS method
+    else:  # Continue
+        tic = time.perf_counter()
+        whole_group_filtered = global_filters_main(data_input=whole_group,
+                                                genome_fasta=genome_fasta,
+                                                writing_path=folder_path)
+        toc = time.perf_counter()
+        print("")
+        print(f"4. Global filtering:\n",
+            f"\t- Data row length: {whole_group_filtered.shape[0]}\n",
+            f"\t- Execution time: {toc - tic:0.2f} seconds")
+
+        RUNS_folder = os.path.join(folder_path, "RUNS")  # Creates the folder for the RUNS
+        os.makedirs(RUNS_folder, exist_ok=True)  # Creates the folder for the RUNS
+
+        RUN_folder_corrected_seqs = os.path.join(folder_path, "Corrected_sequences")  # Creates the folder for the corrected sequences
+        os.makedirs(RUN_folder_corrected_seqs, exist_ok=True)  # Creates the folder for the corrected sequences
+
+        RUN_saver_path = os.path.join(RUNS_folder, "run_" + str(numbering) + ".csv")  # Path to save the RUN
+        whole_group_filtered.to_csv(RUN_saver_path, sep=",", header=True, index=False)  # Saves the RUN
+
+        RUN_corrected_saver_path = os.path.join(RUN_folder_corrected_seqs, "run_" + str(numbering) + "_corrected.csv")  # Path to save the corrected sequences
+        whole_corrected_sequences.to_csv(RUN_corrected_saver_path, sep=",", header=True, index=False)  # Saves the corrected sequences
+        # -----------------------------------------------------------------------------
+        ## Deciding to stop
+        ### Prepare 100% coordinates data for the stop
+        stop_len = len(stop_dic)
+        print("")
+        print(f"5.1 Checking stop condition:\n",
+            f"\t- Number of chromosomes: {stop_len}")
+        for key, value in stop_dic.items():
+            print(f"\t\t- {key}: {value}")
+        true_count = list(stop_dic.values()).count(True)
+
+        ### Prepare stop data with BEDOPS
+        ## Deciding to stop the process or not with BEDOPS
         stop_len_bedops = len(stop_bedops_dic)
         print("")
-        print(f"3.2 Checking stop condition with BEDOPS:\n",
-              f"\t- Number of   chromosomes: {stop_len_bedops}")
+        print(f"5.2 Checking stop condition with BEDOPS:\n",
+            f"\t- Number of   chromosomes: {stop_len_bedops}")
         for key, value in stop_bedops_dic.items():
             print(f"\t\t- {key}: {value}")
         true_count_bedops = list(stop_bedops_dic.values()).count(True)
 
-        if true_count_bedops == stop_len_bedops:
+        if true_count == stop_len or true_count_bedops == stop_len_bedops:
             toc_main = time.perf_counter()
             end_time = datetime.now()
             formatted_end_time = end_time.strftime("%Y %B %d at %H:%M")
             boxymcboxface(message="END OF THE PROGRAM")
             print(f"\t- Execution time: {toc_main - tic_main:0.2f} seconds\n",
-                  f"\t- Program started: {start_time}\n",
-                  f"\t- Program ended: {formatted_end_time}")
-        else:  # If not, then continue with the next run
-
-            tic = time.perf_counter()
-            whole_group_filtered = global_filters_main(data_input=whole_group,
-                                                    genome_fasta=genome_fasta,
-                                                    writing_path=folder_path)
-            toc = time.perf_counter()
-            print("")
-            print(f"4. Global filtering:\n",
-                f"\t- Data row length: {whole_group_filtered.shape[0]}\n",
-                f"\t- Execution time: {toc - tic:0.2f} seconds")
-
-            RUNS_folder = os.path.join(folder_path, "RUNS")  # Creates the folder for the RUNS
-            os.makedirs(RUNS_folder, exist_ok=True)  # Creates the folder for the RUNS
-
-            RUN_folder_corrected_seqs = os.path.join(folder_path, "Corrected_sequences")  # Creates the folder for the corrected sequences
-            os.makedirs(RUN_folder_corrected_seqs, exist_ok=True)  # Creates the folder for the corrected sequences
-
-            RUN_saver_path = os.path.join(RUNS_folder, "run_" + str(numbering) + ".csv")  # Path to save the RUN
-            whole_group_filtered.to_csv(RUN_saver_path, sep=",", header=True, index=False)  # Saves the RUN
-
-            RUN_corrected_saver_path = os.path.join(RUN_folder_corrected_seqs, "run_" + str(numbering) + "_corrected.csv")  # Path to save the corrected sequences
-            whole_corrected_sequences.to_csv(RUN_corrected_saver_path, sep=",", header=True, index=False)  # Saves the corrected sequences
-            # -----------------------------------------------------------------------------
+                f"\t- Program started: {start_time}\n",
+                f"\t- Program ended: {formatted_end_time}")
+        # -----------------------------------------------------------------------------
+        else:  # Continue
             toc_main = time.perf_counter()
             print("")
             print(f"RUN {numbering} finished:\n",
