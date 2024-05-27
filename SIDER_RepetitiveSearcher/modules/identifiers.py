@@ -104,6 +104,7 @@ def genome_specific_chromosome_main(data_input, chromosome_ID, main_folder_path,
         if not recapture_data.empty:  # If the data frame is not empty
             corrected_sequences = pd.concat([corrected_sequences, recapture_data], ignore_index=True)  # joins both Data Frames
             corrected_sequences = corrected_sequences.sort_values(by=["sstrand", "sseqid", "sstart"])  # Sort the data frame by the start coordinate
+            corrected_sequences.to_csv(corrected_sequences_path, index=False, header=True, sep=",")  # Overwrite the data frame to a CSV file
 
     else:
         stop_data = False
