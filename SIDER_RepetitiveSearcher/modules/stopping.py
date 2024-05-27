@@ -54,10 +54,12 @@ def stopping_bedops(data_df1, data_df2, folder_path):
     # -----------------------------------------------------------------------------
     ## And now call BEDOPS on minus
     coincidence_minus, data_minus = bedops_coincidence(data_df1_minus, data_df2_minus, minus_path)
-    data_minus[["sstart", "send"]] = data_minus[["send", "sstart"]]  # restore "data_minus" coordinates
+    if not data_minus.empty:  # If the data frame is not empty
+        data_minus[["sstart", "send"]] = data_minus[["send", "sstart"]]  # restore "data_minus" coordinates
 
     recapture_data = pd.concat([data_plus, data_minus], ignore_index=True)  # joins both Data Frames
-    recapture_data = recapture_data.sort_values(by=["sstrand", "sseqid", "sstart"])  # Sort the data frame by the start coordinate
+    if not recapture_data.empty:  # If the data frame is not empty
+        recapture_data = recapture_data.sort_values(by=["sstrand", "sseqid", "sstart"])  # Sort the data frame by the start coordinate
     # -----------------------------------------------------------------------------
     ## math part
     total_coincidence = coincidence_plus + coincidence_minus

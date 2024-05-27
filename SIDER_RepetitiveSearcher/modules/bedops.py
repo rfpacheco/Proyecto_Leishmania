@@ -159,10 +159,10 @@ def bedops_coincidence(data_df1, data_df2, folder_path):
 
     # -----------------------------------------------------------------------------
     ## Now let's recapture the elements in data_df1 that are not in data_df2
-    cmd = f"bedops --element-of 10 {data_df1_path} {data_df2_path}"
+    cmd = f"bedops --not-element-of 10 {data_df1_path} {data_df2_path}"  # IMPORTANT, is NOT element of
     recapture_data_bedops = subprocess.check_output(cmd, shell=True, universal_newlines=True)
-    recapture_data_bedops = pd.DataFrame([x.split("\t") for x in df_bedops.split("\n") if x],
-                                  columns=["sseqid", "sstart", "send"])
+    recapture_data_bedops = pd.DataFrame([x.split("\t") for x in recapture_data_bedops.split("\n") if x],
+                                         columns=["sseqid", "sstart", "send"])
     recapture_data_bedops = columns_to_numeric(recapture_data_bedops, ["sstart", "send"])
     
     if not recapture_data_bedops.empty:  # If the data frame is not empty
@@ -172,6 +172,6 @@ def bedops_coincidence(data_df1, data_df2, folder_path):
             new_row = data_df1[(data_df1["sstart"] == start) & (data_df1["send"] == end)]
             recapture_final = pd.concat([recapture_final, new_row], ignore_index=True)
     else:  # If the data frame is empty
-        recapture_final = pd.DataFrame(columns=data_df1.columns)
+        recapture_final = pd.DataFrame()
         
     return df_bedops.shape[0], recapture_final  # Return the number of elements that are in data_df1
