@@ -228,6 +228,7 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, start_t
     print("")
     print(f"2. Individual searching and cleaning:")
     whole_group = pd.DataFrame()  # This will be the final data frame for each chromosome
+    whole_corrected_sequences = pd.DataFrame()  # This will be the corrected sequences for each chromosome
     stop_dic = {}  # This will be the stop data for each chromosome
     stop_bedops_dic = {}  # This will be the stop data for each chromosome using BEDOPS
     for _, (chromosome, group) in enumerate(data_grouped):
@@ -239,27 +240,31 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, start_t
         print(f"\t- {chromosome}:") 
         start_time_text = f"Program started: {start_time}"
         end_time_text = f"Program time now: {formatted_now_time}"
+        RUN_text = f"RUN {numbering}"
+        print(f"{RUN_text:>{terminal_width}}")
         print(f"{start_time_text:>{terminal_width}}")
         print(f"{end_time_text:>{terminal_width}}")
         
-        data, stop_data, stop_data_bedops = genome_specific_chromosome_main(data_input=group,
-                                             chromosome_ID=chromosome,
-                                             main_folder_path=folder_path,
-                                             genome_fasta=genome_fasta,
-                                             identity_1=identity_1,
-                                             identity_2=identity_2,
-                                             run_phase=numbering)
+        data, corrected_sequences, stop_data, stop_data_bedops = genome_specific_chromosome_main(data_input=group,
+                                                     chromosome_ID=chromosome,
+                                                     main_folder_path=folder_path,
+                                                     genome_fasta=genome_fasta,
+                                                     identity_1=identity_1,
+                                                     identity_2=identity_2,
+                                                     run_phase=numbering)
         toc = time.perf_counter()
         print("")
         print(f"\t\t- Data row length: {data.shape[0]}\n",
               f"\t\t- Execution time: {toc - tic:0.2f} seconds")
         whole_group = pd.concat([whole_group, data])
+        whole_corrected_sequences = pd.concat([whole_corrected_sequences, corrected_sequences])
         stop_dic[chromosome] = stop_data  # Save the stop data for each chromosome
         stop_bedops_dic[chromosome] = stop_data_bedops  # Save the stop data for each chromosome using BEDOPS
     print(f"{" "*7}{"-"*74}")
     print("")
-    print(f"\t- Data row length: {whole_group.shape[0]}",
-          f"\n\t- Execution time: {toc - tic:0.2f} seconds")
+    print(f"\t- Blast data row length: {whole_group.shape[0]}\n",
+          f"\t- Corrected sequences row length: {whole_corrected_sequences.shape[0]}\n",
+          f"\t- Execution time: {toc - tic:0.2f} seconds\n")
     # -----------------------------------------------------------------------------
     # Decide to stop the process or not with normal method
     stop_len = len(stop_dic)
@@ -278,7 +283,7 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, start_t
         print(f"\t- Execution time: {toc_main - tic_main:0.2f} seconds\n",
               f"\t- Program started: {start_time}\n",
               f"\t- Program ended: {formatted_end_time}")           
-    else:  # If not, then it will call itself again.
+    else:  # If not, then checks with BEDOPS stop
         # Decide to stop the process or not with BEDOPS method
         stop_len_bedops = len(stop_bedops_dic)
         print("")
@@ -296,36 +301,43 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, start_t
             print(f"\t- Execution time: {toc_main - tic_main:0.2f} seconds\n",
                   f"\t- Program started: {start_time}\n",
                   f"\t- Program ended: {formatted_end_time}")
+        else:  # If not, then continue with the next run
 
-        tic = time.perf_counter()
-        whole_group_filtered = global_filters_main(data_input=whole_group,
-                                                genome_fasta=genome_fasta,
-                                                writing_path=folder_path)
-        toc = time.perf_counter()
-        print("")
-        print(f"4. Global filtering:\n",
-            f"\t- Data row length: {whole_group_filtered.shape[0]}\n",
-            f"\t- Execution time: {toc - tic:0.2f} seconds")
+            tic = time.perf_counter()
+            whole_group_filtered = global_filters_main(data_input=whole_group,
+                                                    genome_fasta=genome_fasta,
+                                                    writing_path=folder_path)
+            toc = time.perf_counter()
+            print("")
+            print(f"4. Global filtering:\n",
+                f"\t- Data row length: {whole_group_filtered.shape[0]}\n",
+                f"\t- Execution time: {toc - tic:0.2f} seconds")
 
-        RUNS_folder = os.path.join(folder_path, "RUNS")  # Creates the folder for the RUNS
-        os.makedirs(RUNS_folder, exist_ok=True)  # Creates the folder for the RUNS
+            RUNS_folder = os.path.join(folder_path, "RUNS")  # Creates the folder for the RUNS
+            os.makedirs(RUNS_folder, exist_ok=True)  # Creates the folder for the RUNS
 
-        RUN_saver_path = os.path.join(RUNS_folder, "run_" + str(numbering) + ".csv")  # Path to save the RUN
-        whole_group_filtered.to_csv(RUN_saver_path, sep=",", header=True, index=False)  # Saves the RUN
-        # -----------------------------------------------------------------------------
-        toc_main = time.perf_counter()
-        print("")
-        print(f"RUN {numbering} finished:\n",
-            f"\t- Execution time: {toc_main - tic_main:0.2f} seconds")
-        # -----------------------------------------------------------------------------
-        numbering += 1  # Increase the numbering
-        repetitive_blaster(data_input=whole_group_filtered,
-                            genome_fasta=genome_fasta,
-                            folder_path=folder_path,
-                            numbering=numbering,
-                            # maximun_runs=maximun_runs,
-                            start_time=start_time,
-                            identity_1=identity_1,
-                            identity_2=identity_2,
-                            tic_start=tic_start)
+            RUN_folder_corrected_seqs = os.path.join(folder_path, "Corrected_sequences")  # Creates the folder for the corrected sequences
+            os.makedirs(RUN_folder_corrected_seqs, exist_ok=True)  # Creates the folder for the corrected sequences
+
+            RUN_saver_path = os.path.join(RUNS_folder, "run_" + str(numbering) + ".csv")  # Path to save the RUN
+            whole_group_filtered.to_csv(RUN_saver_path, sep=",", header=True, index=False)  # Saves the RUN
+
+            RUN_corrected_saver_path = os.path.join(RUN_folder_corrected_seqs, "run_" + str(numbering) + "_corrected.csv")  # Path to save the corrected sequences
+            whole_corrected_sequences.to_csv(RUN_corrected_saver_path, sep=",", header=True, index=False)  # Saves the corrected sequences
+            # -----------------------------------------------------------------------------
+            toc_main = time.perf_counter()
+            print("")
+            print(f"RUN {numbering} finished:\n",
+                f"\t- Execution time: {toc_main - tic_main:0.2f} seconds")
+            # -----------------------------------------------------------------------------
+            numbering += 1  # Increase the numbering
+            repetitive_blaster(data_input=whole_group_filtered,
+                                genome_fasta=genome_fasta,
+                                folder_path=folder_path,
+                                numbering=numbering,
+                                # maximun_runs=maximun_runs,
+                                start_time=start_time,
+                                identity_1=identity_1,
+                                identity_2=identity_2,
+                                tic_start=tic_start)
                         

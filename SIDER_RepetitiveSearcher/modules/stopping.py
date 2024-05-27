@@ -22,13 +22,14 @@ def stopping_main(data_df1, data_df2):
 
     total_coincidence = coincidence_plus + coincidence_minus
     perc_coincidence = total_coincidence / data_df2.shape[0] * 100
-    print(f"\t\t\t- Coincidence with last corrected sequences: {total_coincidence}/{data_df2.shape[0]} - {perc_coincidence:.2f}%")
+    print(f"\t\t\t- Coincidence with last corrected sequences:\n",
+          f"\t\t\t\t- {total_coincidence}/{data_df2.shape[0]} - {perc_coincidence:.2f}%")
 
     if total_coincidence == data_df2.shape[0]:
-        print(f"\t\t\t\t TRUE")
+        print(f"\t\t\t\t- TRUE")
         return True
     else:  # If the the coincidence is not the 100%
-        print(f"\t\t\t\t FALSE")
+        print(f"\t\t\t\t- FALSE")
         return False
     
 def stopping_bedops(data_df1, data_df2, folder_path):
@@ -54,12 +55,13 @@ def stopping_bedops(data_df1, data_df2, folder_path):
 
     total_coincidence = coincidence_plus + coincidence_minus
     perc_coincidence = total_coincidence / data_df2.shape[0] * 100
-    print(f"\t\t\t- Coincidence with last corrected sequences (BEDOPS version): {total_coincidence}/{data_df2.shape[0]} - {perc_coincidence:.2f}%")
+    print(f"\t\t\t- Coincidence (BEDOPS version):\n",
+          f"\t\t\t\t- {total_coincidence}/{data_df2.shape[0]} - {perc_coincidence:.2f}%")
 
     if total_coincidence == data_df2.shape[0]:
-        print(f"\t\t\t\t TRUE")
+        print(f"\t\t\t\t- TRUE")
         return True
     else:  # If the the coincidence is not the 100%
-        print(f"\t\t\t\t FALSE")
+        print(f"\t\t\t\t- FALSE")
         return False
 

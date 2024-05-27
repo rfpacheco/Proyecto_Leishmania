@@ -77,6 +77,7 @@ def genome_specific_chromosome_main(data_input, chromosome_ID, main_folder_path,
                                                       genome_fasta=genome_fasta,
                                                       chromosome_ID=chromosome_ID,
                                                       run_phase=run_phase)
+    corrected_sequences = columns_to_numeric(corrected_sequences, ["pident", "length", "qstart", "qend", "sstart", "send", "evalue", "bitscore", "qlen", "slen"])
     corrected_sequences.sort_values(by=["sstrand", "sstart"], inplace=True)  # Sort the data frame inplace
     toc = time.perf_counter()
     print("")
@@ -134,4 +135,4 @@ def genome_specific_chromosome_main(data_input, chromosome_ID, main_folder_path,
           f"\t\t\t- Data row length: {filtered_data.shape[0]}\n",
           f"\t\t\t- Execution time: {toc - tic:0.2f} seconds")
 
-    return filtered_data, stop_data, stop_data_bedops  # Returns the data frame
+    return filtered_data, corrected_sequences, stop_data, stop_data_bedops  # Returns the data frame
