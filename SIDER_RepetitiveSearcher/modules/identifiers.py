@@ -105,7 +105,11 @@ def genome_specific_chromosome_main(data_input, chromosome_ID, main_folder_path,
             corrected_sequences = pd.concat([corrected_sequences, recapture_data], ignore_index=True)  # joins both Data Frames
             corrected_sequences = corrected_sequences.sort_values(by=["sstrand", "sseqid", "sstart"])  # Sort the data frame by the start coordinate
             corrected_sequences.to_csv(corrected_sequences_path, index=False, header=True, sep=",")  # Overwrite the data frame to a CSV file
-
+            perc_recaptured = recapture_data.shape[0] / corrected_sequences_df1.shape[0] * 100
+            perc_coincidence = 100 - perc_recaptured
+            print(f"\t\t\t- Recaptured data:\n",
+                  f"\t\t\t\t- {recapture_data.shape[0]}/{corrected_sequences_df1.shape[0]} elements from last run\n",
+                  f"\t\t\t\t- Coincidence between two last runs: {perc_coincidence:.2f}%")
     else:
         stop_data = False
         stop_data_bedops = False
