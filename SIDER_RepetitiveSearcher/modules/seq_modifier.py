@@ -47,7 +47,7 @@ def specific_sequence_1000nt(data_input, chromosome_ID, main_folder_path, genome
             upper_coor = upper_coor + leftover_length_halved  # We add the half of the difference to the end
 
             # Check if the coordinates are not out of the genome
-            if lower_coor < 0:
+            if lower_coor <= 0:
                 lower_coor = 1
                 upper_coor += leftover_length_halved  # Since `new_start` is 1, we add the half of the difference to the end
             
