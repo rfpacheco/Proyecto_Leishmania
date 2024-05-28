@@ -6,7 +6,8 @@ __all__ = [
     "seq_modifier",
     "filters",
     "bedops",
-    "stopping"
+    "stopping",
+    "compare"
 ]
 
 from modules import *

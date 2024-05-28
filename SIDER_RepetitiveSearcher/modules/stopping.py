@@ -32,7 +32,7 @@ def stopping_main(data_df1, data_df2):
         print(f"\t\t\t\t- FALSE")
         return False
     
-def stopping_bedops(data_df1, data_df2, folder_path):
+def stopping_bedops(data_df1, data_df2, folder_path, genome_fasta):
     data_df1_plus = data_df1[data_df1["sstrand"] == "plus"].copy()
     data_df1_minus = data_df1[data_df1["sstrand"] == "minus"].copy()
     data_df2_plus = data_df2[data_df2["sstrand"] == "plus"].copy()
@@ -44,7 +44,7 @@ def stopping_bedops(data_df1, data_df2, folder_path):
 
     # -----------------------------------------------------------------------------
     ## Call BEDOPS on plus
-    coincidence_plus, data_plus = bedops_coincidence(data_df1_plus, data_df2_plus, plus_path)
+    coincidence_plus, data_plus = bedops_coincidence(data_df1_plus, data_df2_plus, plus_path, "plus", genome_fasta)
 
     # Call BEDOPS on minus. Special case, because BEDOPS reads the coordinates like the "+" strand.
     ## First modify the coordinates.
@@ -53,7 +53,7 @@ def stopping_bedops(data_df1, data_df2, folder_path):
 
     # -----------------------------------------------------------------------------
 ## And now call BEDOPS on minus
-    coincidence_minus, data_minus = bedops_coincidence(data_df1_minus, data_df2_minus, minus_path)
+    coincidence_minus, data_minus = bedops_coincidence(data_df1_minus, data_df2_minus, minus_path. "minus", genome_fasta)
     if not data_minus.empty:  # If the data frame is not empty
         data_minus[["sstart", "send"]] = data_minus[["send", "sstart"]]  # restore "data_minus" coordinates
 

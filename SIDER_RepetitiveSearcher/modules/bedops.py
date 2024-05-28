@@ -135,43 +135,61 @@ def bedops_main(data_input, genome_fasta, writing_path_input):
     return new_data  # returns the new Data Frame
 
 
-def bedops_coincidence(data_df1, data_df2, folder_path):
+def bedops_coincidence(data_df1, data_df2, folder_path, strand, genome_fasta):
     """
     Will tell the elements from data_df2 that are in data_df1.
     """
     data_df1 = data_df1.sort_values(by=["sseqid", "sstart"])  # Sort the data frame by the start coordinate
     data_df2 = data_df2.sort_values(by=["sseqid", "sstart"])  # Sort the data frame by the start coordinate
 
-    data_df1_path = os.path.join(f"{folder_path}_1.bed")
-    data_df2_path = os.path.join(f"{folder_path}_2.bed")
+    data_df1_path = os.path.join(f"{folder_path}_1.1.bed")
+    data_df2_path = os.path.join(f"{folder_path}_1.2.bed")
 
     data_df1[["sseqid", "sstart","send"]].to_csv(data_df1_path, sep="\t", header=False, index=False)
     data_df2[["sseqid", "sstart","send"]].to_csv(data_df2_path, sep="\t", header=False, index=False)
 
-    # Call BEDOPS
-    cmd = f"bedops --element-of 10 {data_df2_path} {data_df1_path}"
-    df_bedops = subprocess.check_output(cmd, shell=True, universal_newlines=True)
-    df_bedops = pd.DataFrame([x.split("\t") for x in df_bedops.split("\n") if x],
+    # -----------------------------------------------------------------------------
+    # Call BEDOPS to find coincidences
+    cmd = f"bedops --element-of 10 {data_df1_path} {data_df2_path}"
+    df_AinB = subprocess.check_output(cmd, shell=True, universal_newlines=True)
+    df_AinB = pd.DataFrame([x.split("\t") for x in df_AinB.split("\n") if x],
                              columns=["sseqid", "sstart", "send"])
-    
-    bedops_coincidence_path = os.path.join(f"{folder_path}_final.bed")
-    df_bedops.to_csv(bedops_coincidence_path, sep="\t", header=False, index=False)
+    df_AinB = columns_to_numeric(df_AinB, ["sstart", "send"])
+
+    cmd = f"bedops --element-of 10 {data_df2_path} {data_df1_path}"
+    df_BinA = subprocess.check_output(cmd, shell=True, universal_newlines=True)
+    df_BinA = pd.DataFrame([x.split("\t") for x in df_BinA.split("\n") if x],
+                             columns=["sseqid", "sstart", "send"])
+    df_BinA = columns_to_numeric(df_BinA, ["sstart", "send"])
+    # -----------------------------------------------------------------------------
+    # Let's merge AinB and BinA
+    df_BinA_path = os.path.join(f"{folder_path}_2.1_BinA.bed")
+    df_AinB_path = os.path.join(f"{folder_path}_2.2_AinB.bed")
+
+    df_BinA[["sseqid", "sstart", "send"]].to_csv(df_BinA_path, sep="\t", header=False, index=False)
+    df_AinB[["sseqid", "sstart", "send"]].to_csv(df_AinB_path, sep="\t", header=False, index=False)
+
+    cmd = f"bedops --merge {df_BinA_path} {df_AinB_path}"
+    df_merged_AandB = subprocess.check_output(cmd, shell=True, universal_newlines=True)
+    df_merged_AandB = pd.DataFrame([x.split("\t") for x in df_merged_AandB.split("\n") if x],
+                                   columns=["sseqid", "sstart", "send"])
+    df_merged_AandB = columns_to_numeric(df_merged_AandB, ["sstart", "send"])
+
+    # Now recapture the elements with the genome
+    coincidence_data = get_data_sequence(df_merged_AandB, strand, genome_fasta)
+    # -----------------------------------------------------------------------------
+    # Now let's check the elements that are not in df2 (the first input). They would be the new elements.
+    cmd = f"bedops --not-element-of 10 {data_df2_path} {data_df1_path}"
+    df_notinB = subprocess.check_output(cmd, shell=True, universal_newlines=True)
+    df_notinB = pd.DataFrame([x.split("\t") for x in df_notinB.split("\n") if x],
+                             columns=["sseqid", "sstart", "send"])
+    df_notinB = columns_to_numeric(df_notinB, ["sstart", "send"])
+
+    if not df_notinB.empty:  # If the data frame is not empty
+        new_data = get_data_sequence(df_notinB, strand, genome_fasta)
+    else:  # If the data frame is empty
+        new_data = pd.DataFrame()
 
     # -----------------------------------------------------------------------------
-    ## Now let's recapture the elements in data_df1 that are not in data_df2
-    cmd = f"bedops --not-element-of 10 {data_df1_path} {data_df2_path}"  # IMPORTANT, is NOT element of
-    recapture_data_bedops = subprocess.check_output(cmd, shell=True, universal_newlines=True)
-    recapture_data_bedops = pd.DataFrame([x.split("\t") for x in recapture_data_bedops.split("\n") if x],
-                                         columns=["sseqid", "sstart", "send"])
-    recapture_data_bedops = columns_to_numeric(recapture_data_bedops, ["sstart", "send"])
-    
-    if not recapture_data_bedops.empty:  # If the data frame is not empty
-        recapture_final = pd.DataFrame()
-        for _, row in recapture_data_bedops.iterrows():
-            start, end = row["sstart"], row["send"]
-            new_row = data_df1[(data_df1["sstart"] == start) & (data_df1["send"] == end)]
-            recapture_final = pd.concat([recapture_final, new_row], ignore_index=True)
-    else:  # If the data frame is empty
-        recapture_final = pd.DataFrame()
+    return coincidence_data, new_data
         
-    return df_bedops.shape[0], recapture_final  # Return the number of elements that are in data_df1

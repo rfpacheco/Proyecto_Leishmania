@@ -31,7 +31,7 @@ def fasta_creator(data_input, fasta_output_path):
         matrix.append(rec)
     SeqIO.write(matrix, fasta_output_path, "fasta")
 
-def columns_to_numeric(data_input, columns_to_convert):
+def columns_to_numeric(data_input, columns_to_convert = ["pident", "length", "qstart", "qend", "sstart", "send", "evalue", "bitscore", "qlen", "slen"]):
     """
     This function will convert the columns of a pandas DataFrame to numeric values.
 
@@ -44,3 +44,11 @@ def columns_to_numeric(data_input, columns_to_convert):
     for column in columns_to_convert:
         data_input[column] = pd.to_numeric(data_input[column], errors='coerce')
     return data_input
+
+def df_columns_restore(data_input, data_model):
+    new_column = [len(x) for x in data_input.loc[:,"sseq"]]   # Create a new column with the length of the sequence
+    data_input.insert(1, "length", new_column, True)  # Insert the new column in the second position
+    new_data = pd.DataFrame(index=data_input.shape[0], columns=data_model.columns)
+    new_data.loc[:,["sseqid", "length", "sstart", "send", "sstrand", "sseq"]] = data_input.loc[:,["sseqid", "length", "sstart", "send", "sstrand", "sseq"]].copy()
+    
+    return new_data
