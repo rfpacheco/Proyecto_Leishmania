@@ -323,29 +323,35 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, start_t
     print(f"\t\t- Execution time: {toc - tic:0.2f} seconds")
     # -----------------------------------------------------------------------------
     # Stopping part
-    if new_data.shape[0] == 0:
-        coincidence_data.to_csv(os.path.join(folder_path, "Last_Data.csv"), index=False, header=True, sep=",")  # Save the data frame to a CSV file
+    stopping_folder = os.path.join(folder_path, "stopping")
+    os.makedirs(stopping_folder, exist_ok=True)
+
+    if new_data.shape[0] != 0:
         print("")
-        print(f"6. Stopping:")
-        print(f"\t- No new data found.")
-        print(f"\t- Last data with nrow {coincidence_data.shape[0]} saved in {folder_path}/Last_Data.csv")
-
-        return
-
+        print(f"6. Stopping criteria:")
+        print(f"\t- New data found. Continuing the program.")
+        print("")
     else:
-        # -----------------------------------------------------------------------------
-        toc_main = time.perf_counter()
         print("")
-        print(f"RUN {numbering} finished:\n",
-            f"\t- Execution time: {toc_main - tic_main:0.2f} seconds")
-        # -----------------------------------------------------------------------------
-        numbering += 1  # Increase the numbering
-        repetitive_blaster(data_input=new_data,
-                        genome_fasta=genome_fasta,
-                        folder_path=folder_path,
-                        numbering=numbering,
-                        start_time=start_time,
-                        identity_1=identity_1,
-                        tic_start=tic_start,
-                        coincidence_data=coincidence_data)
+        print(f"6. Stopping criteria:")
+        print(f"\t- No new data found.")
+        print(f"\t- Checking similarities with the last run")
+        
+
+
+    # -----------------------------------------------------------------------------
+    toc_main = time.perf_counter()
+    print("")
+    print(f"RUN {numbering} finished:\n",
+        f"\t- Execution time: {toc_main - tic_main:0.2f} seconds")
+    # -----------------------------------------------------------------------------
+    numbering += 1  # Increase the numbering
+    repetitive_blaster(data_input=new_data,
+                       genome_fasta=genome_fasta,
+                       folder_path=folder_path,
+                       numbering=numbering,
+                       start_time=start_time,
+                       identity_1=identity_1,
+                       tic_start=tic_start,
+                       coincidence_data=coincidence_data)
                         
