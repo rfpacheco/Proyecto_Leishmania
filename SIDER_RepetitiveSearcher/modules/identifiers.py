@@ -7,8 +7,6 @@ from modules.files_manager import fasta_creator, columns_to_numeric
 from modules.seq_modifier import specific_sequence_1000nt, specific_sequence_corrected
 from modules.filters import global_filters_main
 from modules.bedops import bedops_main  # New module 19/04/2024
-from modules.stopping import stopping_main, stopping_bedops  # New module
-# from modules.subfamilies_finder import subfamily_sorter  # Needs to be modified
 
 
 # -----------------------------------------------------------------------------
