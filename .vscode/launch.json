@@ -11,8 +11,8 @@
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal",
-            "args": ["-d", "~/Documents/Work_CBMSO/Testing_Proyecto_Leishmania/SIDER2_Chr32_L_infantum.fasta",
-            "-g", "~/Documents/Work_CBMSO/Testing_Proyecto_Leishmania/1-5_chr.fasta"
+            "args": ["-d", "~/Documents/Work_CBMSO/Testing_Proyecto_Leishmania/LmSIDERs.fasta",
+            "-g", "~/Documents/Work_CBMSO/Testing_Proyecto_Leishmania/TriTrypDB-67_LinfantumJPCM5_Genome.fasta"
             ]
         }
     ]

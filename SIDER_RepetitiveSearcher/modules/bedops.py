@@ -100,13 +100,13 @@ def bedops_main(data_input, genome_fasta, writing_path_input):
     # 4) Call `blastdbcmd` to get the sequences with the function get_data_sequence()
     # -----------------------------------------------------------------------------
     if df_plus_bedops.empty:  # In case the original data is empty, the code needs to keep going
-        df_plus_bedops_wseq = pd.DataFrame(columns=columns_ids)  # creates an empty Data Frame with 5 columns
+        df_plus_bedops_wseq = pd.DataFrame()  # creates an empty Data Frame
     else:  # If the original data is not empty, tit uses get_data_sequence
         df_plus_bedops_wseq = get_data_sequence(df_plus_bedops, "plus", genome_fasta)
 
     # The same for the minus strand:
     if df_minus_bedops.empty:
-        df_minus_bedops_wseq = pd.DataFrame(columns=columns_ids)
+        df_minus_bedops_wseq = pd.DataFrame()
     else:   
         df_minus_bedops_wseq = get_data_sequence(df_minus_bedops, "minus", genome_fasta)
 
@@ -120,19 +120,20 @@ def bedops_main(data_input, genome_fasta, writing_path_input):
     all_data = pd.concat([df_plus_bedops_wseq, df_minus_bedops_wseq], ignore_index=True)  # joins both Data Frames
 
     # Adding sequence length to the DataFrame:
-    new_column = [len(x) for x in all_data.loc[:,"sseq"]]  # creates a list with the length of each sequence
-    all_data.insert(1, "length", new_column)  # inserts the new column with the sequence length. Column index are shifted.
+    if not all_data.empty:
+        new_column = [len(x) for x in all_data.loc[:,"sseq"]]  # creates a list with the length of each sequence
+        all_data.insert(1, "length", new_column)  # inserts the new column with the sequence length. Column index are shifted.
+        # -----------------------------------------------------------------------------
+        # 6) Correctly modeling the output Data Frame to 15 columns and output as CSV file.
+        # -----------------------------------------------------------------------------
+        new_data = pd.DataFrame(index=range(all_data.shape[0]), columns=columns_ids)  # creates a new Data Frame with 15 columns. The rows depends on the .shape[0]
 
-
-    # -----------------------------------------------------------------------------
-    # 6) Correctly modeling the output Data Frame to 15 columns and output as CSV file.
-    # -----------------------------------------------------------------------------
-    new_data = pd.DataFrame(index=range(all_data.shape[0]), columns=columns_ids)  # creates a new Data Frame with 15 columns. The rows depends on the .shape[0]
-
-    new_data.loc[:,["sseqid", "length", "sstart", "send", "sstrand", "sseq"]] = all_data.loc[:,["sseqid", "length", "sstart", "send", "sstrand", "sseq"]].copy()
-    new_data = columns_to_numeric(new_data, ["pident", "length", "qstart", "qend", "sstart", "send", "evalue", "bitscore", "qlen", "slen"])
-    
-    return new_data  # returns the new Data Frame
+        new_data.loc[:,["sseqid", "length", "sstart", "send", "sstrand", "sseq"]] = all_data.loc[:,["sseqid", "length", "sstart", "send", "sstrand", "sseq"]].copy()
+        new_data = columns_to_numeric(new_data, ["pident", "length", "qstart", "qend", "sstart", "send", "evalue", "bitscore", "qlen", "slen"])
+        
+        return new_data  # returns the new Data Frame
+    else:
+        return pd.DataFrame()  # returns an empty Data Frame
 
 
 def bedops_coincidence(last_df, old_df, folder_path, strand, genome_fasta):

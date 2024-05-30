@@ -83,7 +83,7 @@ def genome_specific_chromosome_main(data_input, chromosome_ID, main_folder_path,
     toc = time.perf_counter()
     print("")
     print("\t\t2.4. Filtering BLASTn against genome:\n",
-          f"\t\t\t- Data row length: {filtered_data.shape[0]}\n",
+          f"\t\t\t- Data row length: {len(filtered_data)}\n",  # Not .shape[0] in case it's empty
           f"\t\t\t- Execution time: {toc - tic:0.2f} seconds")
 
     return filtered_data  # Returns the data frame

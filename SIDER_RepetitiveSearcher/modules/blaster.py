@@ -254,7 +254,7 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, start_t
                                                coincidence_data=coincidence_data)
         toc = time.perf_counter()
         print("")
-        print(f"\t\t- Data row length: {data.shape[0]}\n",
+        print(f"\t\t- Data row length: {len(data)}\n",  # Not .shape[0] in case the data is empty
               f"\t\t- Execution time: {toc - tic:0.2f} seconds")
         whole_group = pd.concat([whole_group, data])
     print(f"{" "*7}{"-"*74}")
@@ -329,7 +329,7 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, start_t
         print(f"{'\t'*3}- New data + less than 100: {new_data_and_old.shape[0]}") 
         print(f"{'\t'*3}- Old data: {old_data_exclusive.shape[0]}")
     else:
-        pass
+        new_data_and_old = new_data
 
     # Join coincidence_data with old_data_exclusive
     if not coincidence_data.empty and not old_data_exclusive.empty:
