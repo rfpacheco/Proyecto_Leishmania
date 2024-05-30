@@ -308,11 +308,29 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, start_t
                                                                   folder_path=comparison_folder,
                                                                   genome_fasta=genome_fasta)
     toc = time.perf_counter()
+
+
     print("")
     print(f"\t\t- Coincidence data row length: {coincidence_data.shape[0]}\n",
           f"\t\t- New data row length: {new_data.shape[0]}\n",
-          f"\t\t- Old data row length: {old_data_exclusive.shape[0]}")    
+          f"\t\t- Old data row length: {old_data_exclusive.shape[0]}")
     
+    if not old_data_exclusive.empty and (old_data_exclusive["length"] <= 100).sum() > 0:  # If there are sequences less than 100 bp. The sum of TRUE (for < 100) has to be > 0
+        old_data_exclusive_less_than_100 = old_data_exclusive[old_data_exclusive["length"] <= 100]
+        old_data_exclusive = old_data_exclusive[old_data_exclusive["length"] > 100]
+    else:
+        pass
+
+    
+    if "old_data_exclusive_less_than_100" in locals():  # If old_data_exclusive_less_than_100 exists
+        new_data_and_old = pd.concat([new_data, old_data_exclusive_less_than_100], ignore_index=True)
+        new_data_and_old.sort_values(by=["sseqid", "sstrand", "sstart"], inplace=True)
+        print(f"{'\t'*3}- Less than 100 bp: {old_data_exclusive_less_than_100.shape[0]}")
+        print(f"{'\t'*3}- New data + less than 100: {new_data_and_old.shape[0]}") 
+        print(f"{'\t'*3}- Old data: {old_data_exclusive.shape[0]}")
+    else:
+        pass
+
     # Join coincidence_data with old_data_exclusive
     if not coincidence_data.empty and not old_data_exclusive.empty:
         coincidence_data = pd.concat([coincidence_data, old_data_exclusive], ignore_index=True)
@@ -343,7 +361,7 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, start_t
             f"\t- Execution time: {toc_main - tic_main:0.2f} seconds")
         # -----------------------------------------------------------------------------
         numbering += 1  # Increase the numbering
-        repetitive_blaster(data_input=new_data,
+        repetitive_blaster(data_input=new_data_and_old,
                         genome_fasta=genome_fasta,
                         folder_path=folder_path,
                         numbering=numbering,
