@@ -154,7 +154,7 @@ def bedops_coincidence(last_df, old_df, folder_path, strand, genome_fasta):
 
     # -----------------------------------------------------------------------------
     # Call BEDOPS to find coincidences
-    cmd = f"bedops --element-of 10 {last_df_path} {old_df_path}"
+    cmd = f"bedops --element-of 1 {last_df_path} {old_df_path}"
     Last_in_Old = subprocess.check_output(cmd, shell=True, universal_newlines=True)
     Last_in_Old = pd.DataFrame([x.split("\t") for x in Last_in_Old.split("\n") if x],
                              columns=["sseqid", "sstart", "send"])
@@ -163,7 +163,7 @@ def bedops_coincidence(last_df, old_df, folder_path, strand, genome_fasta):
     print("\t\t\t- Coincidence data:")
     print(f"\t\t\t\t- Last in old: {Last_in_Old.shape[0]}/{last_length} - {Last_in_Old.shape[0]/last_length*100:.2f}%")
 
-    cmd = f"bedops --element-of 10 {old_df_path} {last_df_path}"
+    cmd = f"bedops --element-of 1 {old_df_path} {last_df_path}"
     Old_in_Last = subprocess.check_output(cmd, shell=True, universal_newlines=True)
     Old_in_Last = pd.DataFrame([x.split("\t") for x in Old_in_Last.split("\n") if x],
                              columns=["sseqid", "sstart", "send"])
@@ -191,7 +191,7 @@ def bedops_coincidence(last_df, old_df, folder_path, strand, genome_fasta):
     # Now let's check the elements that are not in df2 (the first input). They would be the new elements.
     print("")
     print("\t\t\t- NOT coincidence data:")
-    cmd = f"bedops --not-element-of 10 {last_df_path} {old_df_path}"
+    cmd = f"bedops --not-element-of 1 {last_df_path} {old_df_path}"
     Last_notin_Old = subprocess.check_output(cmd, shell=True, universal_newlines=True)
     Last_notin_Old = pd.DataFrame([x.split("\t") for x in Last_notin_Old.split("\n") if x],
                              columns=["sseqid", "sstart", "send"])
@@ -204,7 +204,7 @@ def bedops_coincidence(last_df, old_df, folder_path, strand, genome_fasta):
         new_data = pd.DataFrame()
     # -----------------------------------------------------------------------------
     # Now check the elements in Old that are not in Last
-    cmd = f"bedops --not-element-of 10 {old_df_path} {last_df_path}"
+    cmd = f"bedops --not-element-of 1 {old_df_path} {last_df_path}"
     Old_notin_Last = subprocess.check_output(cmd, shell=True, universal_newlines=True)
     Old_notin_Last = pd.DataFrame([x.split("\t") for x in Old_notin_Last.split("\n") if x],
                              columns=["sseqid", "sstart", "send"])
