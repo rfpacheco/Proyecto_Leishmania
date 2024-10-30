@@ -1,26 +1,24 @@
-# Use a base image with Miniconda or Anaconda
+# Use a base image with Miniconda
 FROM continuumio/miniconda3
 
-# Set up the working directory
+# Set the working directory in the container
 WORKDIR /usr/src/app
 
-# Copy the environment.yml to the Docker image
+# Copy the environment.yml file into the container
 COPY environment.yml .
 
-# Create the conda environment
+# Create the Conda environment from the environment.yml file
 RUN conda env create -f environment.yml
 
 # Make RUN commands use the new environment
 SHELL ["conda", "run", "-n", "SIDER_RepetitiveSearcher", "/bin/bash", "-c"]
 
-# Install pip packages
-RUN conda run -n SIDER_RepetitiveSearcher pip install numpy pandas pytz six wheel
-
-# Copy your application code to the Docker image
+# Copy the application code into the container
 COPY . .
 
-# Define the default command to run your application
-CMD ["conda", "run", "--no-capture-output", "-n", "SIDER_RepetitiveSearcher", "python", "your_script.py"]FROM ubuntu:latest
-LABEL authors="viskuit"
+# Ensure the environment is activated whenever a command is executed
+# This is necessary because CMD will not have access to the conda environment variables by default
+ENTRYPOINT ["conda", "run", "--no-capture-output", "-n", "SIDER_RepetitiveSearcher"]
 
-ENTRYPOINT ["top", "-b"]
+# Define the default command to run your application
+CMD ["python", "SIDER_RepetitiveSearcher.py"]

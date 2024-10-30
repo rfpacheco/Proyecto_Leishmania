@@ -236,7 +236,7 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, start_t
         now_time = datetime.now()
         formatted_now_time = now_time.strftime("%Y %B %d at %H:%M")
         print("")
-        print(f"{" "*7}{"-"*74}")
+        print(f"{' ' * 7}{'-' * 74}")
         print(f"\t- {chromosome}:") 
         start_time_text = f"Program started: {start_time}"
         end_time_text = f"Program time now: {formatted_now_time}"
@@ -257,7 +257,7 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, start_t
         print(f"\t\t- Data row length: {len(data)}\n",  # Not .shape[0] in case the data is empty
               f"\t\t- Execution time: {toc - tic:0.2f} seconds")
         whole_group = pd.concat([whole_group, data])
-    print(f"{" "*7}{"-"*74}")
+    print(f"{' ' * 7}{'-' * 74}")
     print("")
     print(f"\t- Blast data row length: {whole_group.shape[0]}\n",
           f"\t- Execution time: {toc - tic:0.2f} seconds\n")
@@ -325,9 +325,9 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, start_t
     if "old_data_exclusive_less_than_100" in locals():  # If old_data_exclusive_less_than_100 exists
         new_data_and_old = pd.concat([new_data, old_data_exclusive_less_than_100], ignore_index=True)
         new_data_and_old.sort_values(by=["sseqid", "sstrand", "sstart"], inplace=True)
-        print(f"{'\t'*3}- Less than 100 bp: {old_data_exclusive_less_than_100.shape[0]}")
-        print(f"{'\t'*3}- New data + less than 100: {new_data_and_old.shape[0]}") 
-        print(f"{'\t'*3}- Old data: {old_data_exclusive.shape[0]}")
+        print('\t' * 3 + f"- Less than 100 bp: {old_data_exclusive_less_than_100.shape[0]}")
+        print('\t' * 3 + f"- New data + less than 100: {new_data_and_old.shape[0]}")
+        print('\t' * 3 + f"- Old data: {old_data_exclusive.shape[0]}")
     else:
         new_data_and_old = new_data
 

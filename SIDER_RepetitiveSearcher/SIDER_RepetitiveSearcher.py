@@ -3,7 +3,7 @@ import os
 import shutil
 import time  # to measure the time of the program
 from datetime import datetime
-import subprocess 
+# import subprocess 
 
 from modules.blaster import blastn_dic, blastn_blaster, repetitive_blaster
 from modules.aesthetics import boxymcboxface
@@ -35,7 +35,7 @@ folder_location = os.path.join(data_location, folder_name)  # Create the folder 
 
 # Create the folder with the given name
 os.makedirs(folder_location, exist_ok=True)
-print(f"{"."*20} Folder {folder_name} created in {data_location}")
+print(f"{'.'*20} Folder {folder_name} created in {data_location}")
 
 identity_1 = input("Enter the identity for the first BLASTn step: "); identity_1 = int(identity_1)  # user input for the identity
 first_run = input("Enter the number of the first run: "); first_run = int(first_run)  # user input for the number of runs
@@ -48,7 +48,7 @@ first_run = input("Enter the number of the first run: "); first_run = int(first_
 start_time = datetime.now()
 tic_main = time.perf_counter()  # Start the timer
 formatted_start_time = start_time.strftime("%Y %B %d at %H:%M")
-print(f"{"."*20} Program started: {formatted_start_time}")
+print(f"{'.'*20} Program started: {formatted_start_time}")
 # =============================================================================
 # Take original data used and copy it inside the folder
 # =============================================================================

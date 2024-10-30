@@ -52,7 +52,7 @@ def specific_sequence_1000nt(data_input, chromosome_ID, main_folder_path, genome
                 upper_coor += leftover_length_halved  # Since `new_start` is 1, we add the half of the difference to the end
             
             # We get the sequence from the whole genome
-            cmd = f"blastdbcmd -db {genome_fasta} -entry {element['sseqid']} -range {int(lower_coor)}-{int(upper_coor)} -strand {element["sstrand"]} -outfmt %s"
+            cmd = f"blastdbcmd -db {genome_fasta} -entry {element['sseqid']} -range {int(lower_coor)}-{int(upper_coor)} -strand {element['sstrand']} -outfmt %s"
             seq = subprocess.check_output(cmd, shell=True, universal_newlines=True).strip()
 
             # Now with the data let's modify the data frame
