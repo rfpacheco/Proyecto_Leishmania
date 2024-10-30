@@ -17,8 +17,6 @@ SHELL ["conda", "run", "-n", "SIDER_RepetitiveSearcher", "/bin/bash", "-c"]
 COPY . .
 
 # Ensure the environment is activated whenever a command is executed
-# This is necessary because CMD will not have access to the conda environment variables by default
-ENTRYPOINT ["conda", "run", "--no-capture-output", "-n", "SIDER_RepetitiveSearcher"]
+ENTRYPOINT ["conda", "run", "--no-capture-output", "-n", "SIDER_RepetitiveSearcher", "python", "SIDER_RepetitiveSearcher.py"]
 
-# Define the default command to run your application
 CMD ["python", "SIDER_RepetitiveSearcher.py"]
