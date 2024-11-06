@@ -47,22 +47,35 @@ def blastn_dic(path_input, path_output):
 # -----------------------------------------------------------------------------
 
 
-def blastn_blaster(query_path, dict_path, perc_identity):
+def blastn_blaster(query_path, dict_path, perc_identity, word_size=15):
     """
-        Executes a BLASTN (nucleotide-nucleotide BLAST) search.
+    Executes a BLASTN search on the provided query sequence against a nucleotide database.
 
-        Args:
-        - query_path (str): Path to the query sequence file.
-        - dict_path (str): Path to the nucleotide database.
-        - perc_identity (float): Percentage identity threshold for the BLASTN search.
+    Parameters:
+        query_path (str): Path to the query file containing the sequence to be searched.
+        dict_path (str): Path to the nucleotide database against which the query sequence is to be searched.
+        perc_identity (float): Percent identity threshold for reporting matches.
+        word_size (int, optional): Word size for the BLASTN search algorithm. Default is 15.
 
-        Returns:
-        - pandas.DataFrame: DataFrame containing BLASTN results with columns:
-            "qseqid", "sseqid", "pident", "length", "qstart", "qend", "sstart",
-            "send", "evalue", "bitscore", "qlen", "slen", "sstrand", "sseq".
+    Returns:
+        pandas.DataFrame: DataFrame containing the BLASTN search results with columns:
+            qseqid: Query sequence ID.
+            sseqid: Subject sequence ID.
+            pident: Percentage of identical matches.
+            length: Alignment length.
+            qstart: Start of alignment in query.
+            qend: End of alignment in query.
+            sstart: Start of alignment in subject.
+            send: End of alignment in subject.
+            evalue: Expectation value.
+            bitscore: Bit score.
+            qlen: Length of query sequence.
+            slen: Length of subject sequence.
+            sstrand: Strand of the subject sequence.
+            sseq: Aligned part of the subject sequence.
     """
 
-    cmd = "blastn -word_size 15 -query " \
+    cmd = "blastn -word_size " + str(word_size) + " -query " \
         + query_path + " -db " \
         + dict_path \
         + " -perc_identity " + str(perc_identity) \
