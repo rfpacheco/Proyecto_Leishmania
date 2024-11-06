@@ -7,7 +7,6 @@ import logging
 # from pathlib import Path
 from datetime import datetime
 
-from SIDER_RepetitiveSearcher import word_size_param
 from modules.aesthetics import boxymcboxface  # Some aesthetics function
 from modules.identifiers import genome_specific_chromosome_main
 from modules.filters import global_filters_main
