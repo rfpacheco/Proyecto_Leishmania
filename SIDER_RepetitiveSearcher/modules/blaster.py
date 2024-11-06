@@ -92,19 +92,20 @@ def blastn_blaster(query_path, dict_path, perc_identity, word_size=15):
 
 def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, start_time, identity_1, tic_start, word_size, coincidence_data=None):
     """
-    Performs repetitive BLAST searches and compares results with previous runs.
 
-    This function performs a series of operations to execute and refine BLAST searches on genomic data, compares current results to previously obtained results, and optionally merges results based on certain criteria. It saves all necessary data at various steps and prints informative messages regarding the status and performance of each operation.
+    Executes repetitive BLAST searches, processes and groups the results, filters the data,
+    compares it with previous runs, and recursively handles new data.
 
     Args:
-        data_input (pd.DataFrame): Input data containing BLAST search results to be processed.
+        data_input (pd.DataFrame): Input data for the BLAST process.
         genome_fasta (str): Path to the genome FASTA file.
-        folder_path (str): Directory path where results and intermediary files will be saved.
-        numbering (int): Unique identifier for the run.
-        start_time (str): Start time of the process in a human-readable format.
-        identity_1 (float): Minimum identity threshold for BLAST results.
-        tic_start (float): Starting time recorded for performance measurement.
-        coincidence_data (pd.DataFrame, optional): Data from previous run to be compared with current results. Defaults to None.
+        folder_path (str): Path where results will be stored.
+        numbering (int): Run identifier number.
+        start_time (str): Start time of the process, used for logs.
+        identity_1 (float): Identity threshold for BLAST comparisons.
+        tic_start (float): Start time for performance tracking.
+        word_size (int): BLAST word size parameter.
+        coincidence_data (pd.DataFrame, optional): Data from previous runs to be compared with. Default is None.
 
     Returns:
         None
