@@ -226,7 +226,6 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, start_t
     print("")
     print(f"2. Individual searching and cleaning:")
     whole_group = pd.DataFrame()  # This will be the final data frame for each chromosome
-    stop_bedops_dic = {}  # This will be the stop data for each chromosome using BEDOPS
     for _, (chromosome, group) in enumerate(data_grouped):
         tic = time.perf_counter()
         now_time = datetime.now()
