@@ -31,7 +31,9 @@ folder_name = input("\n\nEnter folder name: ")
 data_location = input("Enter path where you want to place all data: ")
 
 data_location = os.path.normpath(data_location)  # Normalize the path to avoid problems with the OS
+data_location = os.path.expanduser(data_location)
 folder_location = os.path.join(data_location, folder_name)  # Create the folder location
+folder_location = os.path.expanduser(folder_location)
 
 # Create the folder with the given name
 os.makedirs(folder_location, exist_ok=True)
@@ -59,7 +61,6 @@ genome_path = os.path.expanduser(args.genome)
 
 # Create subdirectory for original data
 original_data_folder = os.path.join(folder_location, "original_data")
-original_data_folder = os.path.expanduser(original_data_folder)
 os.makedirs(original_data_folder, exist_ok=True)
 
 # Check if the files exist and copy them
