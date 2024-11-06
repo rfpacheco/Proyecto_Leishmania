@@ -272,5 +272,6 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, start_t
                            start_time=start_time,
                            identity_1=identity_1,
                            tic_start=tic_start,
+                           word_size=word_size,
                            coincidence_data=coincidence_data)
                         
