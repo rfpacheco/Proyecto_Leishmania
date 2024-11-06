@@ -62,7 +62,7 @@ def blastn_blaster(query_path, dict_path, perc_identity):
     :type outfile_path: string
 
     :param perc_identity: Percent of sequence identity which we want to make the BLASTn. **Important**.
-    :type perc_identity: string
+    :type perc_identity: int
 
     :return: A CSV file with the results of the BLASTn.
     :rtype: CSV file

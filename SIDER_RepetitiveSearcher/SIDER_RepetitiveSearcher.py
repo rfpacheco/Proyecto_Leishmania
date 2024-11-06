@@ -39,7 +39,6 @@ print(f"{'.'*20} Folder {folder_name} created in {data_location}")
 
 identity_1 = input("Enter the identity for the first BLASTn step: "); identity_1 = int(identity_1)  # user input for the identity
 first_run = input("Enter the number of the first run: "); first_run = int(first_run)  # user input for the number of runs
-# stop_run = input("Enter the number of runs for the repetitive BLASTn: ");  stop_run = int(stop_run)  # user input for the number of runs
 
 
 # =============================================================================
@@ -79,9 +78,9 @@ blastn_dic(path_input=args.genome,
 boxymcboxface(message="First BLASTn step initiated")
 
 tic = time.perf_counter()  # Start the timer
-first_blaster = blastn_blaster(query_path=args_data_path, 
+first_blaster = blastn_blaster(query_path=args_data_path,
                                dict_path=blastn_dict_path_out, 
-                               perc_identity=identity_1)  # It has the data frame for the first blaster
+                               perc_identity = identity_1)  # It has the data frame for the first blaster
 first_blaster = columns_to_numeric(first_blaster, ["pident", "length", "qstart", "qend", "sstart", "send", "evalue", "bitscore", "qlen", "slen"])
 toc = time.perf_counter()  # Stop the timer
 print(f"1. Initial data:\n",
@@ -127,7 +126,6 @@ repetitive_blaster(data_input=first_blaster_bedops,
                    genome_fasta=blastn_dict_path_out,  # path to the genome dict
                    folder_path=repetitive_blaster_folder,
                    numbering=first_run,
-                  #  maximun_runs=stop_run,
                    start_time=formatted_start_time,
                    identity_1 = identity_1,
                    tic_start = tic_main)
