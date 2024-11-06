@@ -12,24 +12,24 @@ from modules.bedops import bedops_main  # New module 19/04/2024
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
 
-def genome_specific_chromosome_main(data_input, chromosome_ID, main_folder_path, genome_fasta, identity_1, run_phase, word_size, coincidence_data=None):
+def genome_specific_chromosome_main(data_input, chromosome_ID, main_folder_path, genome_fasta, identity_1, run_phase, word_size, min_length, coincidence_data=None):
     """
-    Main program, which calls the iterative blaster and all the filters needed.
+    This function processes genomic sequences specific to a given chromosome and performs several steps including sequence extension, FASTA file creation, BLASTn search, and data filtering.
 
-    :param data_input: data frame. Initially is a pandas gropy object wich was output from :func:`~modules.blaster.blastn_blaster` alone to obtain the initial data.
-    :type data_input: pandas DataFrame
+    Parameters:
+        data_input: A DataFrame containing the input sequence data.
+        chromosome_ID: The identifier for the chromosome being processed.
+        main_folder_path: Path to the main directory where output folders will be created.
+        genome_fasta: Path to the genome FASTA file used for BLASTn search.
+        identity_1: Minimum percent identity for BLASTn matches.
+        run_phase: A parameter indicating the phase of the run.
+        word_size: The word size parameter for the BLASTn search.
+        min_length: Minimum length of the sequences for further consideration.
+        coincidence_data: Optional DataFrame containing additional data coinciding with the chromosome_ID.
 
-    :param chromosome_ID: Chromosome identifier, e.g., *LinJ.07*, which were present more then once in the ``path_input``. See :func:`~modules.blaster.repetitive_blaster` for more information.
-    :type chromosome_ID: member of a python list
+    Returns:
+        A DataFrame containing the filtered BLASTn data.
 
-    :param main_folder_path: Path where the results will be placed.
-    :type main_folder_path: string
-
-    :param genome_fasta: Path to our whole genome sequence in FASTA format.
-    :type genome_fasta: string
-
-    :return: A CSV file with all the data filtered
-    :rtype: CSV file
     """
     from modules.blaster import blastn_dic, blastn_blaster  # Delayed import --> to break the ciruclar import. Need to be at the start of function.
 
@@ -79,7 +79,8 @@ def genome_specific_chromosome_main(data_input, chromosome_ID, main_folder_path,
     tic = time.perf_counter()
     filtered_data = global_filters_main(data_input=second_blaster,
                                         genome_fasta=genome_fasta,
-                                        writing_path=chromosme_folder_path)
+                                        writing_path=chromosme_folder_path,
+                                        min_length=min_length)
     # filtered_data = columns_to_numeric(filtered_data, ["pident", "length", "qstart", "qend", "sstart", "send", "evalue", "bitscore", "qlen", "slen"])
     toc = time.perf_counter()
     print("")

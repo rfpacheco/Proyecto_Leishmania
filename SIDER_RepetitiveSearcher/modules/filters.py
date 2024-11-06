@@ -53,21 +53,21 @@ def chromosome_filter(path_input, name):
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
 
-def global_filters_main(data_input, genome_fasta, writing_path):
+def global_filters_main(data_input, genome_fasta, writing_path, min_length):
     """
-    Filters input data based on length and presence of dashes,
-    then processes the filtered data using the `bedops_main` function.
+    Applies a series of filters to the input data and then processes the data using `bedops_main` function.
 
-    Args:
-        data_input (DataFrame): The input data containing genomic information.
-        genome_fasta (str): Path to the genome FASTA file.
-        writing_path (str): Path where the output will be written.
+    Parameters:
+    data_input (DataFrame): The input data to be filtered.
+    genome_fasta (str): Path to the genome fasta file required for further processing.
+    writing_path (str): Path where the processed data will be saved.
+    min_length (int): The minimum length to filter the input data.
 
     Returns:
-        DataFrame: Processed data after applying the `bedops_main` function.
+    DataFrame: The processed data after applying filters and `bedops_main` function.
     """
 
-    data_filtered = data_input[data_input["length"].astype(int) >= 100]  # Filter by length
+    data_filtered = data_input[data_input["length"].astype(int) >= min_length]  # Filter by length; here it was a 100 before
 
     data_filtered = data_filtered.apply(lambda x: x.replace("-", ""))  # Filter dashes
 

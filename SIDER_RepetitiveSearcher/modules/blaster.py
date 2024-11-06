@@ -90,25 +90,21 @@ def blastn_blaster(query_path, dict_path, perc_identity, word_size=15):
 # -----------------------------------------------------------------------------
 
 
-def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, start_time, identity_1, tic_start, word_size, coincidence_data=None):
+def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, start_time, identity_1, tic_start, word_size, min_length, coincidence_data=None):
     """
+    Performs repetitive blasting operations on genomic data.
 
-    Executes repetitive BLAST searches, processes and groups the results, filters the data,
-    compares it with previous runs, and recursively handles new data.
-
-    Args:
-        data_input (pd.DataFrame): Input data for the BLAST process.
+    Parameters:
+        data_input (pd.DataFrame): Input dataframe containing genomic data.
         genome_fasta (str): Path to the genome FASTA file.
-        folder_path (str): Path where results will be stored.
+        folder_path (str): Path to the folder where results will be stored.
         numbering (int): Run identifier number.
-        start_time (str): Start time of the process, used for logs.
-        identity_1 (float): Identity threshold for BLAST comparisons.
-        tic_start (float): Start time for performance tracking.
-        word_size (int): BLAST word size parameter.
-        coincidence_data (pd.DataFrame, optional): Data from previous runs to be compared with. Default is None.
-
-    Returns:
-        None
+        start_time (str): Start time of the program.
+        identity_1 (float): Identity threshold for filtering.
+        tic_start (float): Initial start time for performance measurement.
+        word_size (int): Word size for blasting.
+        min_length (int): Minimum length for global filtering.
+        coincidence_data (pd.DataFrame, optional): Dataframe containing coincidence data from the last run. Default is None.
     """
 
     # Call the aesthetics function RUN identifier.
@@ -155,7 +151,8 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, start_t
                                                identity_1=identity_1,
                                                run_phase=numbering,
                                                coincidence_data=coincidence_data,
-                                               word_size=word_size)
+                                               word_size=word_size,
+                                               min_length=min_length)
         toc = time.perf_counter()
         print("")
         print(f"\t\t- Data row length: {len(data)}\n",  # Not .shape[0] in case the data is empty
@@ -171,7 +168,8 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, start_t
     print(f"4. Global filtering:")
     whole_group_filtered = global_filters_main(data_input=whole_group,
                                                genome_fasta=genome_fasta,
-                                               writing_path=folder_path)
+                                               writing_path=folder_path,
+                                               min_length=min_length)
     toc = time.perf_counter()
     print("")
     print(f"\t- Data row length: {whole_group_filtered.shape[0]}\n",
@@ -274,5 +272,6 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, start_t
                            identity_1=identity_1,
                            tic_start=tic_start,
                            word_size=word_size,
+                           min_length=min_length,
                            coincidence_data=coincidence_data)
                         
