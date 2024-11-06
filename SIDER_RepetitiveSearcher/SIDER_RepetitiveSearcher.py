@@ -37,7 +37,8 @@ folder_location = os.path.join(data_location, folder_name)  # Create the folder 
 os.makedirs(folder_location, exist_ok=True)
 print(f"{'.'*20} Folder {folder_name} created in {data_location}")
 
-identity_1 = input("Enter the identity for the first BLASTn step: "); identity_1 = int(identity_1)  # user input for the identity
+identity_1 = input("Enter the identity for the first BLASTn step: "); identity_1 = int(identity_1)  # user input for the identity #
+word_size_param = input("Enter the `word_size` value: "); word_size_param = int(word_size_param)
 first_run = input("Enter the number of the first run: "); first_run = int(first_run)  # user input for the number of runs
 
 
@@ -80,7 +81,8 @@ boxymcboxface(message="First BLASTn step initiated")
 tic = time.perf_counter()  # Start the timer
 first_blaster = blastn_blaster(query_path=args_data_path,
                                dict_path=blastn_dict_path_out, 
-                               perc_identity = identity_1)  # It has the data frame for the first blaster
+                               perc_identity=identity_1,
+                               word_size=word_size_param)  # It has the data frame for the first blaster
 first_blaster = columns_to_numeric(first_blaster, ["pident", "length", "qstart", "qend", "sstart", "send", "evalue", "bitscore", "qlen", "slen"])
 toc = time.perf_counter()  # Stop the timer
 print(f"1. Initial data:\n",
