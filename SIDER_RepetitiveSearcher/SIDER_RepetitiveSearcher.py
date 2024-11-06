@@ -53,13 +53,29 @@ print(f"{'.'*20} Program started: {formatted_start_time}")
 # =============================================================================
 # Take original data used and copy it inside the folder
 # =============================================================================
+# Expand user's home directory symbol if present
+data_path = os.path.expanduser(args.data)
+genome_path = os.path.expanduser(args.genome)
+
 # Create subdirectory for original data
 original_data_folder = os.path.join(folder_location, "original_data")
+original_data_folder = os.path.expanduser(original_data_folder)
 os.makedirs(original_data_folder, exist_ok=True)
 
-# Copy the data and genome files to the original_data folder
-shutil.copy(args.data, original_data_folder)
-shutil.copy(args.genome, original_data_folder)
+# Check if the files exist and copy them
+if os.path.exists(data_path) and os.path.isfile(data_path):
+    shutil.copy(data_path, original_data_folder)
+else:
+    print(f"Error: The data file '{data_path}' does not exist.")
+    exit(1)
+
+if os.path.exists(genome_path) and os.path.isfile(genome_path):
+    shutil.copy(genome_path, original_data_folder)
+else:
+    print(f"Error: The genome file '{genome_path}' does not exist.")
+    exit(1)
+
+
 # print(f"Files copied to {original_data_folder}")
 args_data_path = os.path.join(original_data_folder, os.path.basename(args.data))  # save the path so we can use this one instead of the original one
 args_genome_path = os.path.join(original_data_folder, os.path.basename(args.genome))  # save the path so we can use this one instead of the original one
