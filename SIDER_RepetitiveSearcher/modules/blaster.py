@@ -90,7 +90,7 @@ def blastn_blaster(query_path, dict_path, perc_identity, word_size=15):
 # -----------------------------------------------------------------------------
 
 
-def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, start_time, identity_1, tic_start, coincidence_data=None):
+def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, start_time, identity_1, tic_start, word_size, coincidence_data=None):
     """
     Performs repetitive BLAST searches and compares results with previous runs.
 
@@ -154,7 +154,7 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, start_t
                                                identity_1=identity_1,
                                                run_phase=numbering,
                                                coincidence_data=coincidence_data,
-                                               word_size=word_size_param)
+                                               word_size=word_size)
         toc = time.perf_counter()
         print("")
         print(f"\t\t- Data row length: {len(data)}\n",  # Not .shape[0] in case the data is empty

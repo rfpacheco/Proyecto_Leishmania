@@ -130,7 +130,8 @@ repetitive_blaster(data_input=first_blaster_bedops,
                    numbering=first_run,
                    start_time=formatted_start_time,
                    identity_1 = identity_1,
-                   tic_start = tic_main)
+                   tic_start = tic_main,
+                   word_size=word_size_param)
 toc = time.perf_counter()  # Stop the timer
 
 # =============================================================================
