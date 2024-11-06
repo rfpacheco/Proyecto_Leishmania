@@ -12,7 +12,7 @@ from modules.bedops import bedops_main  # New module 19/04/2024
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
 
-def genome_specific_chromosome_main(data_input, chromosome_ID, main_folder_path, genome_fasta, identity_1, run_phase, coincidence_data=None):
+def genome_specific_chromosome_main(data_input, chromosome_ID, main_folder_path, genome_fasta, identity_1, run_phase, coincidence_data=None, word_size):
     """
     Main program, which calls the iterative blaster and all the filters needed.
 
@@ -67,7 +67,8 @@ def genome_specific_chromosome_main(data_input, chromosome_ID, main_folder_path,
     tic = time.perf_counter()
     second_blaster = blastn_blaster(query_path=sequences_1000_fasta_path,
                                     dict_path=genome_fasta,
-                                    perc_identity=identity_1)
+                                    perc_identity=identity_1,
+                                    word_size=word_size)
     second_blaster = columns_to_numeric(second_blaster, ["pident", "length", "qstart", "qend", "sstart", "send", "evalue", "bitscore", "qlen", "slen"])
     toc = time.perf_counter()
     print("")

@@ -7,6 +7,7 @@ import logging
 # from pathlib import Path
 from datetime import datetime
 
+from SIDER_RepetitiveSearcher import word_size_param
 from modules.aesthetics import boxymcboxface  # Some aesthetics function
 from modules.identifiers import genome_specific_chromosome_main
 from modules.filters import global_filters_main
@@ -153,7 +154,8 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, start_t
                                                genome_fasta=genome_fasta,
                                                identity_1=identity_1,
                                                run_phase=numbering,
-                                               coincidence_data=coincidence_data)
+                                               coincidence_data=coincidence_data,
+                                               word_size=word_size_param)
         toc = time.perf_counter()
         print("")
         print(f"\t\t- Data row length: {len(data)}\n",  # Not .shape[0] in case the data is empty
