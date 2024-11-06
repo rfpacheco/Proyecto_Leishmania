@@ -8,7 +8,7 @@ from modules.bedops import bedops_main
 
 def chromosome_filter(path_input, name):
     """
-    With this filter we obtain the labels/titles for each cromosome of our file, e.g., in **Leishmania** case we'll obtain the labels "LinJ.01", "LinJ.02", etc.
+    With this filter we obtain the labels/titles for each chromosome of our file, e.g., in **Leishmania** case we'll obtain the labels "LinJ.01", "LinJ.02", etc.
     This filter reads all the sequences in a FASTA file. Then with a prefix ``name``, it adds a numbering in the format ``.XX``, being X the numbers in order for each sequences it finds.
 
 
@@ -25,22 +25,22 @@ def chromosome_filter(path_input, name):
        ['LinJ.01', 'LinJ.02', 'LinJ.03', 'LinJ.04', 'LinJ.05', 'LinJ.06', 'LinJ.07', 'LinJ.08', 'LinJ.09', 'LinJ.10', 'LinJ.11', 'LinJ.12', 'LinJ.13', 'LinJ.14', 'LinJ.15', 'LinJ.16', 'LinJ.17', 'LinJ.18', 'LinJ.19', 'LinJ.20', 'LinJ.21', 'LinJ.22', 'LinJ.23', 'LinJ.24', 'LinJ.25', 'LinJ.26', 'LinJ.27', 'LinJ.28', 'LinJ.29', 'LinJ.30', 'LinJ.31', 'LinJ.32', 'LinJ.33', 'LinJ.34', 'LinJ.35', 'LinJ.36']
 
     The objective of this function is to be able to correctly name the files since programming languages do not usually admit a non-string format, numbers that start at 0, in this way we can automate their correct labeling, especially for numbers from 01 to 09 .
-    
+
     .. attention::
        This IDs need to be matched **exactly** with the row[1] from the CSV to filter.
 
-    :param path_input: Path to the ``.fasta`` file to read.
-    :type path_input: string
+    Reads a FASTA file and generates a list of chromosome identifiers in a formatted manner.
 
-    :param name: Name to give the results. In **Leishmania**'s case, it's "LinJ".
-    :type name: string
+    Args:
+        path_input (str): The path to the input FASTA file.
+        name (str): A prefix name to be added to each chromosome identifier.
 
-    :return: A python list with the chosen labels
-    :rtype: Python list
+    Returns:
+        list: A list of formatted chromosome identifiers.
     """
     max_chr = len(list(SeqIO.parse(path_input, "fasta")))  # It reads the FASTA file and gets the total number of chromosomes.
     chromosome_number = []
-    main_list = (list(range(1, max_chr + 1)))  # We index correctly with "+ 1" since Python starts everython in 0
+    main_list = (list(range(1, max_chr + 1)))  # We index correctly with "+ 1" since Python starts everything in 0
     for number in main_list:
         number = str(number)
         if len(number) == 1:
@@ -48,32 +48,23 @@ def chromosome_filter(path_input, name):
         else:
             chromosome_number.append(name + "." + number)
 
-    return (chromosome_number)
+    return chromosome_number
 
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
 
 def global_filters_main(data_input, genome_fasta, writing_path):
     """
-    This function mixes every other filter made. Each one writes a CSV which is overwritten every time till the final step.
+    Filters input data based on length and presence of dashes,
+    then processes the filtered data using the `bedops_main` function.
 
-    :param path_input:pandas data frame created by the second blaster of :func:`~modules.blaster.blastn_blaster`.
-    :type path_input: pandas data frame
+    Args:
+        data_input (DataFrame): The input data containing genomic information.
+        genome_fasta (str): Path to the genome FASTA file.
+        writing_path (str): Path where the output will be written.
 
-    :param writing_path_input: Path where the CSV file will be saved.
-    :type writing_path_input: string
-
-    :param genome_fasta: Path to our whole genome sequence in FASTA format.
-    :type genome_fasta: string
-
-    :param naming_short: Label needed to read the ID of each cromosome in the .csv file. In the case of **L. infantum** for example, would be *LinJ* since the .csv file IDs are *LinJ.XX*.
-    :type naming_short: string
-
-    :param max_diff: Maximun proxomity value for the different sequences when they have to be grouped. **Important**.
-    :type max_diff: intenger
-
-    :return: All data filtered without duplications and overlaps.
-    :rtype: CSV file
+    Returns:
+        DataFrame: Processed data after applying the `bedops_main` function.
     """
 
     data_filtered = data_input[data_input["length"].astype(int) >= 100]  # Filter by length
