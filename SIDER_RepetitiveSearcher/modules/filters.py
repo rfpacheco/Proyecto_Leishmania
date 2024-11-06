@@ -1,6 +1,3 @@
-import csv
-import os
-
 from Bio import SeqIO
 
 from modules.bedops import bedops_main
