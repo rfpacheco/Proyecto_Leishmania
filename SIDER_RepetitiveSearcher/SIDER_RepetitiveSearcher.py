@@ -42,6 +42,7 @@ print(f"{'.'*20} Folder {folder_name} created in {data_location}")
 identity_1 = input("Enter the identity for the first BLASTn step: "); identity_1 = int(identity_1)  # user input for the identity #
 word_size_param = input("Enter the `word_size` value: "); word_size_param = int(word_size_param)
 min_length_param = input("Enter the `min_length` value: "); min_length_param = int(min_length_param)
+extend_number_param = input("Enter the `extend_number` value: "); extend_number_param = int(extend_number_param)
 first_run = input("Enter the number of the first run: "); first_run = int(first_run)  # user input for the number of runs
 
 
@@ -150,7 +151,8 @@ repetitive_blaster(data_input=first_blaster_bedops,
                    identity_1 = identity_1,
                    tic_start = tic_main,
                    word_size=word_size_param,
-                   min_length=min_length_param)
+                   min_length=min_length_param,
+                   extend_number=extend_number_param)
 toc = time.perf_counter()  # Stop the timer
 
 # =============================================================================

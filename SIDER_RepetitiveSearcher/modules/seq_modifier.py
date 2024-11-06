@@ -10,24 +10,25 @@ from modules.bedops import bedops_main
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
 
-def specific_sequence_1000nt(data_input, chromosome_ID, main_folder_path, genome_fasta):
+def specific_sequence_1000nt(data_input, chromosome_ID, main_folder_path, genome_fasta, extend_number):
     """
-    This function will expand the selected sequences to 1000 nt and will create a CSV file with it. For this, it will use ``blastdbcmd`` from BLAST `Command Line Application User Manual`_, which will get the sequences in the **whole fasta genome** file so every sequence returned will be "plus".
+    Expands sequences in a given DataFrame to a specific length (1000 nucleotides).
 
+    Parameters:
+    data_input: DataFrame
+        The DataFrame containing sequence information.
+    chromosome_ID: int
+        Identifier for the chromosome.
+    main_folder_path: str
+        Path to the main folder.
+    genome_fasta: str
+        Path to the genome FASTA file.
+    extend_number: int
+        The length to which sequences need to be extended.
 
-    It uses the function :func:`~modules.file_manager.csv_creator`
-
-    :param path_input: Path to the main CSV file where data will be filtered. In this case is the output of expanded sequences to 1000nt from :func:`~modules.identifiers.specific_sequence_extractor`.
-    :type path_input: string
-
-    :param chromosome_ID: Chromosome identifier, e.g., *LinJ.07*, which were present more then once in the ``path_input``. See :func:`~modules.blaster.repetitive_blaster` for more information.
-    :type chromosome_ID: member of a python list
-
-    :param main_folder_path: Path where the results will be placed. It will create a subfolder with the chromosome_ID name + "_1000nt.csv".
-    :type main_folder_path: string
-
-    :return: a CSV file with the sufix "_1000nt.csv"
-    :rtype: CSV file
+    Returns:
+    DataFrame
+        The modified DataFrame with sequences expanded to the specified length.
     """
     # -----------------------------------------------------------------------------
     for index2, (index, element) in enumerate(data_input.iterrows()):
@@ -39,8 +40,8 @@ def specific_sequence_1000nt(data_input, chromosome_ID, main_folder_path, genome
             upper_coor = int(element["sstart"])
         
         subject_length = upper_coor - lower_coor + 1
-        if subject_length < 1000:  # If the sequence is less than 1000nt, we'll expand it.
-            leftover_length = 1000 - subject_length  # We get the difference between 1000 and the length of the sequence
+        if subject_length < extend_number:  # If the sequence is less than 1000nt, we'll expand it.
+            leftover_length = extend_number - subject_length  # We get the difference between 1000 and the length of the sequence
             leftover_length_halved = leftover_length / 2  # We divide it by 2 to get the half of the difference
             # leftover_length_halved = math.ceil(leftover_length_halved)  # We round up the number
             lower_coor = lower_coor - leftover_length_halved  # We subtract the half of the difference to the start

@@ -90,21 +90,33 @@ def blastn_blaster(query_path, dict_path, perc_identity, word_size=15):
 # -----------------------------------------------------------------------------
 
 
-def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, start_time, identity_1, tic_start, word_size, min_length, coincidence_data=None):
+def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, start_time, identity_1, tic_start, word_size, min_length, extend_number, coincidence_data=None):
     """
-    Performs repetitive blasting operations on genomic data.
+    Processes and filters genomic data by grouping, analyzing chromosomes, and comparing results with previous runs.
 
     Parameters:
-        data_input (pd.DataFrame): Input dataframe containing genomic data.
-        genome_fasta (str): Path to the genome FASTA file.
-        folder_path (str): Path to the folder where results will be stored.
-        numbering (int): Run identifier number.
-        start_time (str): Start time of the program.
-        identity_1 (float): Identity threshold for filtering.
-        tic_start (float): Initial start time for performance measurement.
-        word_size (int): Word size for blasting.
-        min_length (int): Minimum length for global filtering.
-        coincidence_data (pd.DataFrame, optional): Dataframe containing coincidence data from the last run. Default is None.
+    data_input : pandas.DataFrame
+        The initial dataset containing genomic data.
+    genome_fasta : str
+        Path to the reference genome file in FASTA format.
+    folder_path : str
+        Directory path where results will be stored.
+    numbering : int
+        Run identifier number.
+    start_time : str
+        Starting timestamp of the run.
+    identity_1 : float
+        Identity threshold for genomic sequence analysis.
+    tic_start : float
+        Starting time as recorded by time.perf_counter() for performance logging.
+    word_size : int
+        Word size for sequence alignment.
+    min_length : int
+        Minimum length threshold for sequences.
+    extend_number : int
+        Number of bases to extend during analysis.
+    coincidence_data : pandas.DataFrame, optional
+        Data from a previous run for comparison.
     """
 
     # Call the aesthetics function RUN identifier.
@@ -152,7 +164,8 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, start_t
                                                run_phase=numbering,
                                                coincidence_data=coincidence_data,
                                                word_size=word_size,
-                                               min_length=min_length)
+                                               min_length=min_length,
+                                               extend_number=extend_number)
         toc = time.perf_counter()
         print("")
         print(f"\t\t- Data row length: {len(data)}\n",  # Not .shape[0] in case the data is empty
@@ -273,5 +286,6 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, start_t
                            tic_start=tic_start,
                            word_size=word_size,
                            min_length=min_length,
+                           extend_number=extend_number,
                            coincidence_data=coincidence_data)
                         
