@@ -3,13 +3,14 @@ import pandas as pd
 import subprocess
 import time
 import shutil
-from pathlib import Path
+import logging
+# from pathlib import Path
 from datetime import datetime
 
 from modules.aesthetics import boxymcboxface  # Some aesthetics function
 from modules.identifiers import genome_specific_chromosome_main
 from modules.filters import global_filters_main
-from modules.files_manager import columns_to_numeric
+# from modules.files_manager import columns_to_numeric
 from modules.compare import compare_main
 
 # -----------------------------------------------------------------------------
@@ -40,9 +41,8 @@ def blastn_dic(path_input, path_output):
         # "parse_seqids" is used to keep the sequence ID in the output.
         cmd = f"makeblastdb -in {path_input} -dbtype nucl -parse_seqids -out {path_output}"
         subprocess.run(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    except Exception:
-        print("\nError: Blast Dictionary couldn't be created")
-
+    except Exception as e:
+        logging.error(f"Error: Blast Dictionary couldn't be created: {e}", exc_info=True)
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------
 
@@ -57,9 +57,6 @@ def blastn_blaster(query_path, dict_path, perc_identity):
 
     :param dict_path: Path to the FASTA file ``query_path`` will be launched to. In the same directory should be the BLAST data base created with :func:`~blastn_dic`.
     :type dict_path: string
-
-    :param outfile_path: Path where the results will be saved. Name the whole file, not only the path.
-    :type outfile_path: string
 
     :param perc_identity: Percent of sequence identity which we want to make the BLASTn. **Important**.
     :type perc_identity: int
@@ -188,22 +185,22 @@ def blastn_blaster(query_path, dict_path, perc_identity):
 
 def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, start_time, identity_1, tic_start, coincidence_data=None):
     """
-    This function will iterate till a number of ``maximun_runs`` defined.
+    Performs repetitive BLAST searches and compares results with previous runs.
 
-    :param genome_fasta: Path to our whole genome sequence in .fasta. It should already be a BLASTn dictionary.
-    :type genome_fasta: string
+    This function performs a series of operations to execute and refine BLAST searches on genomic data, compares current results to previously obtained results, and optionally merges results based on certain criteria. It saves all necessary data at various steps and prints informative messages regarding the status and performance of each operation.
 
-    :param path_input: pandas DataFrame containing data from the first BLASTn. It's the output from :func:`~blastn_blaster`.
-    :type path_input: pandas Data Frame
+    Args:
+        data_input (pd.DataFrame): Input data containing BLAST search results to be processed.
+        genome_fasta (str): Path to the genome FASTA file.
+        folder_path (str): Directory path where results and intermediary files will be saved.
+        numbering (int): Unique identifier for the run.
+        start_time (str): Start time of the process in a human-readable format.
+        identity_1 (float): Minimum identity threshold for BLAST results.
+        tic_start (float): Starting time recorded for performance measurement.
+        coincidence_data (pd.DataFrame, optional): Data from previous run to be compared with current results. Defaults to None.
 
-    :param folder_path: Path to a folder where the results will be placed. Subfolder will be created with the cromosome names.
-    :type folder_path: string
-
-    :param numbering: Indicates the number showed for the first program run. If it's 0, then, the first run will be name 0.
-    :type numbering: integer
-
-    :param maximun_runs: Indicates the last iterative execution of function.
-    :type maximun_runs: integer
+    Returns:
+        None
     """
 
     # Call the aesthetics function RUN identifier.
@@ -225,7 +222,7 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, start_t
     # -----------------------------------------------------------------------------
     # Now let's call  `genome_specific_chromosome_main` for each chromosome_ID in the data using the groupby object.
     terminal_width = shutil.get_terminal_size().columns  # Get the terminal width
-    
+
     print("")
     print(f"2. Individual searching and cleaning:")
     whole_group = pd.DataFrame()  # This will be the final data frame for each chromosome
@@ -237,14 +234,14 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, start_t
         formatted_now_time = now_time.strftime("%Y %B %d at %H:%M")
         print("")
         print(f"{' ' * 7}{'-' * 74}")
-        print(f"\t- {chromosome}:") 
+        print(f"\t- {chromosome}:")
         start_time_text = f"Program started: {start_time}"
         end_time_text = f"Program time now: {formatted_now_time}"
         RUN_text = f"RUN {numbering}"
         print(f"{RUN_text:>{terminal_width}}")
         print(f"{start_time_text:>{terminal_width}}")
         print(f"{end_time_text:>{terminal_width}}")
-        
+
         data = genome_specific_chromosome_main(data_input=group,
                                                chromosome_ID=chromosome,
                                                main_folder_path=folder_path,
@@ -298,8 +295,8 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, start_t
         print(f"\t\t- Total data row length: {data_input.shape[0]}")
     else:  # when coincidence_data == None
         print(f"\t- Last Run data:\n",
-                f"\t\t- First run row length: {data_input.shape[0]}")
-        
+              f"\t\t- First run row length: {data_input.shape[0]}")
+
     tic = time.perf_counter()
     print("")
     print(f"\t- Results in this RUN:")
@@ -314,15 +311,16 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, start_t
     print(f"\t\t- Coincidence data row length: {coincidence_data.shape[0]}\n",
           f"\t\t- New data row length: {new_data.shape[0]}\n",
           f"\t\t- Old data row length: {old_data_exclusive.shape[0]}")
-    
+
+    old_data_exclusive_less_than_100 = None
+
     if not old_data_exclusive.empty and (old_data_exclusive["length"] <= 100).sum() > 0:  # If there are sequences less than 100 bp. The sum of TRUE (for < 100) has to be > 0
         old_data_exclusive_less_than_100 = old_data_exclusive[old_data_exclusive["length"] <= 100]
         old_data_exclusive = old_data_exclusive[old_data_exclusive["length"] > 100]
     else:
         pass
 
-    
-    if "old_data_exclusive_less_than_100" in locals():  # If old_data_exclusive_less_than_100 exists
+    if old_data_exclusive_less_than_100 is not None: # If old_data_exclusive_less_than_100 exists
         new_data_and_old = pd.concat([new_data, old_data_exclusive_less_than_100], ignore_index=True)
         new_data_and_old.sort_values(by=["sseqid", "sstrand", "sstart"], inplace=True)
         print('\t' * 3 + f"- Less than 100 bp: {old_data_exclusive_less_than_100.shape[0]}")
@@ -358,15 +356,15 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, start_t
         toc_main = time.perf_counter()
         print("")
         print(f"RUN {numbering} finished:\n",
-            f"\t- Execution time: {toc_main - tic_main:0.2f} seconds")
+              f"\t- Execution time: {toc_main - tic_main:0.2f} seconds")
         # -----------------------------------------------------------------------------
         numbering += 1  # Increase the numbering
         repetitive_blaster(data_input=new_data_and_old,
-                        genome_fasta=genome_fasta,
-                        folder_path=folder_path,
-                        numbering=numbering,
-                        start_time=start_time,
-                        identity_1=identity_1,
-                        tic_start=tic_start,
-                        coincidence_data=coincidence_data)
+                           genome_fasta=genome_fasta,
+                           folder_path=folder_path,
+                           numbering=numbering,
+                           start_time=start_time,
+                           identity_1=identity_1,
+                           tic_start=tic_start,
+                           coincidence_data=coincidence_data)
                         
