@@ -23,7 +23,7 @@ def blastn_dic(path_input, path_output):
     `Command Line Application User Manual`_ for more information.
 
 
-    The generation of the properly database will be placed in the directory where ``path_input`` is.
+    The generation of the proper database will be placed in the directory where ``path_input`` is.
     It is recommended to use a dedicated folder to this FASTA file so the database is written next to it.
 
     :param path_input: path to a FASTA file.
@@ -33,7 +33,7 @@ def blastn_dic(path_input, path_output):
     :type path_output: string
 
     :return: a BLAST database.
-    :rtype: Muitiples files (**.nhr**, **.nin**, **.nog**, **.nsd**, **.nsi** and **.nsq** extensions)
+    :rtype: Multiples files (**.nhr**, **.nin**, **.nog**, **.nsd**, **.nsi** and **.nsq** extensions)
     """
 
     # Remember is "path.input.dic_path" for "argparse".
@@ -49,123 +49,17 @@ def blastn_dic(path_input, path_output):
 
 def blastn_blaster(query_path, dict_path, perc_identity):
     """
-    This module calls for `blastn` in the BLAST :sup:`R` command line.
-    See `Command Line Application User Manual`_ for more information.
+        Executes a BLASTN (nucleotide-nucleotide BLAST) search.
 
-    :param query_path: Path to our FASTA query used in BLASTn against our database.
-    :type query_path: string
+        Args:
+        - query_path (str): Path to the query sequence file.
+        - dict_path (str): Path to the nucleotide database.
+        - perc_identity (float): Percentage identity threshold for the BLASTN search.
 
-    :param dict_path: Path to the FASTA file ``query_path`` will be launched to. In the same directory should be the BLAST data base created with :func:`~blastn_dic`.
-    :type dict_path: string
-
-    :param perc_identity: Percent of sequence identity which we want to make the BLASTn. **Important**.
-    :type perc_identity: int
-
-    :return: A CSV file with the results of the BLASTn.
-    :rtype: CSV file
-
-
-    .. list-table:: Arguments used in ``blastn``
-       :header-rows: 1
-
-       * - Argument
-         - Type
-         - Description
-
-       * - ``-word_size``
-         - integer
-         - | 28 by default.
-           | BLAST search starts with finding a perfect sequence match of length given by this parameter.
-           | See `world_size info`_ for more information.
-
-       * - ``-query``
-         - string
-         - Query file name.
-
-       * - ``-db``
-         - string
-         - BLAST database name.
-
-       * - ``-out``
-         - string
-         - Output file name.
-
-       * - ``-perc_identity``
-         - integer
-         - Percent identity cutoff.
-
-       * - ``-outfmt``
-         - string
-         - | Alignment view options. Written inside in a nested string.
-           | Explained in :ref:`Table <outfmt_Table>`
-           | See `Command Line Application User Manual`_ and `Metagenomics BLASTn manual`_ for help.
-
-
-    ..
-        # This is to mark the next table
-
-    .. _outfmt_Table:
-
-
-    .. list-table:: Arguments used in ``--outfmt`` inside ``blastn``
-       :header-rows: 1
-
-
-       * - Argument
-         - Description
-
-       * - ``10``
-         - Comma-separated values.
-
-       * - ``qseqid``
-         - | Query Seq-id.
-           | ID of our query sequence.
-
-       * - ``sseqid``
-         - | Subject Seq-id.
-           | ID of our subject sequence.
-
-       * - ``pident``
-         - Percentage of identical matches.
-
-       * - ``length``
-         - Alignment length.
-
-       * - ``qlen``
-         - Query sequence length.
-
-       * - ``slen``
-         - Subject sequence length.
-
-       * - ``mismatch``
-         - Number of mismatches.
-
-       * - ``gapopen``
-         - Number of gap openings.
-
-       * - ``qstart``
-         - Start of alignment in query.
-
-       * - ``qend``
-         - End of alignment in query.
-
-       * - ``sstart``
-         - Start of alignment in subject.
-
-       * - ``send``
-         - End of alignment in subject.
-
-       * - ``evalue``
-         - Expect value.
-
-       * - ``bitscore``
-         - Bit score.
-
-       * - ``sstrand``
-         - Subject strand.
-
-       * - ``sseq``
-         - Aligned part of subject sequence.
+        Returns:
+        - pandas.DataFrame: DataFrame containing BLASTN results with columns:
+            "qseqid", "sseqid", "pident", "length", "qstart", "qend", "sstart",
+            "send", "evalue", "bitscore", "qlen", "slen", "sstrand", "sseq".
     """
 
     cmd = "blastn -word_size 15 -query " \
@@ -235,8 +129,8 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, start_t
         print(f"\t- {chromosome}:")
         start_time_text = f"Program started: {start_time}"
         end_time_text = f"Program time now: {formatted_now_time}"
-        RUN_text = f"RUN {numbering}"
-        print(f"{RUN_text:>{terminal_width}}")
+        run_text = f"RUN {numbering}"
+        print(f"{run_text:>{terminal_width}}")
         print(f"{start_time_text:>{terminal_width}}")
         print(f"{end_time_text:>{terminal_width}}")
 
@@ -270,10 +164,10 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, start_t
 
     # -----------------------------------------------------------------------------
     ## Save the RUN
-    RUNS_folder = os.path.join(folder_path, "RUNS")  # Creates the folder for the RUNS
-    os.makedirs(RUNS_folder, exist_ok=True)  # Creates the folder for the RUNS
-    RUN_saver_path = os.path.join(RUNS_folder, "run_" + str(numbering) + ".csv")  # Path to save the RUN
-    whole_group_filtered.to_csv(RUN_saver_path, sep=",", header=True, index=False)  # Saves the RUN
+    runs_folder = os.path.join(folder_path, "RUNS")  # Creates the folder for the RUNS
+    os.makedirs(runs_folder, exist_ok=True)  # Creates the folder for the RUNS
+    run_saver_path = os.path.join(runs_folder, "run_" + str(numbering) + ".csv")  # Path to save the RUN
+    whole_group_filtered.to_csv(run_saver_path, sep=",", header=True, index=False)  # Saves the RUN
     # -----------------------------------------------------------------------------
     # Compare part
     # Prepare folders and path
