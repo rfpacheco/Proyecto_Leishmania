@@ -8,10 +8,10 @@ from modules.bedops import bedops_main
 
 def chromosome_filter(path_input, name):
     """
+    Reads a FASTA file and generates a list of chromosome identifiers in a formatted manner.
+
     With this filter we obtain the labels/titles for each chromosome of our file, e.g., in **Leishmania** case we'll obtain the labels "LinJ.01", "LinJ.02", etc.
     This filter reads all the sequences in a FASTA file. Then with a prefix ``name``, it adds a numbering in the format ``.XX``, being X the numbers in order for each sequences it finds.
-
-
 
     For example, for:
 
