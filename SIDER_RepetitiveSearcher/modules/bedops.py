@@ -93,7 +93,7 @@ def bedops_main(data_input, genome_fasta, writing_path_input):
     minus_path = os.path.join(writing_path_input, os.path.basename(writing_path_input) + "_minus.bed")
     
     df_plus[["sseqid", "sstart", "send"]].to_csv(plus_path, sep="\t", header=False, index=False)  # creates a BED file for the "+" strand
-    # In the minus strand its important to change the order of the coordinates, because "bedops" reads them like "plus" strand.
+    # In the minus strand it's important to change the order of the coordinates, because "bedops" reads them like "plus" strand.
     # If not, it will not merge them.
     df_minus[["sseqid", "send", "sstart"]].to_csv(minus_path, sep="\t", header=False, index=False)  # creates a BED file for the "-" strand
 
@@ -144,7 +144,7 @@ def bedops_main(data_input, genome_fasta, writing_path_input):
         # -----------------------------------------------------------------------------
         # 6) Correctly modeling the output Data Frame to 15 columns and output as CSV file.
         # -----------------------------------------------------------------------------
-        new_data = pd.DataFrame(index=range(all_data.shape[0]), columns=columns_ids)  # creates a new Data Frame with 15 columns. The rows depends on the .shape[0]
+        new_data = pd.DataFrame(index=range(all_data.shape[0]), columns=columns_ids)  # creates a new Data Frame with 15 columns. The rows depend on the .shape[0]
 
         new_data.loc[:,["sseqid", "length", "sstart", "send", "sstrand", "sseq"]] = all_data.loc[:,["sseqid", "length", "sstart", "send", "sstrand", "sseq"]].copy()
         new_data = columns_to_numeric(new_data, ["pident", "length", "qstart", "qend", "sstart", "send", "evalue", "bitscore", "qlen", "slen"])
