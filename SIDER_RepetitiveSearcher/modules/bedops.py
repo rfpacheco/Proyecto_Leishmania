@@ -46,6 +46,21 @@ def get_data_sequence(data, strand, genome_fasta):
     sequences_df = pd.DataFrame(sequences)
     return sequences_df
 
+def bedops_contrast(base_df_path, contrast_df_path, bedops_mode):
+    bedops_mode_map = {'coincidence': '--element-of',
+                       'opposite': '--not-element-of',
+                       'merge': '--merge'}
+    cmd_mode = bedops_mode_map.get(bedops_mode)
+
+    # Check which elements in 'base_df' are inside 'contrast_df'
+    cmd_coincidence = f"bedops {cmd_mode} 1 {base_df_path} {contrast_df_path}"
+    check_coincidence = subprocess.check_output(cmd_coincidence, shell=True, universal_newlines=True)
+    check_coincidence = pd.DataFrame([x.split("\t") for x in check_coincidence.split("\n") if x],
+                             columns=["sseqid", "sstart", "send"])
+    check_coincidence = columns_to_numeric(check_coincidence, ["sstart", "send"])
+    return check_coincidence
+
+
 def bedops_main(data_input, genome_fasta, writing_path_input):
     """
     Processes genomic data by filtering, sorting, and merging BEDOPS files, and obtaining sequences.
@@ -156,67 +171,47 @@ def bedops_coincidence(last_df, old_df, folder_path, strand, genome_fasta):
     last_df[["sseqid", "sstart","send"]].to_csv(last_df_path, sep="\t", header=False, index=False)
     old_df[["sseqid", "sstart","send"]].to_csv(old_df_path, sep="\t", header=False, index=False)
 
-    # -----------------------------------------------------------------------------
-    # Call BEDOPS to find coincidences
-    cmd = f"bedops --element-of 1 {last_df_path} {old_df_path}"
-    Last_in_Old = subprocess.check_output(cmd, shell=True, universal_newlines=True)
-    Last_in_Old = pd.DataFrame([x.split("\t") for x in Last_in_Old.split("\n") if x],
-                             columns=["sseqid", "sstart", "send"])
-    Last_in_Old = columns_to_numeric(Last_in_Old, ["sstart", "send"])
+    last_in_old = bedops_contrast(last_df_path, old_df_path, 'coincidence')
     print("")
     print("\t\t\t- Coincidence data:")
-    print(f"\t\t\t\t- Last in old: {Last_in_Old.shape[0]}/{last_length} - {Last_in_Old.shape[0]/last_length*100:.2f}%")
+    print(f"\t\t\t\t- Last in old: {last_in_old.shape[0]}/{last_length} - {last_in_old.shape[0]/last_length*100:.2f}%")
 
-    cmd = f"bedops --element-of 1 {old_df_path} {last_df_path}"
-    Old_in_Last = subprocess.check_output(cmd, shell=True, universal_newlines=True)
-    Old_in_Last = pd.DataFrame([x.split("\t") for x in Old_in_Last.split("\n") if x],
-                             columns=["sseqid", "sstart", "send"])
-    Old_in_Last = columns_to_numeric(Old_in_Last, ["sstart", "send"])
-    print(f"\t\t\t\t- Old in last: {Old_in_Last.shape[0]}/{old_length} - {Old_in_Last.shape[0]/old_length*100:.2f}%")
+    old_in_last = bedops_contrast(old_df_path, last_df_path, 'coincidence')
+    print(f"\t\t\t\t- Old in last: {old_in_last.shape[0]}/{old_length} - {old_in_last.shape[0]/old_length*100:.2f}%")
     # -----------------------------------------------------------------------------
     # Let's merge
-    Old_in_Last_path = os.path.join(f"{folder_path}_2.1_Old_in_Last.bed")
-    Last_in_Old_path = os.path.join(f"{folder_path}_2.2_Last_in_Old.bed")
 
-    Old_in_Last[["sseqid", "sstart", "send"]].to_csv(Old_in_Last_path, sep="\t", header=False, index=False)
-    Last_in_Old[["sseqid", "sstart", "send"]].to_csv(Last_in_Old_path, sep="\t", header=False, index=False)
 
-    cmd = f"bedops --merge {Old_in_Last_path} {Last_in_Old_path}"
-    merged_LastOld = subprocess.check_output(cmd, shell=True, universal_newlines=True)
-    merged_LastOld = pd.DataFrame([x.split("\t") for x in merged_LastOld.split("\n") if x],
-                                   columns=["sseqid", "sstart", "send"])
-    merged_LastOld = columns_to_numeric(merged_LastOld, ["sstart", "send"])
-    print(f"\t\t\t\t- Merged data: {merged_LastOld.shape[0]}")
+    old_in_last_path = os.path.join(f"{folder_path}_2.1_Old_in_Last.bed")
+    last_in_old_path = os.path.join(f"{folder_path}_2.2_Last_in_Old.bed")
+
+    old_in_last[["sseqid", "sstart", "send"]].to_csv(old_in_last_path, sep="\t", header=False, index=False)
+    last_in_old[["sseqid", "sstart", "send"]].to_csv(last_in_old_path, sep="\t", header=False, index=False)
+
+    merged_last_old = bedops_contrast(old_in_last_path, last_in_old_path, 'merge')
+    print(f"\t\t\t\t- Merged data: {merged_last_old.shape[0]}")
 
     # Now recapture the elements with the genome
-    coincidence_data = get_data_sequence(merged_LastOld, strand, genome_fasta)
+    coincidence_data = get_data_sequence(merged_last_old, strand, genome_fasta)
     # -----------------------------------------------------------------------------
     # -----------------------------------------------------------------------------
     # Now let's check the elements that are not in df2 (the first input). They would be the new elements.
     print("")
     print("\t\t\t- NOT coincidence data:")
-    cmd = f"bedops --not-element-of 1 {last_df_path} {old_df_path}"
-    Last_notin_Old = subprocess.check_output(cmd, shell=True, universal_newlines=True)
-    Last_notin_Old = pd.DataFrame([x.split("\t") for x in Last_notin_Old.split("\n") if x],
-                             columns=["sseqid", "sstart", "send"])
-    Last_notin_Old = columns_to_numeric(Last_notin_Old, ["sstart", "send"])
-    print(f"\t\t\t\t- Last NOT in old: {Last_notin_Old.shape[0]}/{last_length} - {Last_notin_Old.shape[0]/last_length*100:.2f}%")
+    last_notin_old = bedops_contrast(last_df_path, old_df_path, 'opposite')
+    print(f"\t\t\t\t- Last NOT in old: {last_notin_old.shape[0]}/{last_length} - {last_notin_old.shape[0]/last_length*100:.2f}%")
 
-    if not Last_notin_Old.empty:  # If the data frame is not empty
-        new_data = get_data_sequence(Last_notin_Old, strand, genome_fasta)
+    if not last_notin_old.empty:  # If the data frame is not empty
+        new_data = get_data_sequence(last_notin_old, strand, genome_fasta)
     else:  # If the data frame is empty
         new_data = pd.DataFrame()
     # -----------------------------------------------------------------------------
     # Now check the elements in Old that are not in Last
-    cmd = f"bedops --not-element-of 1 {old_df_path} {last_df_path}"
-    Old_notin_Last = subprocess.check_output(cmd, shell=True, universal_newlines=True)
-    Old_notin_Last = pd.DataFrame([x.split("\t") for x in Old_notin_Last.split("\n") if x],
-                             columns=["sseqid", "sstart", "send"])
-    Old_notin_Last = columns_to_numeric(Old_notin_Last, ["sstart", "send"])
-    print(f"\t\t\t\t- Old NOT in last: {Old_notin_Last.shape[0]}/{old_length} - {Old_notin_Last.shape[0]/old_length*100:.2f}%")
+    old_notin_last = bedops_contrast(old_df_path, last_df_path, 'opposite')
+    print(f"\t\t\t\t- Old NOT in last: {old_notin_last.shape[0]}/{old_length} - {old_notin_last.shape[0]/old_length*100:.2f}%")
 
-    if not Old_notin_Last.empty:  # If the data frame is not empty
-        old_data_exclusive = get_data_sequence(Old_notin_Last, strand, genome_fasta)
+    if not old_notin_last.empty:  # If the data frame is not empty
+        old_data_exclusive = get_data_sequence(old_notin_last, strand, genome_fasta)
     else:  # If the data frame is empty
         old_data_exclusive = pd.DataFrame()
 
