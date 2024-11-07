@@ -1,5 +1,4 @@
 # Modules needed
-import numpy as np
 import pandas as pd
 import subprocess
 import os
