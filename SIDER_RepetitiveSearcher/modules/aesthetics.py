@@ -12,7 +12,7 @@ def boxymcboxface(message):
 
 
     :param message: Message to write inside the box of the function.
-    :type messasge: string
+    :type message: string
 
     :return: an output text display box with a message inside.
     :rtype: output text display box.
