@@ -47,13 +47,16 @@ def get_data_sequence(data, strand, genome_fasta):
 
 def bedops_main(data_input, genome_fasta, writing_path_input):
     """
-    This function will implement BEDOPS to filter duplicates and overlaps in a CSV file.
+    Processes genomic data by filtering, sorting, and merging BEDOPS files, and obtaining sequences.
+    The resulting data is restructured and returned as a formatted DataFrame.
 
-    :param path_input: Path to the CSV file we want to filter data.
-    :type path_input: string
+    Args:
+        data_input (pandas.DataFrame): The input data frame containing genomic information.
+        genome_fasta (str): Path to the genome FASTA file.
+        writing_path_input (str): Directory where BEDOPS files will be written.
 
-    :param genome_fasta: Path to the whole genome sequence in FASTA format.
-    :type genome_fasta: string
+    Returns:
+        pandas.DataFrame: A DataFrame with processed and formatted genomic data.
     """
     # -----------------------------------------------------------------------------
     # 1) Filter and sort data
