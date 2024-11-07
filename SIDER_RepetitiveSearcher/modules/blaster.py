@@ -261,6 +261,17 @@ def repetitive_blaster(data_input, genome_fasta, folder_path, numbering, start_t
     os.makedirs(stopping_folder, exist_ok=True)
 
     if new_data.shape[0] == 0:
+        coincidence_data = coincidence_data[['sseqid', 'length', 'sstart', 'send', 'sstrand', 'sseq']].copy()  # #Take only needed columns:
+        
+        # Make it so 'sstart' is always < than 'send'
+        coincidence_data.loc[
+            coincidence_data[coincidence_data['sstart'] > coincidence_data['send']].index,
+            ['sstart', 'send']
+        ] = coincidence_data.loc[
+            coincidence_data[coincidence_data['sstart'] > coincidence_data['send']].index,
+            ['send', 'sstart']
+        ].values
+
         coincidence_data.to_csv(os.path.join(folder_path, "Last_Data.csv"), index=False, header=True, sep=",")  # Save the data frame to a CSV file
         print("")
         print(f"6. Stopping:")
