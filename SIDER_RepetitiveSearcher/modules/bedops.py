@@ -47,6 +47,20 @@ def get_data_sequence(data, strand, genome_fasta):
     return sequences_df
 
 def bedops_contrast(base_df_path, contrast_df_path, bedops_mode):
+    """
+    Executes a BEDOPS command to compare genomic regions between two BED files and returns a DataFrame.
+
+        Parameters:
+        base_df_path (str): Path to the base BED file.
+        contrast_df_path (str): Path to the contrast BED file.
+        bedops_mode (str): Mode of operation for the BEDOPS command.
+                           Supported modes are 'coincidence' (checks which elements in base are in contrast),
+                           'opposite' (checks which elements in base are not in contrast),
+                           and 'merge' (merges overlapping intervals).
+
+        Returns:
+        pd.DataFrame: DataFrame containing the results of the BEDOPS operation with columns 'sseqid', 'sstart', and 'send'.
+    """
     bedops_mode_map = {'coincidence': '--element-of 1',
                        'opposite': '--not-element-of 1',
                        'merge': '--merge'}
