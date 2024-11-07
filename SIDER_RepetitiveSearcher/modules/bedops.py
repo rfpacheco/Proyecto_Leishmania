@@ -1,5 +1,6 @@
 # Modules needed
 import pandas as pd
+import numpy as np
 import subprocess
 import os
 
@@ -123,7 +124,7 @@ def bedops_main(data_input, genome_fasta, writing_path_input):
 
     # Adding sequence length to the DataFrame:
     if not all_data.empty:
-        new_column = [len(x) for x in all_data.loc[:,"sseq"]]  # creates a list with the length of each sequence
+        new_column = np.array([len(x) for x in all_data.loc[:, "sseq"]], dtype=np.int64)  # creates a list with the length of each sequence
         all_data.insert(1, "length", new_column)  # inserts the new column with the sequence length. Column index are shifted.
         # -----------------------------------------------------------------------------
         # 6) Correctly modeling the output Data Frame to 15 columns and output as CSV file.
