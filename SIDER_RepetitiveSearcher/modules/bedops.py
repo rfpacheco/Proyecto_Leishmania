@@ -47,13 +47,13 @@ def get_data_sequence(data, strand, genome_fasta):
     return sequences_df
 
 def bedops_contrast(base_df_path, contrast_df_path, bedops_mode):
-    bedops_mode_map = {'coincidence': '--element-of',
-                       'opposite': '--not-element-of',
+    bedops_mode_map = {'coincidence': '--element-of 1',
+                       'opposite': '--not-element-of 1',
                        'merge': '--merge'}
     cmd_mode = bedops_mode_map.get(bedops_mode)
 
     # Check which elements in 'base_df' are inside 'contrast_df'
-    cmd_coincidence = f"bedops {cmd_mode} 1 {base_df_path} {contrast_df_path}"
+    cmd_coincidence = f"bedops {cmd_mode} {base_df_path} {contrast_df_path}"
     check_coincidence = subprocess.check_output(cmd_coincidence, shell=True, universal_newlines=True)
     check_coincidence = pd.DataFrame([x.split("\t") for x in check_coincidence.split("\n") if x],
                              columns=["sseqid", "sstart", "send"])
