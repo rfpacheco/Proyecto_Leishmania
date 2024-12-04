@@ -33,7 +33,7 @@ def blastn_dic(path_input, path_output):
     
 
 def blastn_blaster(query_path, dict_path):
-    cmd = "blastn -word_size 11" \
+    cmd = "blastn -word_size 15" \
         + " -query " + query_path \
         + " -db " + dict_path \
         + " -outfmt '10 qseqid sseqid sstrand pident qstart qend sstart send evalue bitscore length qlen qcovs slen mismatch gapopen gaps'"

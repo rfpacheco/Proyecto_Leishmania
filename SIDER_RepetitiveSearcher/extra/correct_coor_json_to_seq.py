@@ -32,7 +32,7 @@ def get_sequence(start_coor, end_coor, strand, chromosome, path_genome):
 
 def blastn_blaster(query, path_genome, evalue):
     cmd = (
-        f'blastn -word_size 11 '
+        f'blastn -word_size 15 '
         f'-query {query} '
         f'-db {path_blast_dict_file} '
         f'-evalue {evalue} '
