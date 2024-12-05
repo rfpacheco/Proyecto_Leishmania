@@ -65,7 +65,10 @@ Una vez terminado tendréis todos los elementos de búsqueda en la carpeta que h
 
 ## 3º paso: depuración.
 
-El programa encuentra de forma iterativa todas las secuencias repetidas que buscamos, pero como tiene una habilidad de extensión, puede acabar encontrando otras secuencias que den lugar a encontrar otras secuencias. Por lo tanto, nos encontramos con un amalgama de elementos repetidos en el genoma que son elementos SIDER y elementos repetidos no SIDER. Para poder filtrar bien los elementos tenemos los siguientes Scripts:
+(05/12/24 en construcción)
+
+El programa encuentra de forma iterativa todas las secuencias repetidas que buscamos, pero como tiene una habilidad de extensión, puede acabar encontrando otras secuencias y patrones que den lugar . Por lo tanto, nos encontramos con un amalgama de elementos repetidos en el genoma que son elementos SIDER y elementos repetidos no SIDER. Para poder filtrar bien los elementos tenemos los siguientes Scripts:
+
 
 - [join_strands.py](../SIDER_RepetitiveSearcher/extra/join_strands.py)
   - Este _script_ se encargará de unir las secuencias de "Last_Data.csv" en una sola hebra, la positiva. De esta forma ponemos como defecto la hebra "positiva" para los elementos SIDER, ya su dirección dependerá de otros factores y no de los que BLASTn nos diga.
