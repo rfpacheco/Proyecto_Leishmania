@@ -44,7 +44,7 @@ python SIDER_RepetitiveSearcher.py \
 -d <archivo secuencia de búsqueda FASTA> \
 -g <archivo genoma FASTA>
 ```
-Los "/\" son para saltar a la siguiente línea en _bash_ y así tener el código más ordenado.
+Los "\\" son para saltar a la siguiente línea en _bash_ y así tener el código más ordenado.
 
 Ejecutamos el código y nos preguntará por el nombre de la carpeta donde guardar los datos y, por el "path" en donde queremos guardar esa carpeta. Luego preguntará los siguientes parámetros:
 
