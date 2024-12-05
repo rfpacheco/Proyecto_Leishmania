@@ -61,30 +61,62 @@ Ejecutamos el código y nos preguntará por el nombre de la carpeta donde guarda
 
 Una vez terminado, el programa se ejecutará, aquí depende mucho del HARDWARE que se tenga tanto de los procesos del ordenador que ejecute de entre medias. En mi caso con un **i9 de 11th generación y 64 GB de RAM** en el genoma de _L. infantum_ con el Hallmark de ingi, tardó casi 3h recién encendido, y en otra ocasión con los mismos hardwares, pero con el ordenador encendido por semanas, y por tanto, con múltiples procesos desconocidos abiertos, tardó 11 horas.
 
-Una vez terminado tendréis todos los elementos de búsqueda en la carpeta que hayáis elegido. Dentro de esa carpeta tendréis "Execution data" y dentro de esa carpeta habrá una archivo que se llama "Last_Data.csv" en donde tendrá todas las secuencias encontradas.
+Una vez terminado tendréis todos los elementos de búsqueda en la carpeta que hayáis elegido. Dentro de esa carpeta tendréis la carpeta "execution_data" y dentro de esa carpeta habrá una archivo que se llama "Last_Data.csv" en donde tendrá todas las secuencias encontradas.
 
 ## 3º paso: depuración.
 
 (05/12/24 en construcción)
 
-El programa encuentra de forma iterativa todas las secuencias repetidas que buscamos, pero como tiene una habilidad de extensión, puede acabar encontrando otras secuencias y patrones que den lugar . Por lo tanto, nos encontramos con un amalgama de elementos repetidos en el genoma que son elementos SIDER y elementos repetidos no SIDER. Para poder filtrar bien los elementos tenemos los siguientes Scripts:
+El programa encuentra de forma iterativa todas las secuencias repetidas que buscamos, pero como tiene una habilidad de extensión, puede acabar encontrando otras secuencias y patrones que den lugar a otros elementos. Por lo tanto, al final nos encontramos con una amalgama de elementos repetidos en el genoma que son elementos SIDER y elementos repetidos no SIDER. Para poder filtrar bien los elementos tenemos los siguientes Scripts:
+
+### 3.1 Union de datos en ambas hebras
+
+[join_strands.py](../SIDER_RepetitiveSearcher/extra/join_strands.py)
+
+"Last_Data.csv" tiene todas las secuencias repartidas tanto en el sentido positivo como negativo de las hebras. Esto es una repercusión de la forma que tiene BLASTn de encontrar las secuencias. Sin embargo, no podemos darle ese sentido debido a la estructura que tiene el genoma de _Leishmania_ (i.e., Directional Gene Clusters). Por ello, el primer paso es unir todos los elementos en el sentido "positivo", para ello usaremos [join_strands.py](../SIDER_RepetitiveSearcher/extra/join_strands.py):
+  
+  ```bash
+  python ./extra/compare.py \
+  <archivo CSV> \
+  <archivo genoma FASTA> \
+  plus
+  ```
+De aquí obtendremos un archivo denominado **merged_sequences.csv** como resultado.
 
 
-- [join_strands.py](../SIDER_RepetitiveSearcher/extra/join_strands.py)
-  - Este _script_ se encargará de unir las secuencias de "Last_Data.csv" en una sola hebra, la positiva. De esta forma ponemos como defecto la hebra "positiva" para los elementos SIDER, ya su dirección dependerá de otros factores y no de los que BLASTn nos diga.
+### 3.2 Aplicación del test de SIDER
+
+[true_sider_filter.py](../SIDER_RepetitiveSearcher/extra/true_sider_filter.py)
 
 
-- [true_sider_filter.py](../SIDER_RepetitiveSearcher/extra/true_sider_filter.py)[true_sider_filter.py](../SIDER_RepetitiveSearcher/extra/true_sider_filter.py)
-  - Este _script_ se encargará de encontrar dentro del amalgama de elementos repetidos aquellos considerados realmente SIDER. Para ser considerado como SIDER en una búsqueda de cada secuencia en BLASTn frente al genoma original deben cumplir las siguientes premisas:
-    - Aparecer en al menos 5 cromosomas diferentes.
-    - Con un valor esperado < 1.0E-09.
-  - Una vez terminado, obtendremos dos archivos CSV:
-    - **final_yes_data.csv** con aquellos elementos que han pasado el filtro. Este es el que nos interesa.
-    - **final_no_data.csv** con aquellos elementos que no han pasado el filtro.
+Este _script_ se encargará de encontrar dentro del amalgama de elementos repetidos aquellos considerados realmente SIDER. Para ser considerado como SIDER en una búsqueda de cada secuencia en BLASTn frente al genoma original, consideramos que deben cumplir las siguientes premisas:
+  - Aparecer en al menos 5 cromosomas diferentes con un valor esperado < 1.0E-09.
 
+Ejecutamos el script:
 
-- [correct_coor_to_json.py](../SIDER_RepetitiveSearcher/extra/correct_coor_to_json.py)
+```bash
+python ./extra/true_sider_filter.py \
+-f <merged_secuences.csv> \
+-d <archivo genoma FASTA> \
+--word-size 15\
+--recaught_file <archivo secuencia de búsqueda FAST>
+```
+
+Una vez terminado, obtendremos dos archivos CSV:
+  - **final_yes_data.csv** --> con aquellos elementos que han pasado el filtro. Este es el que nos interesa.
+  - **final_no_data.csv** --> con aquellos elementos que no han pasado el filtro.
+
+### 3.3. Corrección coordenadas
+
+#### 3.3.1 Delimitación y fragmentación
+
+[correct_coor_to_json.py](../SIDER_RepetitiveSearcher/extra/correct_coor_to_json.py)
   -  Este programa se encargará de depurar
 
+#### 3.3.2 True SIDER Test
 
-- [correct_coor_json_to_seq.py](../SIDER_RepetitiveSearcher/extra/correct_coor_json_to_seq.py)[correct_coor_json_to_seq.py](../SIDER_RepetitiveSearcher/extra/correct_coor_json_to_seq.py)
+[correct_coor_json_true_sider_test.py](../SIDER_RepetitiveSearcher/extra/correct_coor_json_true_sider_test.py)
+
+#### 3.3.3 Obtención de secuencias
+
+[correct_coor_json_to_csv.py](../SIDER_RepetitiveSearcher/extra/correct_coor_json_to_csv.py)
