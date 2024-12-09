@@ -10,7 +10,7 @@ import subprocess
 # ======================================================================
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Creating new data bases from JSON python dict')
-    parser.add_argument('-f', '--file', type=str, required=True, help='Path to the JSON file that contains the python tictionary.')
+    parser.add_argument('-f', '--file', type=str, required=True, help='Path to the JSON file that contains the python dictionary.')
     parser.add_argument('-o', '--output_dir', type=str, required=True, help='Directory output path to save all the data')
     parser.add_argument('-db', '--database', type=str, required=True, help='Path to the genome fasta file.')
     parser.add_argument('-ndb', '--neg_database', type=str, required=True, help='Path to the old negative elements that did not pass the filter')
