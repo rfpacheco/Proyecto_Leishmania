@@ -91,6 +91,7 @@ De aquí obtendremos un archivo denominado **merged_sequences.csv** como resulta
 
 Este _script_ se encargará de encontrar dentro del amalgama de elementos repetidos aquellos considerados realmente SIDER. Para ser considerado como SIDER en una búsqueda de cada secuencia en BLASTn frente al genoma original, consideramos que deben cumplir las siguientes premisas:
   - Aparecer en al menos 5 cromosomas diferentes con un valor esperado < 1.0E-09. Es decir, si $x$ es todas las secuencias de elementos SIDER, $C(x)$ es existir en al menos 5 cromosomas y $E(x)$ tener un valor esperado < 1.0E-09, entonces:
+
 $$
 \forall x \ (C(x) \ \land \ E(x) )
 $$
