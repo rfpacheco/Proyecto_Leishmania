@@ -83,6 +83,13 @@ if __name__ == "__main__":
     accepted = 0
     rejected = 0
 
+    # Create the blast dic
+    genome_file_path = os.path.expanduser(args.dict_path)
+    genome_folder_path = os.path.join(folder_path, 'blastn_dic')
+    os.makedirs(genome_folder_path, exist_ok=True)
+    genome_file_path_out = os.path.join(genome_folder_path, os.path.basename(genome_file_path))
+    blastn_dic(genome_file_path, genome_file_path_out)
+
     for index, row in data.iterrows():
         print("="*50)
         print(f"Analyzing row {hash(index) + 1} of {data.shape[0]}")
@@ -90,7 +97,7 @@ if __name__ == "__main__":
         fasta_path = os.path.join(folder_path, "mySequence.fasta")
         print(row)
         fasta_creator(row["sseq"], index, fasta_path)
-        blastn_data = blastn_blaster(fasta_path, args.dict_path, 1.0E-09, args.word_size)
+        blastn_data = blastn_blaster(fasta_path, genome_file_path_out, 1.0E-09, args.word_size)
 
         if blastn_data.count("\n") <= 1:
             not_matches[index] = True
