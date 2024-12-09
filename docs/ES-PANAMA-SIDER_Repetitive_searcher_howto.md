@@ -90,7 +90,10 @@ De aquí obtendremos un archivo denominado **merged_sequences.csv** como resulta
 
 
 Este _script_ se encargará de encontrar dentro del amalgama de elementos repetidos aquellos considerados realmente SIDER. Para ser considerado como SIDER en una búsqueda de cada secuencia en BLASTn frente al genoma original, consideramos que deben cumplir las siguientes premisas:
-  - Aparecer en al menos 5 cromosomas diferentes con un valor esperado < 1.0E-09.
+  - Aparecer en al menos 5 cromosomas diferentes con un valor esperado < 1.0E-09. Es decir, si $x$ es todas las secuencias de elementos SIDER, $C(x)$ es existir en al menos 5 cromosomas y $E(x)$ tener un valor esperado < 1.0E-09, entonces:
+$$
+\forall x \ (C(x) \ \land \ E(x) )
+$$
 
 Ejecutamos el script:
 
@@ -99,7 +102,7 @@ python ./extra/true_sider_filter.py \
 -f <merged_secuences.csv> \
 -d <archivo genoma FASTA> \
 --word-size 15\
---recaught_file <archivo secuencia de búsqueda FAST>
+--recaught_file <archivo secuencia de búsqueda FASTA>
 ```
 
 Una vez terminado, obtendremos dos archivos CSV:
@@ -111,12 +114,48 @@ Una vez terminado, obtendremos dos archivos CSV:
 #### 3.3.1 Delimitación y fragmentación
 
 [correct_coor_to_json.py](../SIDER_RepetitiveSearcher/extra/correct_coor_to_json.py)
-  -  Este programa se encargará de depurar
+
+Este _script_ se encargará de mirar secuencia a secuencia y limitar las coordenadas de los elementos. El archivo resultante será un archivo tipo JSON con las secuencias y coordenadas resultantes.
+
+```bash
+python ./extra/correct_coor_to_json.py \
+-f <path final_yes_data.csv> \
+-d <archivo genoma FASTA> \
+-o <path a la creación de la carpeta de destino deseada>
+```
+
+Dentro de la carpeta elegida, tendremos un archivo denominado **main_dict.json** con la información que necesitamos.
 
 #### 3.3.2 True SIDER Test
 
 [correct_coor_json_true_sider_test.py](../SIDER_RepetitiveSearcher/extra/correct_coor_json_true_sider_test.py)
 
+En este apartado, el _script _ utilizará los datos del archivo JSON **main_dict.json** para efectuar un análisis de True SIDER Test. La diferencia es que en vez de ejecutarse en el CSV, se utilizará el archivo JSON directamente.
+
+```bash
+python ./extra/correct_coor_json_true_sider_test.py \
+-f <path main_dict.json> \
+-o <path a la creación de la carpeta de destino deseada> \
+-db <archivo genoma FASTA> 
+```
+
+Al finalizar el proceso, dentro de nuestra carpeta deseada tendremos un archivo JSON denominado **filtered_data.json** con la información necesaria.
+
+
 #### 3.3.3 Obtención de secuencias
 
 [correct_coor_json_to_csv.py](../SIDER_RepetitiveSearcher/extra/correct_coor_json_to_csv.py)
+
+Este _script_ realizará la transformación de los archivos JSON a un archivo CSV, de un uso más común.
+
+```bash
+python ./extra/correct_coor_json_to_csv.py \
+-f  <path filtered_data.json> \
+-o <path a la creación de la carpeta de destino deseada> \
+-db <archivo genoma FASTA>\
+-ndb <path final_no_data.csv>
+```
+
+Al finalizar el resultado tendremos dos archivos:
+- **positive_database.csv** --> con los elementos deseados.
+- **negative_database.csv** --> con los elementos rechazados, por si se necesitan estudiar en el futuro.
